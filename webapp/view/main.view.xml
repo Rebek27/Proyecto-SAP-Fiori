@@ -1,0 +1,17 @@
+<mvc:View
+    controllerName="com.invertions.sapfiorimodinv.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:m="sap.m"
+>  
+    <m:Page
+        id="IdPageMain"
+        title="{i18n>title}"
+    >
+        <m:content> 
+            <m:Text
+                id="IdText1Main"
+                text="MI PAGINA DE INICIO (PRINCIPAL)"
+            />
+        </m:content>
+    </m:Page>
+</mvc:View>
