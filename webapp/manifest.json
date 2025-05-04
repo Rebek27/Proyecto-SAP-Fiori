@@ -93,13 +93,18 @@
                 },
                 {
                 "name": "RouteMain",
-                "pattern": "",
+                "pattern": "main",
                 "target": ["TargetMain"]
                 },
                 {
                 "name": "RouteSalesForecast",
                 "pattern": "salesforecast",
                 "target": ["TargetSalesForecast"]
+                },
+                {
+                "name": "RouteValues",
+                "pattern": "values",
+                "target": ["TargetValues"]
                 }
             ],
             "targets": {
@@ -126,6 +131,14 @@
                 "viewlevel": 3,
                 "path": "com.invertions.sapfiorimodinv.view.salesforecast",
                 "viewPath": "com.invertions.sapfiorimodinv.view.salesforecast"
+                },
+                "TargetValues": {
+                "viewId": "values",
+                "viewName": "values",
+                "viewType": "XML",
+                "viewlevel": 3,
+                "path": "com.invertions.sapfiorimodinv.view.values",
+                "viewPath": "com.invertions.sapfiorimodinv.view.values"
                 }
             }
         },
