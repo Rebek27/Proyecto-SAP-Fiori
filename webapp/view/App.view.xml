@@ -1,8 +1,46 @@
-<mvc:View controllerName="com.invertions.sapfiorimodinv.controller.App"
-    displayBlock="true"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    >
-    <App id="app">
-    </App>
+<mvc:View
+  controllerName="com.invertions.sapfiorimodinv.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:tnt="sap.tnt"
+  xmlns:f="sap.f"
+  xmlns="sap.m">
+
+  <tnt:ToolPage id="mainToolPage" class="sapUiSizeCompact">
+  
+    <!-- Header corregido -->
+    <tnt:header>
+      <f:ShellBar
+        id="shellBar"
+        title="Módulo de Seguridad"
+        showMenuButton="true"
+         homeIcon="./resources/images/logo_sap.png"
+        menuButtonPressed=".onToggleSideNav">
+        <f:profile>
+          <Avatar id="mainAvatar" initials="US" press=".onUserPress" />
+        </f:profile>
+      </f:ShellBar>
+    </tnt:header>
+
+    <!-- Side Navigation -->
+    <tnt:sideContent>
+      <tnt:SideNavigation
+        id="sideNavigation"
+        itemSelect=".onItemSelect"
+        selectedKey="main">
+        <tnt:NavigationList id="mainNavigationList">
+                <tnt:NavigationListItem id="navItemMain" key="main" text="Home" icon="sap-icon://home"/>
+                 <tnt:NavigationListItem id="navItemSalesForecast" key="salesforecast" text="Pronóstico de Ventas" icon="sap-icon://business-objects-experience"/>
+                <tnt:NavigationListItem id="navItemRoles" key="roles" text="Gestión de Roles" icon="sap-icon://employee-approvals"/>
+        </tnt:NavigationList>
+
+
+      </tnt:SideNavigation>
+    </tnt:sideContent>
+
+    <!-- Main Content -->
+    <tnt:mainContents>
+      <App id="mainContents" />
+    </tnt:mainContents>
+
+  </tnt:ToolPage>
 </mvc:View>

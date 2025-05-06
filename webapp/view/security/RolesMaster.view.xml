@@ -1,0 +1,70 @@
+<mvc:View
+  controllerName="com.invertions.sapfiorimodinv.controller.security.RolesMaster"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:m="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout.form">
+
+  <m:Page id="rolesPage" title="Roles Disponibles" class="sapUiContentPadding">
+
+    <!-- 🔹 Sección: Formulario para agregar nuevo rol -->
+    <layout:SimpleForm
+      id="formAddRole"
+      editable="true"
+      layout="ResponsiveGridLayout"
+      labelSpanL="4"
+      labelSpanM="4"
+      emptySpanL="1"
+      columnsL="2"
+      columnsM="2"
+      class="sapUiSmallMarginBottom sapUiContentPadding">
+
+      <layout:title>
+        <core:Title text=" Agregar Nuevo Rol" />
+      </layout:title>
+
+      <m:Label text="ID del Rol" />
+      <m:Input value="{newRoleModel>/ROLEID}" placeholder="Ej. IdAdmin" />
+
+      <m:Label text="Nombre del Rol" />
+      <m:Input value="{newRoleModel>/ROLENAME}" placeholder="Ej. Administrador" />
+
+      <m:Label text="Descripción" />
+      <m:Input value="{newRoleModel>/DESCRIPTION}" placeholder="Ej. Encargado de seguridad..." />
+
+      <m:Toolbar>
+        <m:ToolbarSpacer />
+        <m:Button
+          text="Guardar Rol"
+          icon="sap-icon://save"
+          type="Emphasized"
+          press=".onSaveRole" />
+      </m:Toolbar>
+
+    </layout:SimpleForm>
+
+    <!-- 🔹 Sección: Búsqueda -->
+    <m:Toolbar class="sapUiTinyMarginBottom">
+      <m:Title text="Lista de Roles" level="H2" />
+      <m:ToolbarSpacer />
+      <m:SearchField
+        id="searchRoleName"
+        placeholder="Buscar por nombre de rol..."
+        liveChange=".onMultiSearch"
+        width="40%" />
+    </m:Toolbar>
+
+    <!-- 🔹 Sección: Lista de Roles -->
+    <m:List
+      id="rolesList"
+      items="{roles>/value}"
+      mode="SingleSelectMaster"
+      itemPress=".onRolePress">
+      <m:StandardListItem
+        title="{roles>ROLENAME}"
+        description="{roles>DESCRIPTION}"
+        type="Active" />
+    </m:List>
+
+  </m:Page>
+</mvc:View>

@@ -1,10 +1,11 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller"
-], (Controller) => {
+    "com/invertions/sapfiorimodinv/controller/BaseController"
+], function (BaseController) {
     "use strict";
 
-    return Controller.extend("com.invertions.sapfiorimodinv.controller.Main", {
-        onInit() {
+    return BaseController.extend("com.invertions.sapfiorimodinv.controller.Main", {
+        onInit: function () {
+            // Lógica inicial si se necesita
         }
     });
 });

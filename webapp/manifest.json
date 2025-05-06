@@ -7,7 +7,7 @@
             "bundleName": "com.invertions.sapfiorimodinv.i18n.i18n",
             "fallbackLocale": "es_MX",
             "supportedLocales": [
-              "es_MX"
+                "es_MX"
             ]
         },
         "applicationVersion": {
@@ -39,7 +39,7 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": true,
+        "flexEnabled": false,
         "dependencies": {
             "minUI5Version": "1.132.1",
             "libs": {
@@ -47,7 +47,7 @@
                 "sap.ui.core": {},
                 "sap.tnt": {},
                 "sap.f": {},
-                "sap.ui.table":{}
+                "sap.ui.table": {}
             }
         },
         "contentDensities": {
@@ -61,8 +61,8 @@
                     "bundleName": "com.invertions.sapfiorimodinv.i18n.i18n",
                     "fallbackLocale": "es_MX",
                     "supportedLocales": [
-                "es_MX"
-              ]
+                        "es_MX"
+                    ]
                 }
             }
         },
@@ -76,69 +76,58 @@
         "routing": {
             "config": {
                 "routerClass": "sap.m.routing.Router",
-                "controlAggregation": "pages",
-                "controlId": "app",
-                "transition": "slide",
-                "type": "View",
                 "viewType": "XML",
-                "path": "com.invertions.sapfiorimodinv.view",
                 "async": true,
-                "viewPath": "com.invertions.sapfiorimodinv.view"
+                "viewPath": "com.invertions.sapfiorimodinv.view",
+                "controlId": "mainContents",
+                "controlAggregation": "pages",
+                "transition": "slide"
             },
             "routes": [
-                { 
-                    "name": "RouteLogin", 
-                    "pattern": "login", 
-                    "target": "TargetLogin" 
+                {
+                    "pattern": "",
+                    "name": "RouteMain",
+                    "target": "TargetMain"
                 },
                 {
-                "name": "RouteMain",
-                "pattern": "main",
-                "target": ["TargetMain"]
+                    "pattern": "salesforecast",
+                    "name": "RouteSalesForecast",
+                    "target": "TargetSalesForecast"
                 },
                 {
-                "name": "RouteSalesForecast",
-                "pattern": "salesforecast",
-                "target": ["TargetSalesForecast"]
+                    "pattern": "roles",
+                    "name": "RouteRolesMaster",
+                    "target": "TargetRolesMaster"
                 },
                 {
-                "name": "RouteValues",
-                "pattern": "values",
-                "target": ["TargetValues"]
+                    "pattern": "roles/{roleId}",
+                    "name": "RouteRolesDetail",
+                    "target": "TargetRolesDetail"
                 }
             ],
             "targets": {
-                "TargetLogin": {
-                "viewId": "Login",
-                "viewName": "Login",
-                "viewType": "XML",
-                "transition": "slide",
-                "clearControlAggregation": false,
-                "viewlevel": 1
-                },
                 "TargetMain": {
-                "viewId": "main",
-                "viewName": "main",
-                "viewType": "XML",
-                "transition": "slide",
-                "clearControlAggregation": false,
-                "viewlevel": 2
+                    "viewName": "Main",
+                    "viewId": "main",
+                    "viewType": "XML"
                 },
                 "TargetSalesForecast": {
-                "viewId": "salesForecast",
-                "viewName": "salesForecast",
-                "viewType": "XML",
-                "viewlevel": 3,
-                "path": "com.invertions.sapfiorimodinv.view.salesforecast",
-                "viewPath": "com.invertions.sapfiorimodinv.view.salesforecast"
+                    "viewName": "salesforecast.SalesForecast",
+                    "viewId": "salesForecast",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.salesforecast"
                 },
-                "TargetValues": {
-                "viewId": "values",
-                "viewName": "values",
-                "viewType": "XML",
-                "viewlevel": 3,
-                "path": "com.invertions.sapfiorimodinv.view.values",
-                "viewPath": "com.invertions.sapfiorimodinv.view.values"
+                "TargetRolesMaster": {
+                    "viewName": "RolesMaster",
+                    "viewId": "rolesMaster",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.security"
+                },
+                "TargetRolesDetail": {
+                    "viewName": "RolesDetail",
+                    "viewId": "rolesDetail",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.security"
                 }
             }
         },
@@ -149,7 +138,3 @@
         }
     }
 }
-
-
-
-

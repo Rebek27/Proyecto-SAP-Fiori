@@ -1,17 +1,18 @@
+
+
 <mvc:View
     controllerName="com.invertions.sapfiorimodinv.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:m="sap.m"
->  
+>
     <m:Page
-        id="IdPageMain"
-        title="{i18n>title}"
+        id="mainnPage"
+        showHeader="false"
+        class="sapUiContentPadding"
     >
-        <m:content> 
-            <m:Text
-                id="IdText1Main"
-                text="MI PAGINA DE INICIO (PRINCIPAL)"
-            />
-        </m:content>
+        <m:Text
+            id="mainnWelcomeText"
+            text="¡Bienvenido al módulo de seguridad!"
+        />
     </m:Page>
 </mvc:View>
