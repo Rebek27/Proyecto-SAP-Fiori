@@ -1,0 +1,45 @@
+<mvc:View
+    controllerName="com.invertions.sapfiorimodinv.controller.Catalogs"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    
+    <Page title="Catálogos">
+        <content>
+            <VBox>
+                <HBox>
+                    <Label text="Filtrar por LABELID:"/>
+                    <Input id="labelFilter" width="200px" liveChange="onFilterChange"/>
+                    <Label text="Filtrar por VALUEID:"/>
+                    <Input id="valueFilter" width="200px" liveChange="onFilterChange"/>
+                </HBox>
+
+                <Table id="catalogTable" items="{
+                    path: '/value',
+                    sorter: { path: 'LABELID' }
+                }">
+                    <columns>
+                        <Column><Text text="LABELID"/></Column>
+                        <Column><Text text="LABEL"/></Column>
+                        <Column><Text text="VALUEID"/></Column>
+                        <Column><Text text="VALUE"/></Column>
+                        <Column><Text text="DESCRIPTION"/></Column>
+                        <Column><Text text="IMAGE"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{LABELID}"/>
+                                <Text text="{LABEL}"/>
+                                <Text text="{VALUEID}"/>
+                                <Text text="{VALUE}"/>
+                                <Text text="{DESCRIPTION}"/>
+                                <Image src="{IMAGE}" width="50px" height="50px"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

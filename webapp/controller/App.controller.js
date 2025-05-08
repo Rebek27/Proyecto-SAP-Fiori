@@ -33,6 +33,9 @@ sap.ui.define([
               case "roles":
                   oRouter.navTo("RouteRolesMaster");
                   break;
+              case "catalogs":
+                  oRouter.navTo("RouteCatalogs");
+                  break;
               default:
                   oRouter.navTo("RouteMain");
           }

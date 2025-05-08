@@ -103,7 +103,13 @@
                     "pattern": "roles/{roleId}",
                     "name": "RouteRolesDetail",
                     "target": "TargetRolesDetail"
-                }
+                },
+                {
+                    "pattern": "catalogs",
+                    "name": "RouteCatalogs",
+                    "target": "TargetCatalogs"
+                  }
+
             ],
             "targets": {
                 "TargetMain": {
@@ -128,6 +134,12 @@
                     "viewId": "rolesDetail",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security"
+                },
+                "TargetCatalogs": {
+                    "viewName": "Catalogs",
+                    "viewId": "catalogs",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.catalogs"
                 }
             }
         },

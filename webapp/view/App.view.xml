@@ -31,6 +31,7 @@
                 <tnt:NavigationListItem id="navItemMain" key="main" text="Home" icon="sap-icon://home"/>
                  <tnt:NavigationListItem id="navItemSalesForecast" key="salesforecast" text="Pronóstico de Ventas" icon="sap-icon://business-objects-experience"/>
                 <tnt:NavigationListItem id="navItemRoles" key="roles" text="Gestión de Roles" icon="sap-icon://employee-approvals"/>
+                <tnt:NavigationListItem id="navItemCatalogs" key="catalogs" text="Catálogos" icon="sap-icon://table-view"/>
         </tnt:NavigationList>
 
 
