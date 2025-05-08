@@ -2,43 +2,93 @@
     controllerName="com.invertions.sapfiorimodinv.controller.Catalogs"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    xmlns:core="sap.ui.core">
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"  
+    xmlns:html="http://www.w3.org/1999/xhtml">
     
     <Page title="Catálogos">
         <content>
             <VBox>
-                <HBox>
-                    <Label text="Filtrar por LABELID:"/>
-                    <Input id="labelFilter" width="200px" liveChange="onFilterChange"/>
-                    <Label text="Filtrar por VALUEID:"/>
-                    <Input id="valueFilter" width="200px" liveChange="onFilterChange"/>
-                </HBox>
+                <!-- Splitter control para dividir la pantalla en dos -->
+                <layout:Splitter id="mainSplitter" orientation="Horizontal">
+                    <!-- Panel izquierdo: Tabla de catálogos -->
+                         <Panel>
+                         <HBox>
+                            <Label text="Filtrar por LABELID:"/>
+                            <Input id="labelFilter" width="200px" liveChange="onFilterChange"/>
+                            <Label text="Filtrar por VALUEID:"/>
+                            <Input id="valueFilter" width="200px" liveChange="onFilterChange"/>
+                        </HBox>
+                         <Table
+                            id="catalogTable"
+                            items="{
+                                path: '/value',
+                                sorter: { path: 'LABELID' }
+                            }"
+                            itemPress="onItemPress"
+                            mode="SingleSelectMaster"
+                            growing="true">
+                            <columns>
+                                <Column><Text text="LABELID"/></Column>
+                                <Column><Text text="LABEL"/></Column>
+                                <Column><Text text="VALUEID"/></Column>
+                                <Column><Text text="VALUE"/></Column>
+                                <Column><Text text="DESCRIPTION"/></Column>
+                                <Column><Text text="IMAGE"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active">
+                                    <cells>
+                                        <Text text="{LABELID}"/>
+                                        <Text text="{LABEL}"/>
+                                        <Text text="{VALUEID}"/>
+                                        <Text text="{VALUE}"/>
+                                        <Text text="{DESCRIPTION}"/>
+                                        <Text text="{IMAGE}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                         </Panel>
+                    <!-- Panel derecho: Tabla de valores -->
+                        <Panel >
+                            <HBox>
+                                <Label text="Filtrar por LABELID:"/>
+                                <Input id="1" width="200px" liveChange="onFilterChange"/>
+                                <Label text="Filtrar por VALUEID:"/>
+                                <Input id="2" width="200px" liveChange="onFilterChange"/>
+                            </HBox>
+                        <Table
+                            id="valuesTable"
+                            visible="false"
+                            items="{values>/values}"
+                            growing="true">
+                            <columns>
+                                <Column><Text text="VALUEID"/></Column>
+                                <Column><Text text="VALUE"/></Column>
+                                <Column><Text text="ALIAS"/></Column>
+                                <Column><Text text="IMAGE"/></Column>
+                                <Column><Text text="DESCRIPTION"/></Column>
+                                <Column><Text text="VALUEPAID"/></Column>
+                                <Column><Text text="VALUESPAID"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{values>VALUEID}"/>
+                                        <Text text="{values>VALUE}"/>
+                                        <Text text="{values>ALIAS}"/>
+                                        <Text text="{values>IMAGE}"/>
+                                        <Text text="{values>DESCRIPTION}"/>
+                                        <Text text="{values>VALUEPAID}"/>
+                                        <Text text="{values>VALUESPAID}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        </Panel>
 
-                <Table id="catalogTable" items="{
-                    path: '/value',
-                    sorter: { path: 'LABELID' }
-                }">
-                    <columns>
-                        <Column><Text text="LABELID"/></Column>
-                        <Column><Text text="LABEL"/></Column>
-                        <Column><Text text="VALUEID"/></Column>
-                        <Column><Text text="VALUE"/></Column>
-                        <Column><Text text="DESCRIPTION"/></Column>
-                        <Column><Text text="IMAGE"/></Column>
-                    </columns>
-                    <items>
-                        <ColumnListItem>
-                            <cells>
-                                <Text text="{LABELID}"/>
-                                <Text text="{LABEL}"/>
-                                <Text text="{VALUEID}"/>
-                                <Text text="{VALUE}"/>
-                                <Text text="{DESCRIPTION}"/>
-                                <Text text="{IMAGE}"/>
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
+                </layout:Splitter>
             </VBox>
         </content>
     </Page>
