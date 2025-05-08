@@ -1,0 +1,33 @@
+<mvc:View
+    controllerName="com.invertions.sapfiorimodinv.controller.Values"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    
+    <Table
+        id="valuesTable"
+        visible="false"
+        items="{path: 'values>/values'}">
+                        <columns>
+                            <Column><Text text="VALUEID"/></Column>
+                            <Column><Text text="VALUE"/></Column>
+                            <Column><Text text="ALIAS"/></Column>
+                            <Column><Text text="IMAGE"/></Column>
+                            <Column><Text text="DESCRIPTION"/></Column>
+                            <Column><Text text="VALUEPAID"/></Column>
+                            <Column><Text text="VALUESPAID"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{values>VALUEID}"/>
+                                    <Text text="{values>VALUE}"/>
+                                    <Text text="{values>ALIAS}"/>
+                                    <Text text="{values>IMAGE}"/>
+                                    <Text text="{values>DESCRIPTION}"/>
+                                    <Text text="{values>VALUEPAID}"/>
+                                    <Text text="{values>VALUESPAID}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+</mvc:View>

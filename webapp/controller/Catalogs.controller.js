@@ -76,23 +76,22 @@ sap.ui.define([
                 method: "GET",
                 dataType: "json",
                 success: function(response) {
-                    var values = response.value || [];
-                    if (!Array.isArray(values)) {
-                        values = [values];
+                    var oValuesView = this.byId("XMLViewValues");
+                    if (oValuesView) {
+                        // Espera a que la vista esté completamente cargada
+                        oValuesView.loaded().then(function() {
+                            var oController = oValuesView.getController();
+                            if (oController && oController.loadValues) {
+                                oController.loadValues(response.value || []);
+                            }
+                        }.bind(this));
                     }
-        
-                    var oValueModel = new JSONModel({ values: values });
-                    that.getView().setModel(oValueModel, "values");
-        
-                    var oValuesTable = that.byId("valuesTable");
-                    oValuesTable.setVisible(true);
-                },
+                }.bind(this),
                 error: function() {
-                    MessageToast.show("Error al cargar los valores del catálogo.");
+                    MessageToast.show("Error al cargar valores");
                 }
             });
         }
-             
         ,onCloseDialog: function () {
             if (this._oDialog) {
                 this._oDialog.close();
