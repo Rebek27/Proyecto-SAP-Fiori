@@ -67,7 +67,10 @@ sap.ui.define([
 
         onItemPress: function(oEvent) {
             var oItem = oEvent.getParameter("listItem");
-            var sLabelID = oItem.getBindingContext().getProperty("LABELID");
+            var oContext = oItem.getBindingContext();
+            var oSelectedData = oContext.getObject(); // Obtiene los datos del ítem seleccionado
+            
+            var sLabelID = oSelectedData.LABELID;
             var sUrl = "http://localhost:4004/api/sec/valuesCRUD?procedure=get&labelID=" + encodeURIComponent(sLabelID);
             var that = this;
         
@@ -76,17 +79,20 @@ sap.ui.define([
                 method: "GET",
                 dataType: "json",
                 success: function(response) {
-                    var oValuesView = this.byId("XMLViewValues");
+                    var oValuesView = that.byId("XMLViewValues");
                     if (oValuesView) {
-                        // Espera a que la vista esté completamente cargada
                         oValuesView.loaded().then(function() {
                             var oController = oValuesView.getController();
                             if (oController && oController.loadValues) {
+                                // Pasa los valores y también el ítem seleccionado
                                 oController.loadValues(response.value || []);
+                                
+                                // Actualiza el selectedValue en el modelo values
+                                oValuesView.getModel("values").setProperty("/selectedValue", oSelectedData);
                             }
-                        }.bind(this));
+                        });
                     }
-                }.bind(this),
+                },
                 error: function() {
                     MessageToast.show("Error al cargar valores");
                 }
