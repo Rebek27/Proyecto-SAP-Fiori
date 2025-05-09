@@ -95,7 +95,6 @@ sap.ui.define([
         
             // Construir objeto con todos los parámetros
             var oParams = {
-                procedure: "post",  // Parámetro requerido por tu API
                 COMPANYID: 0,
                 CEDIID: 0,
                 LABELID: oSelectedCatalog.LABELID,
@@ -125,7 +124,8 @@ sap.ui.define([
             oView.setBusy(true);
             
             $.ajax({
-                url: `http://localhost:4004/api/sec/valuesCRUD?${sParams}`,
+                url: `http://localhost:4004/api/sec/valuesCRUD?procedure=post`,
+                data: oParams,
                 method: "GET",
                 success: function(response) {
                     oView.setBusy(false);
