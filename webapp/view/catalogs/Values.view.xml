@@ -17,7 +17,7 @@
         <Text text="{values>/selectedValue/LABELID}"/>
         
         <Label text="VALUEID" required="true"/>
-        <Input value="{newValueModel>/VALUEID}" enabled="{= !${editMode>/edit}}" />
+        <Input value="{newValueModel>/VALUEID}" id="InputValueID"/>
         
         <Label text="VALUE" required="true"/>
         <Input value="{newValueModel>/VALUE}" />
@@ -37,14 +37,13 @@
         <Toolbar>
             <ToolbarSpacer/>
             <Button 
-                text="{= ${editMode>/edit} ? 'Actualizar' : 'Guardar'}"
+                text="Guardar"
                 type="Emphasized"
                 icon="sap-icon://save"
                 press=".onSaveValues"/>
             <Button
                 text="Cancelar"
-                press=".onCancelEdit"
-                visible="{editMode>/edit}"/>
+                press=".onCancelEdit"/>
         </Toolbar>
     </layout:SimpleForm>
 
@@ -54,12 +53,24 @@
         <ToolbarSpacer/>
         <SearchField 
             width="20rem"
+            id="ValueSearchField"
             placeholder="Buscar valores..."
-            liveChange=".onSearch"/>
+            liveChange="onFilterChange"/>
         <Button 
             icon="sap-icon://add"
             tooltip="Agregar nuevo"
-            press=".onAddNew"/>
+            press=".onSearch"/>
+        <Button
+            text="Editar"
+            icon="sap-icon://edit"
+            press=".onEditValue"
+            enabled="{= !!${values>/selectedValue}}"/>
+        <Button
+            text="Eliminar"
+            icon="sap-icon://delete"
+            type="Reject"
+            press=".onDeleteValue"
+            enabled="{= !!${values>/selectedValue}}"/>
     </OverflowToolbar>
 
     <!-- 🔹 Tabla de valores -->
@@ -67,7 +78,7 @@
         id="valuesTable"
         items="{path: 'values>/values'}"
         mode="SingleSelectMaster"
-        selectionChange=".onItemSelect">
+        selectionChange="onItemSelect">
         
         <columns>
             <Column width="12rem"><Text text="VALUEID"/></Column>
@@ -89,19 +100,4 @@
             </ColumnListItem>
         </items>
     </Table>
-
-    <!-- 🔹 Barra de acciones -->
-    <OverflowToolbar>
-        <Button
-            text="Editar"
-            icon="sap-icon://edit"
-            press=".onEditValue"
-            enabled="{= !!${values>/selectedValue}}"/>
-        <Button
-            text="Eliminar"
-            icon="sap-icon://delete"
-            type="Reject"
-            press=".onDeleteValue"
-            enabled="{= !!${values>/selectedValue}}"/>
-    </OverflowToolbar>
 </mvc:View>
