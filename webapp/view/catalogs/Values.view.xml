@@ -22,7 +22,7 @@
         <Label text="VALUE" required="true"/>
         <Input value="{newValueModel>/VALUE}" />
         
-        <Label text="VALUEPAID"/>
+        <Label text="VALUEPAID" />
         <Input value="{newValueModel>/VALUEPAID}"/>
 
         <Label text="ALIAS"/>
@@ -40,10 +40,8 @@
                 text="Guardar"
                 type="Emphasized"
                 icon="sap-icon://save"
-                press=".onSaveValues"/>
-            <Button
-                text="Cancelar"
-                press=".onCancelEdit"/>
+                press=".onSaveValues"
+                enabled="{= !!${values>/selectedValue}}"/>
         </Toolbar>
     </layout:SimpleForm>
 
@@ -56,21 +54,28 @@
             id="ValueSearchField"
             placeholder="Buscar valores..."
             liveChange="onFilterChange"/>
-        <Button 
-            icon="sap-icon://add"
-            tooltip="Agregar nuevo"
-            press=".onSearch"/>
         <Button
             text="Editar"
             icon="sap-icon://edit"
             press=".onEditValue"
-            enabled="{= !!${values>/selectedValue}}"/>
+            enabled="{= !!${values>/selectedValueIn}}"/>
+        <Button
+            text="Activar"
+            icon="sap-icon://accept"
+            press=".StatusValueAccept"
+            enabled="{= !!${values>/selectedValueIn}}"/>
+            <Button
+            text="Desactivar"
+            icon="sap-icon://decline"
+            type="Reject"
+            press=".StatusValueDecline"
+            enabled="{= !!${values>/selectedValueIn}}"/>
         <Button
             text="Eliminar"
             icon="sap-icon://delete"
             type="Reject"
             press=".onDeleteValue"
-            enabled="{= !!${values>/selectedValue}}"/>
+            enabled="{= !!${values>/selectedValueIn}}"/>
     </OverflowToolbar>
 
     <!-- 🔹 Tabla de valores -->
@@ -86,6 +91,7 @@
             <Column><Text text="ALIAS"/></Column>
             <Column><Text text="IMAGE"/></Column>
             <Column><Text text="DESCRIPTION"/></Column>
+            <Column><Text text="ESTADO"/></Column>
         </columns>
         
         <items>
@@ -96,6 +102,9 @@
                     <Text text="{values>ALIAS}"/>
                     <Text text="{values>IMAGE}"/>
                     <Text text="{values>DESCRIPTION}"/>
+                    <Text 
+                        text="{= ${values>DETAIL_ROW/ACTIVED} ? 'ACTIVO' : 'INACTIVO'}"
+                        class="{= ${values>DETAIL_ROW/ACTIVED} ? 'sapUiGreenText' : 'sapUiRedText'}"/>
                 </cells>
             </ColumnListItem>
         </items>
