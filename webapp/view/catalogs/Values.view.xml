@@ -87,6 +87,7 @@
         
         <columns>
             <Column width="12rem"><Text text="VALUEID"/></Column>
+            <Column width="12rem"><Text text="VALUEPAID"/></Column>
             <Column minScreenWidth="Tablet"><Text text="VALUE"/></Column>
             <Column><Text text="ALIAS"/></Column>
             <Column><Text text="IMAGE"/></Column>
@@ -98,6 +99,7 @@
             <ColumnListItem>
                 <cells>
                     <Text text="{values>VALUEID}"/>
+                    <Text text="{values>VALUEPAID}"/>
                     <Text text="{values>VALUE}"/>
                     <Text text="{values>ALIAS}"/>
                     <Text text="{values>IMAGE}"/>
