@@ -39,7 +39,7 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": true,
+        "flexEnabled": false,
         "dependencies": {
             "minUI5Version": "1.132.1",
             "libs": {
@@ -77,68 +77,58 @@
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "controlAggregation": "pages",
-                "controlId": "app",
+                "controlId": "mainContents",
                 "transition": "slide",
                 "type": "View",
                 "viewType": "XML",
-                "path": "com.invertions.sapfiorimodinv.view",
                 "async": true,
                 "viewPath": "com.invertions.sapfiorimodinv.view"
             },
             "routes": [
                 { 
-                    "name": "RouteLogin", 
-                    "pattern": "login", 
-                    "target": "TargetLogin" 
+                    "pattern": "",
+                    "name": "RouteMain",
+                    "target": "TargetMain"
                 },
                 {
-                "name": "RouteMain",
-                "pattern": "main",
-                "target": ["TargetMain"]
+                    "pattern": "salesforecast",
+                    "name": "RouteSalesForecast",
+                    "target": "TargetSalesForecast"
                 },
                 {
-                "name": "RouteSalesForecast",
-                "pattern": "salesforecast",
-                "target": ["TargetSalesForecast"]
+                    "pattern": "users",
+                    "name": "RouteUsersList",
+                    "target": "TargetUsersList"
                 },
                 {
-                "name": "RouteValues",
-                "pattern": "values",
-                "target": ["TargetValues"]
+                    "pattern": "users/{USERID}",
+                    "name": "RouteUserDetails",
+                    "target":"TargetUserDetails"
                 }
             ],
             "targets": {
-                "TargetLogin": {
-                "viewId": "Login",
-                "viewName": "Login",
-                "viewType": "XML",
-                "transition": "slide",
-                "clearControlAggregation": false,
-                "viewlevel": 1
-                },
                 "TargetMain": {
-                "viewId": "main",
-                "viewName": "main",
-                "viewType": "XML",
-                "transition": "slide",
-                "clearControlAggregation": false,
-                "viewlevel": 2
+                    "viewId": "main",
+                    "viewName": "Main",
+                    "viewType": "XML"
                 },
                 "TargetSalesForecast": {
-                "viewId": "salesForecast",
-                "viewName": "salesForecast",
-                "viewType": "XML",
-                "viewlevel": 3,
-                "path": "com.invertions.sapfiorimodinv.view.salesforecast",
-                "viewPath": "com.invertions.sapfiorimodinv.view.salesforecast"
+                    "viewId": "salesForecast",
+                    "viewName": "salesForecast.SalesForecast",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.salesforecast"
                 },
-                "TargetValues": {
-                "viewId": "values",
-                "viewName": "values",
-                "viewType": "XML",
-                "viewlevel": 3,
-                "path": "com.invertions.sapfiorimodinv.view.values",
-                "viewPath": "com.invertions.sapfiorimodinv.view.values"
+                "TargetUsersList": {
+                    "viewId": "UsersList",
+                    "viewName": "UsersList",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.Users"
+                },
+                "TargetUserDetails":{
+                    "viewId": "userDetails",
+                    "viewName": "UserDetails",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.Users"
                 }
             }
         },

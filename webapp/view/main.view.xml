@@ -4,13 +4,14 @@
     xmlns:m="sap.m"
 >  
     <m:Page
-        id="IdPageMain"
-        title="{i18n>title}"
+        id="mainPage"
+        showHeader="false"
+        class="sapUiContentPadding"
     >
         <m:content> 
             <m:Text
                 id="IdText1Main"
-                text="MI PAGINA DE INICIO (PRINCIPAL)"
+                text="Inicio del Modulo de Seguridad"
             />
         </m:content>
     </m:Page>

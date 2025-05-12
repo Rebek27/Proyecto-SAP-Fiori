@@ -1,3 +1,5 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable fiori-custom/sap-no-hardcoded-url */
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/core/routing/History", // for routes in app
@@ -7,14 +9,14 @@ sap.ui.define([
     "sap/base/Log",                // log  
     "sap/ui/util/Storage"          // to access of the storage 
 ], function (Controller, History, UIComponent, JSONModel, jQuery, Log, Storage) {
-    `use strict`;
+    "use strict";
 
     const urlBase = "https://ccnayt.dnsalias.com:9101";
     
     return Controller.extend("com.invertions.sapfiorimodinv.controller.BaseController", {
 
         onInit: function () { }, //this ecxecute only first time
-        getRouter: function () { return UIComponent.getRouterFor(this)},
+        getRouter: function () { return UIComponent.getRouterFor(this);},
         onNavBack: function () { let oHistory, sPreviousHash;
 
             oHistory = History.getInstance();
