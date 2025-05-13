@@ -1,18 +1,37 @@
-
-
 <mvc:View
-    controllerName="com.invertions.sapfiorimodinv.controller.Main"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:m="sap.m"
->
-    <m:Page
-        id="mainnPage"
-        showHeader="false"
-        class="sapUiContentPadding"
-    >
-        <m:Text
-            id="mainnWelcomeText"
-            text="¡Bienvenido al módulo de seguridad!"
-        />
-    </m:Page>
+  controllerName="com.invertions.sapfiorimodinv.controller.Main"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+
+  <VBox class="sapUiSmallMargin">
+    <Title text="Bienvenido!" level="H1" />
+
+    <HBox wrap="Wrap" justifyContent="Start" alignItems="Start" class="sapUiSmallMarginTop">
+
+
+      <GenericTile
+        header="Gestión de Roles"
+        subheader="Administrar accesos"
+        class="sapUiSmallMarginEnd"
+        press=".onGoToRoles">
+        <TileContent>
+          <ImageContent src="sap-icon://employee-approvals" />
+        </TileContent>
+      </GenericTile>
+
+            
+      <GenericTile
+        header="Modulo Inversiones"
+        subheader="Simular estrategia"
+        class="sapUiSmallMarginEnd"
+        press=".onGoToInvertions">
+        <TileContent>
+          <ImageContent src="sap-icon://business-objects-experience" />
+        </TileContent>
+      </GenericTile>
+
+    </HBox>
+  </VBox>
+
 </mvc:View>

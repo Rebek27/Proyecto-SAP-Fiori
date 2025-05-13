@@ -14,6 +14,9 @@ sap.ui.define([
       this.getView().setModel(oSelectedRoleModel, "selectedRole");
 
       this._loadRolesData();
+
+      const oRouter = this.getOwnerComponent().getRouter();
+      oRouter.getRoute("RouteRolesMaster").attachPatternMatched(this._onRouteMatched, this);
     },
 
     _loadRolesData: async function () {
@@ -21,8 +24,15 @@ sap.ui.define([
         const response = await fetch("http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=all");
         const data = await response.json();
 
+        // Filtrar roles activos y no eliminados
+        const filteredRoles = data.value.filter(role =>
+          role.DETAIL_ROW?.ACTIVED === true &&
+          role.DETAIL_ROW?.DELETED === false
+        );
+
+
         // Guardamos todo el array de roles
-        this.getView().getModel("roles").setData({ value: data.value });
+        this.getView().getModel("roles").setData({ value: filteredRoles });
       } catch (error) {
         Log.error("Error al cargar roles", error);
       }
@@ -64,7 +74,17 @@ sap.ui.define([
       }
 
       oBinding.filter(new sap.ui.model.Filter(aFilters, true));
+    },
+
+    _onRouteMatched: function () {
+      const hash = window.location.hash;
+      const bRefresh = hash.includes("refresh=true");
+
+      if (bRefresh) {
+        this._loadRolesData();
+      }
     }
+
 
 
   });

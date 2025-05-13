@@ -103,6 +103,11 @@
                     "pattern": "roles/{roleId}",
                     "name": "RouteRolesDetail",
                     "target": "TargetRolesDetail"
+                },
+                {
+                    "pattern": "invertions",
+                    "name": "RouteInvertions",
+                    "target": "TargetInvertions"
                 }
             ],
             "targets": {
@@ -128,6 +133,12 @@
                     "viewId": "rolesDetail",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security"
+                },
+                "TargetInvertions": {
+                    "viewName": "Invertions",
+                    "viewId": "invertionsPage",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.invertions"
                 }
             }
         },

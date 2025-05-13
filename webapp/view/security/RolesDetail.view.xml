@@ -19,6 +19,11 @@
           icon="sap-icon://edit"
           press=".onEditRole" />
         <m:Button
+          text="Desactivar"
+          icon="sap-icon://delete"
+          press=".onDesactivateRole"
+          type="Attention"/>
+          <m:Button
           text="Eliminar"
           icon="sap-icon://delete"
           type="Reject"

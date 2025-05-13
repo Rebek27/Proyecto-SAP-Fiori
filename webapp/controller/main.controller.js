@@ -1,11 +1,21 @@
 sap.ui.define([
-    "com/invertions/sapfiorimodinv/controller/BaseController"
-], function (BaseController) {
-    "use strict";
+  "sap/ui/core/mvc/Controller"
+], function (Controller) {
+  "use strict";
 
-    return BaseController.extend("com.invertions.sapfiorimodinv.controller.Main", {
-        onInit: function () {
-            // Lógica inicial si se necesita
-        }
-    });
+  return Controller.extend("com.invertions.sapfiorimodinv.controller.Main", {
+
+    onInit: function () {
+      // Inicialización si se necesita
+    },
+
+    onGoToInvertions: function () {
+      this.getOwnerComponent().getRouter().navTo("RouteInvertions");
+    },
+
+    onGoToRoles: function () {
+      this.getOwnerComponent().getRouter().navTo("RouteRolesMaster");
+    }
+
+  });
 });

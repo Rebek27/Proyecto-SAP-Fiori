@@ -1,0 +1,95 @@
+<mvc:View
+  controllerName="com.invertions.sapfiorimodinv.controller.Invertions.Invertions"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page id="invertionsPage" title="Análisis de Estrategia" showHeader="false">
+
+    <HBox width="100%" fitContainer="true" renderType="Bare">
+      
+      <!-- IZQUIERDA: Tabs -->
+      <VBox width="65%" class="sapUiSmallMargin">
+        <IconTabBar id="tabBar" expandable="false">
+          <items>
+            <IconTabFilter key="table" text="Table">
+              <Table id="strategyTable" growing="true" growingScrollToLoad="true">
+                <columns>
+                  <Column><Text text="Date" /></Column>
+                  <Column><Text text="Open" /></Column>
+                  <Column><Text text="High" /></Column>
+                  <Column><Text text="Low" /></Column>
+                  <Column><Text text="Close" /></Column>
+                  <Column><Text text="Volume" /></Column>
+                </columns>
+                <items>
+                  <ColumnListItem>
+                    <cells>
+                      <Text text="{date}" />
+                      <Text text="{open}" />
+                      <Text text="{high}" />
+                      <Text text="{low}" />
+                      <Text text="{close}" />
+                      <Text text="{volume}" />
+                    </cells>
+                  </ColumnListItem>
+                </items>
+              </Table>
+            </IconTabFilter>
+
+            <IconTabFilter key="chart" text="Chart">
+              <!-- Aquí podrías usar sap.viz o una imagen temporal -->
+              <Text text="Gráfico de análisis aparecerá aquí." />
+            </IconTabFilter>
+          </items>
+        </IconTabBar>
+      </VBox>
+
+      <!-- DERECHA: Panel de configuración y resultados -->
+      <VBox width="35%" class="sapUiSmallMarginBegin sapUiSmallMarginTop">
+
+        <!-- Panel de Estrategia -->
+        <Panel headerText="Panel de Análisis de Estrategia" expandable="true" expanded="true">
+          <VBox class="sapUiSmallMargin">
+
+            <Label text="Estrategia:*" />
+            <Select id="strategySelect" selectedKey="ma">
+              <items>
+                <core:Item key="ma" text="Cruce de Medias Móviles" />
+              </items>
+            </Select>
+
+            <Label text="SMA Larga:" />
+            <Input id="smaLarga" value="200" />
+
+            <Label text="SMA Corta:" />
+            <Input id="smaCorta" value="50" />
+
+            <Label text="Fecha Inicio:" />
+            <DatePicker value="2024-11-12" displayFormat="yyyy-MM-dd" />
+
+            <Label text="Fecha Fin:" />
+            <DatePicker value="2025-05-12" displayFormat="yyyy-MM-dd" />
+
+            <Button text="Analizar Estrategia" type="Emphasized" class="sapUiSmallMarginTop" press=".onAnalyze" />
+          </VBox>
+        </Panel>
+
+        <!-- Panel de Resultados -->
+        <Panel headerText="Resultado del Análisis de Estrategia" expandable="true" expanded="true">
+          <VBox class="sapUiSmallMargin">
+            <Label text="Información del Análisis" design="Bold" />
+            <Text text="Periodo Analizado:\n2024-11-12 - 2025-05-12" />
+            <Text text="Parámetros MA (corta/larga):\n50 / 200" />
+            <Text text="Señal Principal:\ndeath_cross" />
+            <Text text="Resultado Neto:" />
+            <ObjectStatus text="4,278.88" state="Success" />
+          </VBox>
+        </Panel>
+
+      </VBox>
+    </HBox>
+
+  </Page>
+</mvc:View>

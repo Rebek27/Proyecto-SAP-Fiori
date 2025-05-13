@@ -6,14 +6,14 @@
   xmlns="sap.m">
 
   <tnt:ToolPage id="mainToolPage" class="sapUiSizeCompact">
-  
-    <!-- Header corregido -->
+
+    <!-- Header -->
     <tnt:header>
       <f:ShellBar
         id="shellBar"
-        title="Módulo de Seguridad"
+        title="Proyecto Final"
         showMenuButton="true"
-         homeIcon="./resources/images/logo_sap.png"
+        homeIcon="./resources/images/logo_sap.png"
         menuButtonPressed=".onToggleSideNav">
         <f:profile>
           <Avatar id="mainAvatar" initials="US" press=".onUserPress" />
@@ -27,12 +27,39 @@
         id="sideNavigation"
         itemSelect=".onItemSelect"
         selectedKey="main">
-        <tnt:NavigationList id="mainNavigationList">
-                <tnt:NavigationListItem id="navItemMain" key="main" text="Home" icon="sap-icon://home"/>
-                 <tnt:NavigationListItem id="navItemSalesForecast" key="salesforecast" text="Pronóstico de Ventas" icon="sap-icon://business-objects-experience"/>
-                <tnt:NavigationListItem id="navItemRoles" key="roles" text="Gestión de Roles" icon="sap-icon://employee-approvals"/>
-        </tnt:NavigationList>
 
+        <tnt:NavigationList id="mainNavigationList">
+          
+          <!-- Home -->
+          <tnt:NavigationListItem
+            id="navItemMain"
+            key="main"
+            text="Home"
+            icon="sap-icon://home" />
+
+          <!-- Módulo de Seguridad con subitems -->
+          <tnt:NavigationListItem
+            id="navItemSecurity"
+            text="Módulo de Seguridad"
+            icon="sap-icon://shield"
+            expanded="false">
+            
+            <!-- Subitem: Gestión de Roles -->
+            <tnt:NavigationListItem
+              id="navItemRoles"
+              key="roles"
+              text="Gestión de Roles"
+              icon="sap-icon://employee-approvals" />
+          </tnt:NavigationListItem>
+
+          <!-- Módulo de Inversiones -->
+          <tnt:NavigationListItem
+            id="navIteminvertions"
+            key="invertions"
+            text="Módulo de Inversiones"
+            icon="sap-icon://business-objects-experience" />
+          
+        </tnt:NavigationList>
 
       </tnt:SideNavigation>
     </tnt:sideContent>

@@ -17,21 +17,16 @@ sap.ui.define([
           oToolPage.setSideExpanded(!oToolPage.getSideExpanded());
       },
 
-      onUserPress: function () {
-          // Aquí puedes abrir un diálogo de perfil, cerrar sesión, etc.
-          sap.m.MessageToast.show("Usuario: Función aún no implementada");
-      },
-
       onItemSelect: function (oEvent) {
           const sKey = oEvent.getParameter("item").getKey();
           const oRouter = this.getOwnerComponent().getRouter();
 
           switch (sKey) {
-              case "salesforecast":
-                  oRouter.navTo("RouteSalesForecast");
-                  break;
               case "roles":
                   oRouter.navTo("RouteRolesMaster");
+                  break;
+            case "invertions":
+                  oRouter.navTo("RouteInvertions");
                   break;
               default:
                   oRouter.navTo("RouteMain");
