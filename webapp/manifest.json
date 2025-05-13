@@ -48,6 +48,7 @@
                 "sap.tnt": {},
                 "sap.f": {},
                 "sap.ui.table": {}
+
             }
         },
         "contentDensities": {
@@ -106,6 +107,11 @@
                 },
                 {
                     "pattern": "invertions",
+                    "name": "RouteInvertionsCompanies",
+                    "target": "TargetInvertionsCompanies"
+                },
+                {
+                    "pattern": "invertions/{symbol}",
                     "name": "RouteInvertions",
                     "target": "TargetInvertions"
                 }
@@ -133,6 +139,12 @@
                     "viewId": "rolesDetail",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security"
+                },
+                "TargetInvertionsCompanies": {
+                    "viewName": "Companies",
+                    "viewId": "companiesPage",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.invertions"
                 },
                 "TargetInvertions": {
                     "viewName": "Invertions",

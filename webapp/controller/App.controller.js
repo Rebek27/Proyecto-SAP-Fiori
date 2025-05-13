@@ -26,7 +26,7 @@ sap.ui.define([
                   oRouter.navTo("RouteRolesMaster");
                   break;
             case "invertions":
-                  oRouter.navTo("RouteInvertions");
+                  oRouter.navTo("RouteInvertionsCompanies");
                   break;
               default:
                   oRouter.navTo("RouteMain");
