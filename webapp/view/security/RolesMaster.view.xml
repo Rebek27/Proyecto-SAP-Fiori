@@ -6,46 +6,11 @@
   xmlns:layout="sap.ui.layout.form">
 
   <m:Page id="rolesPage" title="Roles Disponibles" class="sapUiContentPadding">
-
-    <!-- 🔹 Sección: Formulario para agregar nuevo rol -->
-    <layout:SimpleForm
-      id="formAddRole"
-      editable="true"
-      layout="ResponsiveGridLayout"
-      labelSpanL="4"
-      labelSpanM="4"
-      emptySpanL="1"
-      columnsL="2"
-      columnsM="2"
-      class="sapUiSmallMarginBottom sapUiContentPadding">
-
-      <layout:title>
-        <core:Title text=" Agregar Nuevo Rol" />
-      </layout:title>
-
-      <m:Label text="ID del Rol" />
-      <m:Input value="{newRoleModel>/ROLEID}" placeholder="Ej. IdAdmin" />
-
-      <m:Label text="Nombre del Rol" />
-      <m:Input value="{newRoleModel>/ROLENAME}" placeholder="Ej. Administrador" />
-
-      <m:Label text="Descripción" />
-      <m:Input value="{newRoleModel>/DESCRIPTION}" placeholder="Ej. Encargado de seguridad..." />
-
-      <m:Toolbar>
-        <m:ToolbarSpacer />
-        <m:Button
-          text="Guardar Rol"
-          icon="sap-icon://save"
-          type="Emphasized"
-          press=".onSaveRole" />
-      </m:Toolbar>
-
-    </layout:SimpleForm>
-
     <!-- 🔹 Sección: Búsqueda -->
     <m:Toolbar class="sapUiTinyMarginBottom">
-      <m:Title text="Lista de Roles" level="H2" />
+      <m:Title text="Roles Disponibles" level="H2" />
+        <m:ToolbarSpacer />
+        <m:Button text="Agregar Rol" icon="sap-icon://add" press=".onOpenDialog" />
       <m:ToolbarSpacer />
       <m:SearchField
         id="searchRoleName"
@@ -65,6 +30,89 @@
         description="{roles>DESCRIPTION}"
         type="Active" />
     </m:List>
+
+
+      <m:Dialog
+  id="dialogAddRole"
+  title="Agregar Nuevo Rol"
+  draggable="true"
+  resizable="true"
+  contentWidth="600px"
+  class="sapUiContentPadding"
+  contentHeight="auto"
+  afterClose=".onDialogClose">
+
+  <layout:SimpleForm
+    editable="true"
+    layout="ResponsiveGridLayout"
+    labelSpanL="4"
+    labelSpanM="4"
+    emptySpanL="1"
+    columnsL="2"
+    columnsM="2">
+
+    <m:Label text="ID del Rol" />
+    <m:Input value="{newRoleModel>/ROLEID}" placeholder="Ej. IdAdmin" />
+
+    <m:Label text="Nombre del Rol" />
+    <m:Input value="{newRoleModel>/ROLENAME}" placeholder="Ej. Administrador" />
+
+    <m:Label text="Descripción" />
+    <m:Input value="{newRoleModel>/DESCRIPTION}" placeholder="Ej. Encargado de seguridad..." />
+
+    <!-- Proceso y privilegios -->
+    <core:Title text="Privilegios por Proceso" />
+            <!-- ComboBox: Proceso -->
+<m:Label text="Proceso" />
+<m:ComboBox
+  items="{processCatalogModel>/values}"
+  selectedKey="{newRoleModel>/NEW_PROCESSID}"
+  placeholder="Selecciona un proceso">
+  <core:Item key="{processCatalogModel>VALUEID}" text="{processCatalogModel>VALUE} -{processCatalogModel>VALUEPAID}" />
+</m:ComboBox>
+
+<!-- MultiComboBox: Privilegios -->
+<m:Label text="Privilegios" />
+<m:MultiComboBox
+  items="{privilegeCatalogModel>/values}"
+  selectedKeys="{newRoleModel>/NEW_PRIVILEGES}"
+  placeholder="Selecciona privilegios">
+  <core:Item
+    key="{privilegeCatalogModel>VALUEID}"
+    text="{privilegeCatalogModel>VALUE}" />
+</m:MultiComboBox>
+
+
+
+    <m:Button
+      text="Agregar Privilegio"
+      icon="sap-icon://add"
+      press=".onAddPrivilege" />
+
+    <m:Table
+      items="{newRoleModel>/PRIVILEGES}"
+      growing="true"
+      growingThreshold="5">
+      <m:columns>
+        <m:Column><m:Text text="Proceso" /></m:Column>
+        <m:Column><m:Text text="Privilegios" /></m:Column>
+      </m:columns>
+      <m:items>
+        <m:ColumnListItem>
+          <m:cells>
+            <m:Text text="{newRoleModel>PROCESSID}" />
+            <m:Text text="{= ${newRoleModel>PRIVILEGEID}.join(', ')}" />
+          </m:cells>
+        </m:ColumnListItem>
+      </m:items>
+    </m:Table>
+  </layout:SimpleForm>
+
+    <m:buttons>
+    <m:Button text="Guardar" type="Emphasized" press=".onSaveRole" />
+    <m:Button text="Cancelar" press=".onDialogClose" />
+  </m:buttons>
+</m:Dialog>
 
   </m:Page>
 </mvc:View>

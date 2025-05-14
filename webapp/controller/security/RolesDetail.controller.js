@@ -28,7 +28,8 @@ sap.ui.define([
         this.getView().bindElement({ path: "/", model: "selectedRole" });
 
         try {
-          const response = await fetch(`http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=users&roleid=${sRoleId}`);
+          const response = await fetch(`http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=users&roleid=${sRoleId}`,
+         {method: "POST"});
           const result = await response.json();
 
           if (Array.isArray(result.value) && result.value.length > 0) {
@@ -108,7 +109,7 @@ sap.ui.define([
         actions: [MessageBox.Action.YES, MessageBox.Action.NO],
         emphasizedAction: MessageBox.Action.YES,
         confirmAction: MessageBox.Action.YES,
-        method: "GET",
+        method: "POST",
         url: "http://localhost:4004/api/sec/rolesCRUD?procedure=delete&type=logic&roleid=",
         successMessage: "Rol desactivado correctamente."
       });
@@ -122,7 +123,7 @@ sap.ui.define([
         actions: [MessageBox.Action.DELETE, MessageBox.Action.CANCEL],
         emphasizedAction: MessageBox.Action.DELETE,
         confirmAction: MessageBox.Action.DELETE,
-        method: "GET",
+        method: "POST",
         url: "http://localhost:4004/api/sec/rolesCRUD?procedure=delete&type=hard&roleid=",
         successMessage: "Rol eliminado permanentemente."
       });
