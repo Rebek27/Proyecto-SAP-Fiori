@@ -31,10 +31,10 @@ sap.ui.define(
 
           // Cargar datos desde el endpoint
           $.ajax({
-            url: "http://localhost:4004/api/sec/catalogsR?procedure=get&type=all",
+            url: "http://localhost:4004/api/sec/getall",
             method: "GET",
             success: function (data) {
-              let flattenedData = [];
+              /* let flattenedData = [];
 
               data.value.forEach(function (catalog) {
                 catalog.VALUES.forEach(function (value) {
@@ -50,9 +50,9 @@ sap.ui.define(
                     VALUESPAID: value.VALUESPAID,
                   });
                 });
-              });
+              }); */
 
-              oModel.setData({ value: flattenedData });
+              oModel.setData({ value: data.value });
               that.getView().setModel(oModel);
             },
           });
@@ -123,14 +123,14 @@ sap.ui.define(
           var oDetailPanel = this.byId("detailPanel");
           var oLayoutData = oDetailPanel.getLayoutData();
           if (oLayoutData) {
-            oLayoutData.setSize("50%"); // O el porcentaje/píxeles que prefieras
+            oLayoutData.setSize("100%"); // O el porcentaje/píxeles que prefieras
           }
 
           // Opcional: reducir el panel izquierdo
           var oLeftPanel = oSplitter.getContentAreas()[0];
           var oLeftLayoutData = oLeftPanel.getLayoutData();
           if (oLeftLayoutData) {
-            oLeftLayoutData.setSize("50%");
+            oLeftLayoutData.setSize("0%");
           }
         },
         onCloseDialog: function () {
