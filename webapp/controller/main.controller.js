@@ -10,7 +10,7 @@ sap.ui.define([
     },
 
     onGoToInvertions: function () {
-      this.getOwnerComponent().getRouter().navTo("RouteInvertions");
+      this.getOwnerComponent().getRouter().navTo("RouteInvertionsCompanies");
     },
 
     onGoToRoles: function () {

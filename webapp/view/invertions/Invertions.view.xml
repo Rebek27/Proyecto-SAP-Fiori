@@ -109,11 +109,12 @@
             <Input id="cantidadnput" placeholder="Ej. 100 usd"  class="sapUiSmallMarginBottom"/>
 
             <Label text="Estrategia:" />
-            <ComboBox id="strategyCombo" selectedKey="ma" change=".onStrategyChange" class="sapUiSmallMarginBottom">
-              <items>
-                <core:Item key="ma" text="Cruce de Medias Móviles" />
-                <core:Item key="macd" text="MACD" />
-              </items>
+            <ComboBox id="strategyCombo"  change=".onStrategyChange" class="sapUiSmallMarginBottom"   items="{/value}">
+              <!--items-->
+                <!--core:Item key="ma" text="Cruce de Medias Móviles" /-->
+                <!--core:Item key="macd" text="MACD" /-->
+              <!--/items-->
+                 <core:Item key="{ID}" text="{NAME}" />
             </ComboBox>
 
 
@@ -124,7 +125,7 @@
             <DatePicker id="endDate" value="2025-05-12" displayFormat="yyyy-MM-dd" class="sapUiSmallMarginBottom" />
 
               <Panel headerText="Indicadores a mostrar" expandable="true" expanded="true">
-                <VBox id="indicatorParamsVBox" class="sapUiSmallMargin" />
+                <VBox id="indicatorParamsVBox" class="sapUiSmallMargin"    selectedKey="{NAME}"/>
               </Panel>
 
 
