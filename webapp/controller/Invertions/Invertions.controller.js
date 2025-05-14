@@ -60,7 +60,7 @@ sap.ui.define([
       var oModel = new sap.ui.model.json.JSONModel();
 
       $.ajax({
-        url: "http://localhost:4004/api/sec/strategy?procedure=get",
+        url: "http://localhost:4004/api/inv/strategy?procedure=get",
         method: "GET",
         success: function (data) {
           oModel.setData(data);

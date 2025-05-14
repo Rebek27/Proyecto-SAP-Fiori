@@ -25,6 +25,8 @@ sap.ui.define([
               case "roles":
                   oRouter.navTo("RouteRolesMaster");
                   break;
+              case "users":
+                 oRouter.navTo("RouteUsersList");
             case "invertions":
                   oRouter.navTo("RouteInvertionsCompanies");
                   break;

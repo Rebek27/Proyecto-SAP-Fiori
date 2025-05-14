@@ -105,6 +105,16 @@
                     "name": "RouteRolesDetail",
                     "target": "TargetRolesDetail"
                 },
+                 {
+                    "pattern": "users",
+                    "name": "RouteUsersList",
+                    "target": "TargetUsersList"
+                },
+                {
+                    "pattern": "users/{USERID}",
+                    "name": "RouteUserDetails",
+                    "target":"TargetUserDetails"
+                },
                 {
                     "pattern": "invertions",
                     "name": "RouteInvertionsCompanies",
@@ -137,6 +147,18 @@
                 "TargetRolesDetail": {
                     "viewName": "RolesDetail",
                     "viewId": "rolesDetail",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.security"
+                },
+                "TargetUsersList": {
+                    "viewId": "UsersList",
+                    "viewName": "UsersList",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.security"
+                },
+                "TargetUserDetails":{
+                    "viewId": "UserDetails",
+                    "viewName": "UserDetails",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security"
                 },
