@@ -18,6 +18,9 @@
         columnsM="1"
     >
       <f:content>
+        <m:Label text="Nombre de Usuario(USERID)" />
+        <m:Input id="inputUserName" value="{UserDialogModel>/USERID}" />
+
         <m:Label text="Primer Nombre" />
         <m:Input id="inputFirstName" value="{UserDialogModel>/FIRSTNAME}" />
 

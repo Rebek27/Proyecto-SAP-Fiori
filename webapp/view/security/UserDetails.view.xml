@@ -33,6 +33,7 @@
                         <m:Button
                             text="Eliminar"
                             icon="sap-icon://delete"
+                            type="Reject"
                             press=".onDeleteUser"
                         />
                     </m:Toolbar>
@@ -147,18 +148,95 @@
                                 id="pais1"
                                 text="{selectedUser>COUNTRY}"
                             />
-                            <m:Label
+                            <!-- <m:Label
                                 id="Roles"
                                 text="Roles del usuario"
                             />
                             <m:Text
                                 id="roles"
                                 text="{selectedUser>ROLES}"
-                            />
+                            /> -->
+                            <m:List id="UserRolesList" headerText="Roles del usuario" items="{selectedUser>/ROLES}">
+                                <m:ObjectListItem title="{ROLENAME}" type="Inactive">
+                                    <m:attributes>
+                                        <m:ObjectAttribute text="{ROLEID}" />
+                                    </m:attributes>
+                                </m:ObjectListItem>
+                            </m:List>
                         </f:content>
                     </f:SimpleForm>
                 </m:content>
             </m:Panel>
         </m:content>
     </m:Page>
+
+    <m:Dialog id="UpdateUserDialog" title="Editar Usuario" stretch="false">
+    <f:SimpleForm 
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanL="3"
+        labelSpanM="3"
+        emptySpanL="4"
+        emptySpanM="4"
+        columnsL="1"
+        columnsM="1"
+    >
+      <f:content>
+        <m:Label text="Nombre de Usuario(USERID)" />
+        <m:Input  value="{selectedUser>/USERID}" />
+
+        <m:Label text="Primer Nombre" />
+        <m:Input  value="{selectedUser>/FIRSTNAME}" />
+
+        <m:Label text="Apellidos" />
+        <m:Input  value="{selectedUser>/LASTNAME}" />
+
+        <m:Label text="Alias" />
+        <m:Input  value="{selectedUser>/ALIAS}" />
+
+        <m:Label text="Correo" />
+        <m:Input  value="{selectedUser>/EMAIL}" type="Email" />
+
+        <m:Label text="Fecha de Nacimiento" />
+        <m:DatePicker 
+            value="{selectedUser>/BIRTHDAYDATE}" 
+            displayFormat="yyyy-MM-dd" 
+        />
+
+        <m:Label text="Departamento" />
+        <m:Input  value="{selectedUser>/DEPARTMENT}" />
+
+        <m:Label text="Función" />
+        <m:Input value="{selectedUser>/FUNCTION}" />
+
+        <m:Label text="Calle" />
+        <m:Input  value="{selectedUser>/STREET}" />
+
+        <m:Label text="Ciudad" />
+        <m:Input  value="{selectedUser>/CITY}" />
+
+        <m:Label text="Estado" />
+        <m:Input  value="{selectedUser>/STATE}" />
+
+        <m:Label text="Código Postal" />
+        <m:Input  value="{selectedUser>/POSTALCODE}" />
+
+        <m:Label text="Teléfono" />
+        <m:Input value="{selectedUser>/PHONENUMBER}" type="Tel" />
+
+        <m:Label text="País" />
+        <m:Input  value="{selectedUser>/COUNTRY}" />
+
+        <m:Label text="Roles del Usuario" />
+        <m:Input value="{selectedUser>/ROLES}" />
+      </f:content>
+    </f:SimpleForm>
+
+    <m:beginButton>
+      <m:Button text="Guardar" type="Emphasized" press=".onUpdateUser"/>
+    </m:beginButton>
+    <m:endButton>
+      <m:Button text="Cancelar" press=".onCancelUser"/>
+    </m:endButton>
+  </m:Dialog>
 </mvc:View>

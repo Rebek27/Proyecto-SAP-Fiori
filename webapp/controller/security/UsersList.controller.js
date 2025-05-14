@@ -25,7 +25,12 @@ sap.ui.define([
 
         _loadUsersData: async function(){
             try {
-                const response = await fetch("http://localhost:4004/api/sec/usersCRUD?procedure=getall");
+                const response = await fetch("http://localhost:4004/api/sec/usersCRUD?procedure=getall",{
+                    method:"POST",
+                    headers: {
+                        "Content-Type": "application/json" // Indica que se envían datos en JSON
+                    }
+                });
                 const data = await response.json();
                 //console.log("ESTO ES LA RESPUESTA:",data);
                 // Guardamos todo el array de usuarios
@@ -59,13 +64,15 @@ sap.ui.define([
             if (!this._oUserDialog) {
                 Fragment.load({
                     id: this.getView().getId(),
-                    name: "com.invertions.sapfiorimodinv.view.Users.UserDialog",
+                    name: "com.invertions.sapfiorimodinv.view.security.UserDialog",
                     controller: this
                 }).then( (oDialog) => {
                     this.getView().addDependent(oDialog);
                     this._oUserDialog = oDialog;
                     // Crea y asigna un modelo local para el diálogo
                     var oDialogModel = new JSONModel({
+                        USERID:"",
+                        USERNAME:"",
                         FIRSTNAME: "",
                         LASTNAME: "",
                         ALIAS: "",
@@ -87,23 +94,7 @@ sap.ui.define([
                 });
             } else {
                 // Si el diálogo ya existe, reinicia el modelo
-                var oModel = this._oUserDialog.getModel("UserDialogModel");
-                // oModel.setData({
-                // FIRSTNAME: "",
-                // LASTNAME: "",
-                // ALIAS: "",
-                // EMAIL: "",
-                // BIRTHDAYDATE: "",
-                // DEPARTMENT: "",
-                // FUNCTION: "",
-                // STREET: "",
-                // CITY: "",
-                // STATE: "",
-                // POSTALCODE: "",
-                // PHONENUMBER: "",
-                // COUNTRY: "",
-                // ROLES: ""
-                // });
+                //var oModel = this._oUserDialog.getModel("UserDialogModel");
                 this._oUserDialog.open();
             }
         },
@@ -113,7 +104,7 @@ sap.ui.define([
                 this._oUserDialog.close();
             }
         },
-        onSaveUser: function() {
+        onSaveUser: async function() {
             var oDialogModel = this._oUserDialog.getModel("UserDialogModel");
             var oNewUser = oDialogModel.getData();
             console.log("Datos guardados en el modelo local:",oNewUser);
@@ -122,37 +113,35 @@ sap.ui.define([
                 MessageToast.show("Por favor, complete los campos obligatorios.");
                 return;
             }
+            oNewUser.USERNAME = oNewUser.FIRSTNAME + " " + oNewUser.LASTNAME;
 
-            // Obtener el modelo principal de usuarios (por ejemplo, "users")
-            var oMainModel = this.getView().getModel("users");
-            var aUsers = oMainModel.getProperty("/value") || [];
-            aUsers.push(oNewUser);
-            oMainModel.setProperty("/value", aUsers);
+            // Enviar datos a la API usando fetch con configuración adecuada:
+            try {
+                // Enviar la solicitud POST incluyendo
+                const response = await fetch("http://localhost:4004/api/sec/usersCRUD?procedure=post", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(oNewUser)
+                });
+                console.log(response);
+                // Puedes verificar el estado de la respuesta o procesar la respuesta:
+                if (response.ok) {
+                    MessageToast.show("El usuario se ha guardado correctamente.");
+                } else {
+                    MessageToast.show("Error al guardar el usuario en la base de datos.");
+                }
 
-
-            // Cerramos el diálogo y, opcionalmente, mostramos un mensaje de éxito.
+                
+            } catch (error) {
+                console.error(error);
+                MessageToast.show("Error de conexión a la API.");
+            }
+            
             this._oUserDialog.close();
             MessageToast.show("El usuario se ha guardado correctamente.");
-        }
-
-        ,_resetUserDialog: function() {
-            // Asumiendo que tus controles de entrada están dentro del diálogo
-            // Puedes obtenerlos por ID y poner su valor en vacío.
-            // Por ejemplo:
-            this.byId("inputFirstName").setValue("");
-            this.byId("inputLastName").setValue("");
-            this.byId("inputAlias").setValue("");
-            this.byId("inputEmail").setValue("");
-            this.byId("inputBirthday").setValue("");
-            this.byId("inputDepartment").setValue("");
-            this.byId("inputFunction").setValue("");
-            this.byId("inputStreet").setValue("");
-            this.byId("inputCity").setValue("");
-            this.byId("inputState").setValue("");
-            this.byId("inputPostalCode").setValue("");
-            this.byId("inputPhoneNumber").setValue("");
-            this.byId("inputCountry").setValue("");
-            this.byId("inputRoles").setValue("");
+            //this._loadUsersData();
         }
     });
 });
