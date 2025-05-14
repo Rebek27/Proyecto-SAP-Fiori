@@ -20,7 +20,7 @@ sap.ui.define(
     "use strict";
 
     return Controller.extend(
-      "com.invertions.sapfiorimodinv.controller.Catalogs",
+      "com.invertions.sapfiorimodinv.controller.catalogs.Catalogs",
       {
         onInit: function () {
           var oModel = new JSONModel();

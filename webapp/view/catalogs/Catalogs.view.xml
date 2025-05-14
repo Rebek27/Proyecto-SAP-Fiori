@@ -1,6 +1,6 @@
 <mvc:View
     xmlns:form="sap.ui.layout.form"
-    controllerName="com.invertions.sapfiorimodinv.controller.Catalogs"
+    controllerName="com.invertions.sapfiorimodinv.controller.catalogs.Catalogs"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"

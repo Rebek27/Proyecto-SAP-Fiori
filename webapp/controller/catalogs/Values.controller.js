@@ -9,7 +9,7 @@ sap.ui.define([
 ], function(BaseController, JSONModel, MessageBox, MessageToast, Filter, FilterOperator, $) {
     "use strict";
 
-    return BaseController.extend("com.invertions.sapfiorimodinv.controller.Values", {
+    return BaseController.extend("com.invertions.sapfiorimodinv.controller.catalogs.Values", {
         // Método de inicialización del controlador
         onInit: function() {
             // Modelo para los valores
