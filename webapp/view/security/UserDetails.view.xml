@@ -148,23 +148,65 @@
                                 id="pais1"
                                 text="{selectedUser>COUNTRY}"
                             />
-                            <!-- <m:Label
-                                id="Roles"
-                                text="Roles del usuario"
-                            />
-                            <m:Text
-                                id="roles"
-                                text="{selectedUser>ROLES}"
-                            /> -->
-                            <m:List id="UserRolesList" headerText="Roles del usuario" items="{selectedUser>/ROLES}">
+                            <!-- <m:List id="UserRolesList" headerText="Roles del usuario" items="{selectedUser>/ROLES}">
                                 <m:ObjectListItem title="{ROLENAME}" type="Inactive">
                                     <m:attributes>
                                         <m:ObjectAttribute text="{ROLEID}" />
                                     </m:attributes>
                                 </m:ObjectListItem>
-                            </m:List>
+                            </m:List> -->
                         </f:content>
                     </f:SimpleForm>
+                    <m:Panel 
+                                headerText="Roles del usuario"
+                                expandable="false"
+                                class="sapUiMediumMarginTop"
+                            >
+                            <m:Table 
+                                items="{selectedUser>ROLES}"
+                                inset="false"
+                                width="100%"
+                                growing="true"
+                                noDataText="Este usuario no tiene roles asignados"
+                            >
+                                <m:columns>
+                                    <m:Column>
+                                        <m:Text text="Rol"/>
+                                    </m:Column>                         
+                                    <m:Column>
+                                        <m:Text text="Proceso"/>
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Aplicación" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Vista" />
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:Text text="Privilegios" />
+                                    </m:Column>
+                                </m:columns>
+
+                                <m:items>
+                                    <m:ColumnListItem >
+                                        <m:cells>
+                                            <m:Text text="{selectedUser>PROCESSNAME}"/>
+                                            <m:Text text="{selectedUser>APPLICATIONNAME}"/>
+                                            <m:Text text="{selectedUser>VIEWNAME}"/>
+                                            <m:HBox wrap="Wrap">
+                                                <m:FlexBox wrap="Wrap" items="{selectedUser>PRIVILEGES}">
+                                                    <m:items>
+                                                        <m:ObjectStatus 
+                                                        text="{selectedUSer>PRIVILEGENAME}"
+                                                        class="sapUiTinyMarginEnd sapUiTinyMarginTop"/>
+                                                    </m:items>
+                                                </m:FlexBox>
+                                            </m:HBox>
+                                        </m:cells>
+                                    </m:ColumnListItem>
+                                </m:items>
+                            </m:Table>
+                            </m:Panel>
                 </m:content>
             </m:Panel>
         </m:content>
