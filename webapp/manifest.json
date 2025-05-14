@@ -124,7 +124,13 @@
                     "pattern": "invertions/{symbol}",
                     "name": "RouteInvertions",
                     "target": "TargetInvertions"
-                }
+                },
+                {
+                    "pattern": "catalogs",
+                    "name": "RouteCatalogs",
+                    "target": "TargetCatalogs"
+                  }
+
             ],
             "targets": {
                 "TargetMain": {
@@ -173,6 +179,12 @@
                     "viewId": "invertionsPage",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.invertions"
+                },
+                "TargetCatalogs": {
+                    "viewName": "Catalogs",
+                    "viewId": "catalogs",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.catalogs"
                 }
             }
         },

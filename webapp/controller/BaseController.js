@@ -27,5 +27,13 @@ sap.ui.define([
             }
         
         },
+        _getOrCreateModel: function(sName, oData) {
+            var oModel = this.getView().getModel(sName);
+            if (!oModel) {
+                oModel = new JSONModel(oData || {});
+                this.getView().setModel(oModel, sName);
+            }
+            return oModel;
+        }
     });
 });

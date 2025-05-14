@@ -1,0 +1,154 @@
+<mvc:View
+    xmlns:form="sap.ui.layout.form"
+    controllerName="com.invertions.sapfiorimodinv.controller.Catalogs"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:cc="com.invertions.sapfiorimodinv.controller"
+>
+    <Page title="Catálogos">
+        <content>
+            <VBox>
+                <!-- Splitter control para dividir la pantalla en dos -->
+                <cc:CustomSplitter
+                    id="mainSplitter"
+                    orientation="Horizontal"
+                >
+                    <!-- Panel izquierdo: Tabla de catálogos -->
+                    <Panel>
+                        <layoutData>
+                            <layout:SplitterLayoutData size="100%" />
+                        </layoutData>
+
+                        <!-- 🔹 Barra de herramientas -->
+                        <OverflowToolbar>
+                            <Title
+                                text="Valores"
+                                level="H2"
+                            />
+                            <ToolbarSpacer />
+                            <SearchField
+                                width="20rem"
+                                id="labelFilter"
+                                placeholder="Buscar valores..."
+                                liveChange="onFilterChange"
+                            />
+                            <Button
+                                text="Agregar"
+                                icon="sap-icon://add"
+                                type="Emphasized"
+                                tooltip="Agregar elemento"
+                                press=".StatusValueAccept"
+                                enabled="{= !!${values>/selectedValueIn}}"
+                            />
+
+                            <Button
+                                text="Editar"
+                                icon="sap-icon://edit"
+                                press=".onEditValue"
+                                enabled="{= !!${values>/selectedValueIn}}"
+                            />
+                            <Button
+                                text="Activar"
+                                icon="sap-icon://accept"
+                                press=".StatusValueAccept"
+                                enabled="{= !!${values>/selectedValueIn}}"
+                            />
+                            <Button
+                                text="Desactivar"
+                                icon="sap-icon://decline"
+                                type="Reject"
+                                press=".StatusValueDecline"
+                                enabled="{= !!${values>/selectedValueIn}}"
+                            />
+                            <Button
+                                text="Eliminar"
+                                icon="sap-icon://delete"
+                                type="Reject"
+                                press=".onDeleteValue"
+                                enabled="{= !!${values>/selectedValueIn}}"
+                            />
+                        </OverflowToolbar>
+                        <Table
+                            id="catalogTable"
+                            items="{
+                                path: '/value',
+                                sorter: { path: 'LABELID' }
+                            }"
+                            itemPress="onItemPress"
+                            mode="SingleSelectMaster"
+                            growing="true"
+                        >
+                            <columns>
+                                <Column>
+                                    <Text text="LABELID" />
+                                </Column>
+                                <Column>
+                                    <Text text="LABEL" />
+                                </Column>
+                                <Column>
+                                    <Text text="INDEX" />
+                                </Column>
+                                <Column>
+                                    <Text text="COLLECTION" />
+                                </Column>
+                                <Column>
+                                    <Text text="SECTION" />
+                                </Column>
+                                <Column>
+                                    <Text text="SEQUENCE" />
+                                </Column>
+                                <Column>
+                                    <Text text="IMAGE" />
+                                </Column>
+                                <Column>
+                                    <Text text="DESCRIPTION" />
+                                </Column>
+                                <Column>
+                                    <Text text="ESTADO" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Active">
+                                    <cells>
+                                        <Text text="{LABELID}" />
+                                        <Text text="{LABEL}" />
+                                        <Text text="{INDEX}" />
+                                        <Text text="{COLLECTION}" />
+                                        <Text text="{SECTION}" />
+                                        <Text text="{SEQUENCE}" />
+                                        <Text text="{IMAGE}" />
+                                        <Text text="{DESCRIPTION}" />
+                                        <Text
+                                            text="{= ${DETAIL_ROW/ACTIVED} ? 'ACTIVO' : 'INACTIVO'}"
+                                            class="{= ${DETAIL_ROW/ACTIVED} ? 'sapUiGreenText' : 'sapUiRedText'}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </Panel>
+                    <!-- Panel derecho: View valores -->
+                    <Panel id="detailPanel">
+                        <layoutData>
+                            <layout:SplitterLayoutData size="0px" />
+                        </layoutData>
+                        <Button
+                            icon="sap-icon://nav-back"
+                            type="Default"
+                            tooltip="Volver"
+                            press="onCloseDetailPanel"
+                        />
+
+                        <mvc:XMLView
+                            id="XMLViewValues"
+                            viewName="com.invertions.sapfiorimodinv.view.catalogs.Values"
+                        />
+                    </Panel>
+                </cc:CustomSplitter>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

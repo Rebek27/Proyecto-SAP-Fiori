@@ -1,0 +1,153 @@
+<mvc:View
+    controllerName="com.invertions.sapfiorimodinv.controller.Values"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout.form"
+    class="sapUiSizeCompact"
+>
+    <!-- 🔹 Formulario CRUD -->
+    <layout:SimpleForm
+        id="formValues"
+        editable="true"
+        layout="ResponsiveGridLayout"
+        title="Agregar/Editar Valor"
+    >
+        <Label
+            text="LABELID"
+            required="true"
+        />
+        <Text text="{values>/selectedValue/LABELID}" />
+
+        <Label
+            text="VALUEID"
+            required="true"
+        />
+        <Input
+            value="{newValueModel>/VALUEID}"
+            id="InputValueID"
+        />
+
+        <Label
+            text="VALUE"
+            required="true"
+        />
+        <Input value="{newValueModel>/VALUE}" />
+
+        <Label text="VALUEPAID" />
+        <Input value="{newValueModel>/VALUEPAID}" />
+
+        <Label text="ALIAS" />
+        <Input value="{newValueModel>/ALIAS}" />
+
+        <Label text="IMAGE" />
+        <Input value="{newValueModel>/IMAGE}" />
+
+        <Label text="DESCRIPTION" />
+        <TextArea
+            value="{newValueModel>/DESCRIPTION}"
+            rows="3"
+        />
+
+        <Toolbar>
+            <ToolbarSpacer />
+            <Button
+                text="Guardar"
+                type="Emphasized"
+                icon="sap-icon://save"
+                press=".onSaveValues"
+                enabled="{= !!${values>/selectedValue}}"
+            />
+        </Toolbar>
+    </layout:SimpleForm>
+
+    <!-- 🔹 Barra de herramientas -->
+    <OverflowToolbar>
+        <Title
+            text="Valores"
+            level="H2"
+        />
+        <ToolbarSpacer />
+        <SearchField
+            width="20rem"
+            id="ValueSearchField"
+            placeholder="Buscar valores..."
+            liveChange="onFilterChange"
+        />
+        <Button
+            text="Editar"
+            icon="sap-icon://edit"
+            press=".onEditValue"
+            enabled="{= !!${values>/selectedValueIn}}"
+        />
+        <Button
+            text="Activar"
+            icon="sap-icon://accept"
+            press=".StatusValueAccept"
+            enabled="{= !!${values>/selectedValueIn}}"
+        />
+        <Button
+            text="Desactivar"
+            icon="sap-icon://decline"
+            type="Reject"
+            press=".StatusValueDecline"
+            enabled="{= !!${values>/selectedValueIn}}"
+        />
+        <Button
+            text="Eliminar"
+            icon="sap-icon://delete"
+            type="Reject"
+            press=".onDeleteValue"
+            enabled="{= !!${values>/selectedValueIn}}"
+        />
+    </OverflowToolbar>
+
+    <!-- 🔹 Tabla de valores -->
+    <Table
+        id="valuesTable"
+        items="{path: 'values>/values'}"
+        mode="SingleSelectMaster"
+        selectionChange="onItemSelect"
+    >
+        <columns>
+            <Column width="12rem">
+                <Text text="VALUEID" />
+            </Column>
+            <Column width="12rem">
+                <Text text="VALUEPAID" />
+            </Column>
+            <Column minScreenWidth="Tablet">
+                <Text text="VALUE" />
+            </Column>
+            <Column>
+                <Text text="ALIAS" />
+            </Column>
+            <Column>
+                <Text text="IMAGE" />
+            </Column>
+            <Column>
+                <Text text="DESCRIPTION" />
+            </Column>
+            <Column>
+                <Text text="ESTADO" />
+            </Column>
+        </columns>
+
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{values>VALUEID}" />
+                    <Text text="{values>VALUEPAID}" />
+                    <Text text="{values>VALUE}" />
+                    <Text text="{values>ALIAS}" />
+                    <Text text="{values>IMAGE}" />
+                    <Text text="{values>DESCRIPTION}" />
+                    <Text
+                        text="{= ${values>DETAIL_ROW/ACTIVED} ? 'ACTIVO' : 'INACTIVO'}"
+                        class="{= ${values>DETAIL_ROW/ACTIVED} ? 'sapUiGreenText' : 'sapUiRedText'}"
+                    />
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+</mvc:View>
