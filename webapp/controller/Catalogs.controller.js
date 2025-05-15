@@ -2,21 +2,11 @@ sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
     "sap/m/MessageToast", // Ensure MessageToast is imported
     "jquery",
   ],
-  function (
-    Controller,
-    JSONModel,
-    Filter,
-    FilterOperator,
-    Fragment,
-    MessageToast,
-    $
-  ) {
+  function (Controller, JSONModel, Fragment, MessageToast, $) {
     "use strict";
 
     return Controller.extend(
@@ -26,59 +16,236 @@ sap.ui.define(
           var oModel = new JSONModel();
           var that = this;
 
-          // Declare _oDialog as a property of the controller
           this._oDialog = null;
 
-          // Cargar datos desde el endpoint
           $.ajax({
             url: "http://localhost:4004/api/sec/getall",
             method: "GET",
             success: function (data) {
-              /* let flattenedData = [];
-
-              data.value.forEach(function (catalog) {
-                catalog.VALUES.forEach(function (value) {
-                  flattenedData.push({
-                    LABELID: catalog.LABELID,
-                    LABEL: catalog.LABEL,
-                    VALUEID: value.VALUEID,
-                    VALUE: value.VALUE,
-                    DESCRIPTION: value.DESCRIPTION,
-                    IMAGE: value.IMAGE,
-                    ALIAS: value.ALIAS,
-                    VALUEPAID: value.VALUEPAID,
-                    VALUESPAID: value.VALUESPAID,
-                  });
-                });
-              }); */
-
               oModel.setData({ value: data.value });
               that.getView().setModel(oModel);
             },
           });
         },
-
-        onFilterChange: function () {
+        // ----- PARA FILTRAR EN LA TABLA
+        onFilterChange: function (oEvent) {
+          var sQuery = oEvent.getSource().getValue();
           var oTable = this.byId("catalogTable");
-          var oBinding = oTable.getBinding("items");
 
-          var labelFilterVal = this.byId("labelFilter").getValue();
-          var valueFilterVal = this.byId("valueFilter").getValue();
+          var aItems = oTable.getItems();
 
-          var aFilters = [];
-
-          if (labelFilterVal) {
-            aFilters.push(
-              new Filter("LABELID", FilterOperator.Contains, labelFilterVal)
-            );
+          if (!sQuery) {
+            aItems.forEach(function (oItem) {
+              oItem.setVisible(true);
+            });
+            return;
           }
-          if (valueFilterVal) {
-            aFilters.push(
-              new Filter("VALUEID", FilterOperator.Contains, valueFilterVal)
+          aItems.forEach(function (oItem) {
+            var oContext = oItem.getBindingContext();
+            if (!oContext) return;
+
+            var oData = oContext.getObject();
+            var bVisible = Object.keys(oData).some(function (sKey) {
+              if (typeof oData[sKey] === "string") {
+                return oData[sKey].toLowerCase().includes(sQuery.toLowerCase());
+              }
+              return false;
+            });
+
+            oItem.setVisible(bVisible);
+          });
+        },
+        // ----- PARA AGREGAR UN NUEVO LABEL
+        onAddCatalog: function () {
+          // Inicializa el modelo con estructura completa
+          var oModel = new JSONModel({
+            COMPANYID: "0",
+            CEDIID: "0",
+            LABELID: "",
+            LABEL: "",
+            INDEX: "",
+            COLLECTION: "",
+            SECTION: "seguridad", // Valor por defecto
+            SEQUENCE: 10, // Valor por defecto
+            IMAGE: "",
+            DESCRIPTION: "",
+            DETAIL_ROW: {
+              ACTIVED: true,
+              DELETED: false,
+              DETAIL_ROW_REG: [
+                {
+                  CURRENT: false,
+                  REGDATE: new Date().toISOString(),
+                  REGTIME: new Date().toISOString(),
+                  REGUSER: "FIBARRAC",
+                },
+                {
+                  CURRENT: true,
+                  REGDATE: new Date().toISOString(),
+                  REGTIME: new Date().toISOString(),
+                  REGUSER: "FIBARRAC",
+                },
+              ],
+            },
+          });
+
+          this.getView().setModel(oModel, "addCatalogModel");
+
+          // Cargar el diálogo si no existe
+          if (!this._oAddDialog) {
+            Fragment.load({
+              id: this.getView().getId(),
+              name: "com.invertions.sapfiorimodinv.view.fragments.AddCatalogDialog",
+              controller: this,
+            }).then(
+              function (oDialog) {
+                this._oAddDialog = oDialog;
+                this.getView().addDependent(oDialog);
+                oDialog.open();
+              }.bind(this)
             );
+          } else {
+            this._oAddDialog.open();
+          }
+        },
+
+        onSaveCatalog: function () {
+          var oModel = this.getView().getModel("addCatalogModel");
+          var oData = oModel.getData();
+
+          // Validación básica
+          if (!oData.LABELID || !oData.LABEL) {
+            MessageToast.show("LABELID y LABEL son campos requeridos");
+            return;
           }
 
-          oBinding.filter(aFilters);
+          // Preparar datos para enviar
+          var payload = {
+            values: oData,
+          };
+
+          console.log("Data:", JSON.stringify(oData));
+
+          $.ajax({
+            url: "http://localhost:4004/api/sec/newLabel", // Ajusta tu endpoint
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(payload),
+            success: function (response) {
+              MessageToast.show("Catálogo agregado correctamente");
+              this._oAddDialog.close();
+              this._refreshCatalogTable(); // Método para refrescar la tabla
+            }.bind(this),
+            error: function (error) {
+              MessageToast.show("Error al guardar: " + error.responseText);
+            },
+          });
+        },
+
+        onCancelAddCatalog: function () {
+          if (this._oAddDialog) {
+            this._oAddDialog.close();
+          }
+        },
+
+        _refreshCatalogTable: function () {
+          // Implementa la lógica para refrescar los datos de la tabla
+          var oTable = this.byId("catalogTable");
+          var oModel = this.getView().getModel();
+
+          $.ajax({
+            url: "http://localhost:4004/api/sec/getall",
+            method: "GET",
+            success: function (data) {
+              oModel.setData({ value: data.value });
+            },
+          });
+        },
+
+        // ----- PARA EDITAR UN LABEL
+        onEditPressed: function (oEvent) {
+          // Obtener el item seleccionado
+          var oSelectedItem =
+            oEvent.getSource().getParent() || oEvent.getSource();
+          var oBindingContext = oSelectedItem.getBindingContext();
+
+          if (!oBindingContext) {
+            MessageToast.show("Seleccione un registro para editar");
+            return;
+          }
+
+          // Crear modelo para edición (copiamos los datos para no modificar directamente)
+          var oOriginalData = oBindingContext.getObject();
+          var oEditModel = new JSONModel(
+            jQuery.extend(true, {}, oOriginalData)
+          );
+          this.getView().setModel(oEditModel, "editModel");
+
+          // Guardar referencia al contexto original para actualizar después
+          this._oEditContext = oBindingContext;
+
+          // Cargar el diálogo de edición
+          if (!this._oEditDialog) {
+            Fragment.load({
+              id: this.getView().getId(),
+              name: "com.invertions.sapfiorimodinv.view.fragments.EditCatalogDialog",
+              controller: this,
+            }).then(
+              function (oDialog) {
+                this._oEditDialog = oDialog;
+                this.getView().addDependent(oDialog);
+                oDialog.open();
+              }.bind(this)
+            );
+          } else {
+            this._oEditDialog.open();
+          }
+        },
+
+        onSaveEdit: function () {
+          var oEditModel = this.getView().getModel("editModel");
+          var oEditedData = oEditModel.getData();
+
+          // Mostrar indicador de carga
+          this._setBusy(true);
+
+          // Llamada a la API para actualizar
+          $.ajax({
+            url: "http://localhost:4004/api/sec/updateLabel", // Tu endpoint de actualización
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              values: oEditedData,
+            }),
+            success: function (response) {
+              MessageToast.show("Registro actualizado correctamente");
+              this._oEditDialog.close();
+
+              // Actualizar el modelo local con los cambios
+              this._oEditContext
+                .getModel()
+                .setProperty(this._oEditContext.getPath(), oEditedData);
+
+              this._setBusy(false);
+            }.bind(this),
+            error: function (error) {
+              MessageToast.show("Error al actualizar: " + error.responseText);
+              this._setBusy(false);
+            }.bind(this),
+          });
+        },
+
+        onCancelEdit: function () {
+          if (this._oEditDialog) {
+            this._oEditDialog.close();
+          }
+        },
+
+        _setBusy: function (bBusy) {
+          this.getView().setBusy(bBusy);
+          if (this._oEditDialog) {
+            this._oEditDialog.setBusy(bBusy);
+          }
         },
 
         onItemPress: function (oEvent) {
@@ -133,11 +300,13 @@ sap.ui.define(
             oLeftLayoutData.setSize("0%");
           }
         },
+
         onCloseDialog: function () {
           if (this._oDialog) {
             this._oDialog.close();
           }
         },
+
         onCloseDetailPanel: function () {
           var oSplitter = this.byId("mainSplitter");
           var oDetailPanel = this.byId("detailPanel");
@@ -149,63 +318,6 @@ sap.ui.define(
           var oLeftLayoutData = oLeftPanel.getLayoutData();
           if (oLeftLayoutData) {
             oLeftLayoutData.setSize("100%");
-          }
-        },
-        onAddLabel: function () {
-          // Modelo vacío para el formulario
-          var oModel = new sap.ui.model.json.JSONModel({
-            LABELID: "",
-            LABEL: "",
-            INDEX: "",
-            COLLECTION: "",
-            SECTION: "",
-            SEQUENCE: "",
-            IMAGE: "",
-            DESCRIPTION: "",
-          });
-          this.getView().setModel(oModel, "addLabelModel");
-
-          // Cargar el fragmento solo una vez
-          if (!this._oAddLabelDialog) {
-            var oView = this.getView();
-            sap.ui.core.Fragment.load({
-              id: oView.getId(),
-              name: "com.invertions.sapfiorimodinv.view.catalogs.AddLabelDialog",
-              controller: this,
-            }).then(
-              function (oDialog) {
-                this._oAddLabelDialog = oDialog;
-                oView.addDependent(oDialog);
-                oDialog.open();
-              }.bind(this)
-            );
-          } else {
-            this._oAddLabelDialog.open();
-          }
-        },
-        onSaveLabel: function () {
-          var oModel = this.getView().getModel("addLabelModel");
-          var oData = oModel.getData();
-          // Enviar datos a la API
-          $.ajax({
-            url: "http://localhost:4004/api/sec/catalogsR", // Cambia la URL según tu API
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(oData),
-            success: function (response) {
-              MessageToast.show("Label agregado correctamente"); // Use the imported MessageToast
-              this._oAddLabelDialog.close();
-              // Aquí puedes recargar la tabla si lo deseas
-            }.bind(this),
-            error: function () {
-              MessageToast.show("Error al agregar label");
-            },
-          });
-        },
-
-        onCancelAddLabel: function () {
-          if (this._oAddLabelDialog) {
-            this._oAddLabelDialog.close();
           }
         },
       }

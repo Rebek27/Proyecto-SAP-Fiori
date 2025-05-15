@@ -31,24 +31,22 @@
                             <ToolbarSpacer />
                             <SearchField
                                 width="20rem"
-                                id="labelFilter"
-                                placeholder="Buscar valores..."
+                                id="searchField"
+                                placeholder="Buscar en todos los campos..."
                                 liveChange="onFilterChange"
+                                showSearchButton="false"
                             />
                             <Button
                                 text="Agregar"
                                 icon="sap-icon://add"
                                 type="Emphasized"
-                                tooltip="Agregar elemento"
-                                press=".StatusValueAccept"
-                                enabled="{= !!${values>/selectedValueIn}}"
+                                press="onAddCatalog"
                             />
-
                             <Button
                                 text="Editar"
                                 icon="sap-icon://edit"
-                                press=".onEditValue"
-                                enabled="{= !!${values>/selectedValueIn}}"
+                                press="onEditPressed"
+                                enabled="{= !!${/selectedItem}}"
                             />
                             <Button
                                 text="Activar"
@@ -78,6 +76,7 @@
                                 sorter: { path: 'LABELID' }
                             }"
                             itemPress="onItemPress"
+                            itemDblPress="onItemDoublePress"
                             mode="SingleSelectMaster"
                             growing="true"
                         >
