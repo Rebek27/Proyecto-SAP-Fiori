@@ -43,30 +43,35 @@
                                 press="onAddCatalog"
                             />
                             <Button
+                                id="editButton"
                                 text="Editar"
                                 icon="sap-icon://edit"
                                 press="onEditPressed"
-                                enabled="{= !!${/selectedItem}}"
+                                enabled="false"
                             />
                             <Button
+                                id="activateButton"
                                 text="Activar"
                                 icon="sap-icon://accept"
-                                press=".StatusValueAccept"
-                                enabled="{= !!${values>/selectedValueIn}}"
+                                press="onActivatePressed"
+                                enabled="false"
+                                visible="{= !${DETAIL_ROW/ACTIVED} }"
                             />
                             <Button
+                                id="deactivateButton"
                                 text="Desactivar"
                                 icon="sap-icon://decline"
-                                type="Reject"
-                                press=".StatusValueDecline"
-                                enabled="{= !!${values>/selectedValueIn}}"
+                                press="onDeactivatePressed"
+                                enabled="false"
+                                visible="{= ${DETAIL_ROW/ACTIVED} }"
                             />
                             <Button
+                                id="deleteButton"
                                 text="Eliminar"
                                 icon="sap-icon://delete"
+                                press="onDeletePressed"
+                                enabled="false"
                                 type="Reject"
-                                press=".onDeleteValue"
-                                enabled="{= !!${values>/selectedValueIn}}"
                             />
                         </OverflowToolbar>
                         <Table
@@ -75,8 +80,8 @@
                                 path: '/value',
                                 sorter: { path: 'LABELID' }
                             }"
+                            selectionChange="onSelectionChange"
                             itemPress="onItemPress"
-                            itemDblPress="onItemDoublePress"
                             mode="SingleSelectMaster"
                             growing="true"
                         >

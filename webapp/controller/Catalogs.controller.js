@@ -2,11 +2,12 @@ sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
     "sap/ui/core/Fragment",
-    "sap/m/MessageToast", // Ensure MessageToast is imported
+    "sap/m/MessageToast",
     "jquery",
   ],
-  function (Controller, JSONModel, Fragment, MessageToast, $) {
+  function (Controller, JSONModel, MessageBox, Fragment, MessageToast, $) {
     "use strict";
 
     return Controller.extend(
@@ -163,51 +164,12 @@ sap.ui.define(
         },
 
         // ----- PARA EDITAR UN LABEL
-        onEditPressed: function (oEvent) {
-          // Obtener el item seleccionado
-          var oSelectedItem =
-            oEvent.getSource().getParent() || oEvent.getSource();
-          var oBindingContext = oSelectedItem.getBindingContext();
-
-          if (!oBindingContext) {
-            MessageToast.show("Seleccione un registro para editar");
-            return;
-          }
-
-          // Crear modelo para edición (copiamos los datos para no modificar directamente)
-          var oOriginalData = oBindingContext.getObject();
-          var oEditModel = new JSONModel(
-            jQuery.extend(true, {}, oOriginalData)
-          );
-          this.getView().setModel(oEditModel, "editModel");
-
-          // Guardar referencia al contexto original para actualizar después
-          this._oEditContext = oBindingContext;
-
-          // Cargar el diálogo de edición
-          if (!this._oEditDialog) {
-            Fragment.load({
-              id: this.getView().getId(),
-              name: "com.invertions.sapfiorimodinv.view.fragments.EditCatalogDialog",
-              controller: this,
-            }).then(
-              function (oDialog) {
-                this._oEditDialog = oDialog;
-                this.getView().addDependent(oDialog);
-                oDialog.open();
-              }.bind(this)
-            );
-          } else {
-            this._oEditDialog.open();
-          }
-        },
-
         onSaveEdit: function () {
           var oEditModel = this.getView().getModel("editModel");
           var oEditedData = oEditModel.getData();
 
           // Mostrar indicador de carga
-          this._setBusy(true);
+          // this._setBusy(true);
 
           // Llamada a la API para actualizar
           $.ajax({
@@ -221,16 +183,13 @@ sap.ui.define(
               MessageToast.show("Registro actualizado correctamente");
               this._oEditDialog.close();
 
-              // Actualizar el modelo local con los cambios
-              this._oEditContext
-                .getModel()
-                .setProperty(this._oEditContext.getPath(), oEditedData);
+              this._refreshCatalogTable(); // Método para refrescar la tabla
 
-              this._setBusy(false);
+              // this._setBusy(false);
             }.bind(this),
             error: function (error) {
               MessageToast.show("Error al actualizar: " + error.responseText);
-              this._setBusy(false);
+              // this._setBusy(false);
             }.bind(this),
           });
         },
@@ -241,12 +200,12 @@ sap.ui.define(
           }
         },
 
-        _setBusy: function (bBusy) {
+        /* _setBusy: function (bBusy) {
           this.getView().setBusy(bBusy);
           if (this._oEditDialog) {
             this._oEditDialog.setBusy(bBusy);
           }
-        },
+        }, */
 
         onItemPress: function (oEvent) {
           var oItem = oEvent.getParameter("listItem");
@@ -290,14 +249,14 @@ sap.ui.define(
           var oDetailPanel = this.byId("detailPanel");
           var oLayoutData = oDetailPanel.getLayoutData();
           if (oLayoutData) {
-            oLayoutData.setSize("100%"); // O el porcentaje/píxeles que prefieras
+            oLayoutData.setSize("50%"); // O el porcentaje/píxeles que prefieras
           }
 
           // Opcional: reducir el panel izquierdo
           var oLeftPanel = oSplitter.getContentAreas()[0];
           var oLeftLayoutData = oLeftPanel.getLayoutData();
           if (oLeftLayoutData) {
-            oLeftLayoutData.setSize("0%");
+            oLeftLayoutData.setSize("50%");
           }
         },
 
@@ -320,6 +279,206 @@ sap.ui.define(
             oLeftLayoutData.setSize("100%");
           }
         },
+
+        // EXPERIMENTAL
+
+        onSelectionChange: function (oEvent) {
+          // Obtener el item seleccionado
+          var oTable = this.byId("catalogTable");
+          var oSelectedItem = oTable.getSelectedItem();
+
+          if (!oSelectedItem) {
+            this._disableAllActions();
+            return;
+          }
+
+          // Habilitar todos los botones de acción
+          this.byId("editButton").setEnabled(true);
+          this.byId("deleteButton").setEnabled(true);
+
+          // Determinar estado para activar/desactivar
+          var oContext = oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+
+          console.log(oData);
+
+          // Actualizar visibilidad de botones según estado
+          this.byId("activateButton").setVisible(!oData.DETAIL_ROW.ACTIVED);
+          this.byId("deactivateButton").setVisible(oData.DETAIL_ROW.ACTIVED);
+
+          // Guardar referencia al item seleccionado
+          this._oSelectedItem = oSelectedItem;
+
+          // Mostrar información en panel derecho (opcional)
+          this._loadDetailInformation(oSelectedItem);
+        },
+
+        _disableAllActions: function () {
+          this.byId("editButton").setEnabled(false);
+          this.byId("activateButton").setEnabled(false);
+          this.byId("deactivateButton").setEnabled(false);
+          this.byId("deleteButton").setEnabled(false);
+        },
+
+        _loadDetailInformation: function (oSelectedItem) {
+          var oContext = oSelectedItem.getBindingContext();
+          var oSelectedData = oContext.getObject();
+          var sLabelID = oSelectedData.LABELID;
+          var that = this;
+
+          $.ajax({
+            url:
+              "http://localhost:4004/api/sec/valuesCRUD?procedure=get&labelID=" +
+              encodeURIComponent(sLabelID),
+            method: "GET",
+            dataType: "json",
+            success: function (response) {
+              var oValuesView = that.byId("XMLViewValues");
+              if (oValuesView) {
+                oValuesView.loaded().then(function () {
+                  var oController = oValuesView.getController();
+                  if (oController && oController.loadValues) {
+                    oController.loadValues(response.value || []);
+                    oValuesView
+                      .getModel("values")
+                      .setProperty("/selectedValue", oSelectedData);
+                  }
+                });
+              }
+            },
+            error: function () {
+              MessageToast.show("Error al cargar valores");
+            },
+          });
+
+          // Expandir el panel derecho
+          this._toggleDetailPanel(true);
+        },
+
+        _toggleDetailPanel: function (bShow) {
+          var oSplitter = this.byId("mainSplitter");
+          var oDetailPanel = this.byId("detailPanel");
+          var oLayoutData = oDetailPanel.getLayoutData();
+
+          if (oLayoutData) {
+            oLayoutData.setSize(bShow ? "100%" : "0px");
+          }
+
+          // Ajustar panel izquierdo
+          var oLeftPanel = oSplitter.getContentAreas()[0];
+          var oLeftLayoutData = oLeftPanel.getLayoutData();
+          if (oLeftLayoutData) {
+            oLeftLayoutData.setSize(bShow ? "0%" : "100%");
+          }
+        },
+
+        // Implementación de acciones
+        onEditPressed: function () {
+          if (!this._oSelectedItem) return;
+
+          var oContext = this._oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+
+          // Crear modelo para edición
+          var oEditModel = new JSONModel($.extend(true, {}, oData));
+          this.getView().setModel(oEditModel, "editModel");
+
+          // Cargar diálogo de edición
+          if (!this._oEditDialog) {
+            Fragment.load({
+              id: this.getView().getId(),
+              name: "com.invertions.sapfiorimodinv.view.fragments.EditCatalogDialog",
+              controller: this,
+            }).then(
+              function (oDialog) {
+                this._oEditDialog = oDialog;
+                this.getView().addDependent(oDialog);
+                oDialog.open();
+              }.bind(this)
+            );
+          } else {
+            this._oEditDialog.open();
+          }
+        },
+
+        onActivatePressed: function () {
+          this._changeStatus(true);
+        },
+
+        onDeactivatePressed: function () {
+          this._changeStatus(false);
+        },
+
+        _changeStatus: function (bActivate) {
+          if (!this._oSelectedItem) return;
+
+          var oContext = this._oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+          var sAction = bActivate ? "activateLabel" : "deactivateLabel";
+
+          $.ajax({
+            url: "http://localhost:4004/api/sec/" + sAction,
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ labelID: oData.LABELID }),
+            success: function () {
+              MessageToast.show(
+                "Registro " + (bActivate ? "activado" : "desactivado")
+              );
+              this._refreshCatalogTable();
+            }.bind(this),
+            error: function (error) {
+              MessageToast.show("Error: " + error.responseText);
+            },
+          });
+        },
+
+        onDeletePressed: function () {
+          if (!this._oSelectedItem) return;
+
+          var oContext = this._oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+
+          MessageBox.confirm("¿Está seguro de eliminar este registro?", {
+            actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+            onClose: function (sAction) {
+              if (sAction === MessageBox.Action.YES) {
+                $.ajax({
+                  url: "http://localhost:4004/api/sec/deleteLabel",
+                  method: "POST",
+                  contentType: "application/json",
+                  data: JSON.stringify({ labelID: oData.LABELID }),
+                  success: function () {
+                    MessageToast.show("Registro eliminado");
+                    this._refreshCatalogTable();
+                    this._toggleDetailPanel(false);
+                  }.bind(this),
+                  error: function (error) {
+                    MessageToast.show(
+                      "Error al eliminar: " + error.responseText
+                    );
+                  },
+                });
+              }
+            }.bind(this),
+          });
+        },
+
+        /* _refreshCatalogTable: function () {
+          var oModel = this.getView().getModel();
+
+          $.ajax({
+            url: "http://localhost:4004/api/sec/getall",
+            method: "GET",
+            success: function (data) {
+              oModel.setData({ value: data.value });
+              this._disableAllActions();
+            }.bind(this),
+            error: function () {
+              MessageToast.show("Error al actualizar datos");
+            },
+          });
+        }, */
       }
     );
   }
