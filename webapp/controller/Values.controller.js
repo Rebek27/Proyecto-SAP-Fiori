@@ -4,9 +4,10 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/model/Filter",
+    "sap/ui/core/Fragment",
     "sap/ui/model/FilterOperator",
     "jquery"
-], function(BaseController, JSONModel, MessageBox, MessageToast, Filter, FilterOperator, $) {
+], function(BaseController, JSONModel, MessageBox, MessageToast, Filter, Fragment, FilterOperator, $) {
     "use strict";
 
     return BaseController.extend("com.invertions.sapfiorimodinv.controller.Values", {
@@ -290,9 +291,149 @@ sap.ui.define([
                                     (error.responseJSON?.error?.message || "Error en el servidor"));
                             }  
                         });
-                }
-        }.bind(this)
-    });
-    }
+                    }
+                }.bind(this)
+            });
+        },
+        onChangeValue: function() {
+            var oView = this.getView();
+            var oValuesModel = oView.getModel("values");
+            var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
+                      // Inicializa el modelo con estructura completa
+          var oModel = new JSONModel({
+                            COMPANYID: 0,
+                CEDIID: 0,
+                LABELID: oSelectedCatalog.LABELID,
+                VALUEPAID: "",
+                VALUEID: "",
+                VALUE: "",
+                ALIAS: "",
+                SEQUENCE: 30,
+                IMAGE: "",
+                VALUESAPID: "",
+                DESCRIPTION: "",
+                ROUTE: "",
+                // Estructura anidada para DETAIL_ROW
+                "DETAIL_ROW": {
+                    "ACTIVED": true,
+                    "DELETED": false
+                },
+                "DETAIL_ROW_REG": [
+                        
+                    ]
+          });
+
+          this.getView().setModel(oModel, "addValueModel");
+
+          // Cargar el diálogo si no existe
+          if (!this._oEditDialog) {
+            Fragment.load({
+              id: this.getView().getId(),
+              name: "com.invertions.sapfiorimodinv.view.fragments.EditValueDialog",
+              controller: this,
+            }).then(
+              function (oDialog) {
+                this._oEditDialog = oDialog;
+                this.getView().addDependent(oDialog);
+                oDialog.open();
+              }.bind(this)
+            );
+          } else {
+            this._oEditDialog.open();
+          }
+        },
+        onAddValues: function() {
+            var oView = this.getView();
+            var oValuesModel = oView.getModel("values");
+            var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
+                      // Inicializa el modelo con estructura completa
+          var oModel = new JSONModel({
+                            COMPANYID: 0,
+                CEDIID: 0,
+                LABELID: oSelectedCatalog.LABELID,
+                VALUEPAID: "",
+                VALUEID: "",
+                VALUE: "",
+                ALIAS: "",
+                SEQUENCE: 30,
+                IMAGE: "",
+                VALUESAPID: "",
+                DESCRIPTION: "",
+                ROUTE: "",
+                // Estructura anidada para DETAIL_ROW
+                "DETAIL_ROW": {
+                    "ACTIVED": true,
+                    "DELETED": false
+                },
+                "DETAIL_ROW_REG": [
+                        
+                    ]
+          });
+
+          this.getView().setModel(oModel, "addValueModel");
+
+          // Cargar el diálogo si no existe
+          if (!this._oAddDialog) {
+            Fragment.load({
+              id: this.getView().getId(),
+              name: "com.invertions.sapfiorimodinv.view.fragments.AddValueDialog",
+              controller: this,
+            }).then(
+              function (oDialog) {
+                this._oAddDialog = oDialog;
+                this.getView().addDependent(oDialog);
+                oDialog.open();
+              }.bind(this)
+            );
+          } else {
+            this._oAddDialog.open();
+          }
+        },
+        onCancelEdit: function () {
+            if (this._oEditDialog) {
+            this._oEditDialog.close();
+          }
+          this._cleanModels();
+        },
+        onCancelValues: function () {
+            if (this._oAddDialog) {
+            this._oAddDialog.close();
+          }
+          this._cleanModels();
+        },
+        _cleanModels: function() {
+            // Limpiar modelo de valores seleccionados
+            this.getView().getModel("newValueModel").setData({
+              VALUEID: "",
+              VALUE: "",
+              VALUEPAID: "",
+              ALIAS: "",
+             IMAGE: "",
+             DESCRIPTION: ""
+             });
+  
+             // Limpiar modelo de añadir valores (si existe)
+             if (this.getView().getModel("addValueModel")) {
+               this.getView().getModel("addValueModel").setData({
+                 VALUEID: "",
+                 VALUE: "",
+                 VALUEPAID: "",
+                ALIAS: "",
+                 IMAGE: "",
+                 DESCRIPTION: ""
+               });
+            }  
+  
+             // Resetear selección
+             this.getView().getModel("values").setProperty("/selectedValueIn", null);
+  
+              // Deseleccionar items en la tabla
+             var oTable = this.byId("valuesTable");
+              if (oTable) {
+                  oTable.removeSelections();
+              }
+        }
+
+
     });
 });
