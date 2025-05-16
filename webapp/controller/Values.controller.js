@@ -7,22 +7,22 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/ui/model/FilterOperator",
     "jquery"
-], function(BaseController, JSONModel, MessageBox, MessageToast, Filter, Fragment, FilterOperator, $) {
+], function (BaseController, JSONModel, MessageBox, MessageToast, Filter, Fragment, FilterOperator, $) {
     "use strict";
 
     return BaseController.extend("com.invertions.sapfiorimodinv.controller.Values", {
         // Método de inicialización del controlador
-        onInit: function() {
+        onInit: function () {
             // Modelo para los valores
             this.getView().setModel(new JSONModel({
                 values: [],
                 selectedValue: null
             }), "values");
             this.getView().setModel(new JSONModel({
-                    values: [],       // Datos de la tabla
-                    selectedValueIn: null  // 🔥 Para controlar los botones
+                values: [],       // Datos de la tabla
+                selectedValueIn: null  // 🔥 Para controlar los botones
             }), "values");
-            
+
             // Modelo para los datos del formulario
             this.getView().setModel(new JSONModel({
                 VALUEID: "",
@@ -34,11 +34,11 @@ sap.ui.define([
             }), "newValueModel");
         },
         // Método para cargar los valores en el modelo
-        loadValues: function(aValues) {
+        loadValues: function (aValues) {
             this.getView().getModel("values").setProperty("/values", aValues || []);
         },
         // Método para abrir el diálogo de selección de valores
-        onItemSelect: function(oEvent) {
+        onItemSelect: function (oEvent) {
             var oItem = oEvent.getParameter("listItem");
             var oSelectedData = oItem.getBindingContext("values").getObject();
             // Actualiza el modelo newValueModel con los datos seleccionados
@@ -52,24 +52,24 @@ sap.ui.define([
             });
 
             // Activa el modo de edición
-             this.getView().getModel("values").setProperty("/selectedValueIn", true);
+            this.getView().getModel("values").setProperty("/selectedValueIn", true);
         },
         // Método para esditar el nuevo valor
-        onEditValue: function() {
+        onEditValue: function () {
             var oView = this.getView();
             var oNewValueModel = oView.getModel("newValueModel");
             var oValuesModel = oView.getModel("values");
-            
+
             // Obtener datos del formulario
             var oFormData = oNewValueModel.getData();
             var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
-        
+
             // Validaciones
             if (!oFormData.VALUEID || !oFormData.VALUE) {
                 MessageToast.show("VALUEID y VALUE son campos obligatorios");
                 return;
             }
-        
+
             // Construir objeto con todos los parámetros
             var oParams = {
                 COMPANYID: 0,
@@ -90,45 +90,63 @@ sap.ui.define([
                     "DELETED": false
                 },
                 "DETAIL_ROW_REG": [
-                        
-                    ]
+
+                ]
             };
-        
+
             // Configurar llamada AJAX con GET
             oView.setBusy(true);
-            
+
             $.ajax({
                 url: `http://localhost:4004/api/sec/valuesCRUD?procedure=put`,
                 data: oParams,
                 method: "GET",
-                success: function(response) {
+                success: function (response) {
                     oView.setBusy(false);
                     MessageToast.show("Valor guardado correctamente");
-                    this._loadValuesByLabel(oSelectedCatalog.LABELID);
+
+                    // Actualizar el modelo directamente
+                    var currentValues = oValuesModel.getProperty("/values") || [];
+                    var updatedIndex = currentValues.findIndex(item => item.VALUEID === oFormData.VALUEID);
+
+                    if (updatedIndex !== -1) {
+                        currentValues[updatedIndex] = {
+                            ...currentValues[updatedIndex],
+                            VALUE: oFormData.VALUE,
+                            VALUEPAID: oFormData.VALUEPAID,
+                            ALIAS: oFormData.ALIAS,
+                            IMAGE: oFormData.IMAGE,
+                            DESCRIPTION: oFormData.DESCRIPTION
+                        };
+                        oValuesModel.setProperty("/values", currentValues);
+                    }
+
+                    // Cerrar diálogo y limpiar
+                    this.onCancelEdit();
                 }.bind(this),
-                error: function(error) {
+                error: function (error) {
                     oView.setBusy(false);
-                    MessageToast.show("Error al guardar: " + 
+                    MessageToast.show("Error al guardar: " +
                         (error.responseJSON?.error?.message || "Error en el servidor"));
                 }
             });
         },
         // Método para guardar un nuevo valor
-        onSaveValues: function() {
+        onSaveValues: function () {
             var oView = this.getView();
             var oNewValueModel = oView.getModel("newValueModel");
             var oValuesModel = oView.getModel("values");
-            
+
             // Obtener datos del formulario
             var oFormData = oNewValueModel.getData();
             var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
-        
+
             // Validaciones
             if (!oFormData.VALUEID || !oFormData.VALUE) {
                 MessageToast.show("VALUEID y VALUE son campos obligatorios");
                 return;
             }
-        
+
             // Construir objeto con todos los parámetros
             var oParams = {
                 COMPANYID: 0,
@@ -149,31 +167,49 @@ sap.ui.define([
                     "DELETED": false
                 },
                 "DETAIL_ROW_REG": [
-                        
-                    ]
+
+                ]
             };
-        
+
             // Configurar llamada AJAX con GET
             oView.setBusy(true);
-            
+
             $.ajax({
                 url: `http://localhost:4004/api/sec/valuesCRUD?procedure=post`,
                 data: oParams,
                 method: "GET",
-                success: function(response) {
+                success: function (response) {
                     oView.setBusy(false);
                     MessageToast.show("Valor guardado correctamente");
-                    this._loadValuesByLabel(oSelectedCatalog.LABELID);
+
+                    // Actualizar el modelo directamente
+                    var currentValues = oValuesModel.getProperty("/values") || [];
+                    currentValues.push({
+                        VALUEID: oFormData.VALUEID,
+                        VALUE: oFormData.VALUE,
+                        VALUEPAID: oFormData.VALUEPAID,
+                        ALIAS: oFormData.ALIAS,
+                        IMAGE: oFormData.IMAGE,
+                        DESCRIPTION: oFormData.DESCRIPTION,
+                        DETAIL_ROW: {
+                            ACTIVED: true,
+                            DELETED: false
+                        }
+                    });
+                    oValuesModel.setProperty("/values", currentValues);
+
+                    // Cerrar diálogo y limpiar
+                    this.onCancelValues();
                 }.bind(this),
-                error: function(error) {
+                error: function (error) {
                     oView.setBusy(false);
-                    MessageToast.show("Error al guardar: " + 
+                    MessageToast.show("Error al guardar: " +
                         (error.responseJSON?.error?.message || "Error en el servidor"));
                 }
             });
         },
         //FILTRO DE VALORES
-        onFilterChange: function() {
+        onFilterChange: function () {
             var oTable = this.byId("valuesTable");
             var oBinding = oTable.getBinding("items");
             var valueFilterVal = this.byId("ValueSearchField").getValue();
@@ -186,7 +222,7 @@ sap.ui.define([
             oBinding.filter(aFilters);
         },
 
-        _loadValuesByLabel: function(sLabelID) {
+        /*_loadValuesByLabel: function(sLabelID) {
             var oView = this.getView();
             
             $.ajax({
@@ -200,28 +236,28 @@ sap.ui.define([
                     console.error("Error loading values:", error);
                 }
             });
+        },*/
+        StatusValueDecline: function () {
+            this.StatusValue(false, true, "delete");
         },
-        StatusValueDecline: function() {
-            this.StatusValue(false,true,"delete");
+        StatusValueAccept: function () {
+            this.StatusValue(true, false, "actived");
         },
-        StatusValueAccept: function() {
-            this.StatusValue(true,false,"actived");
-        },
-        StatusValue: function(aceptar, rechazar,type) {
+        StatusValue: function (aceptar, rechazar, type) {
             var oView = this.getView();
             var oNewValueModel = oView.getModel("newValueModel");
             var oValuesModel = oView.getModel("values");
-            
+
             // Obtener datos del formulario
             var oFormData = oNewValueModel.getData();
             var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
-        
+
             // Validaciones
             if (!oFormData.VALUEID || !oFormData.VALUE) {
                 MessageToast.show("VALUEID y VALUE son campos obligatorios");
                 return;
             }
-        
+
             // Construir objeto con todos los parámetros
             var oParams = {
                 // Estructura anidada para DETAIL_ROW
@@ -230,35 +266,46 @@ sap.ui.define([
                     "DELETED": rechazar
                 },
             };
-        
+
             // Configurar llamada AJAX con GET
             oView.setBusy(true);
-            
+
             $.ajax({
                 url: `http://localhost:4004/api/sec/valuesCRUD?procedure=${type}&labelID=${oSelectedCatalog.LABELID}&ValueID=${oFormData.VALUEID}`,
                 data: oParams,
                 method: "GET",
-                success: function(response) {
+                success: function (response) {
                     oView.setBusy(false);
-                    if(aceptar==true){
+                    if (aceptar == true) {
                         MessageToast.show("Valor activado correctamente");
-                    }else{
+                    } else {
                         MessageToast.show("Valor desactivado correctamente");
                     }
-                    this._loadValuesByLabel(oSelectedCatalog.LABELID);
+
+                    // Actualizar el modelo directamente
+                    var currentValues = oValuesModel.getProperty("/values") || [];
+                    var updatedIndex = currentValues.findIndex(item => item.VALUEID === oFormData.VALUEID);
+
+                    if (updatedIndex !== -1) {
+                        currentValues[updatedIndex].DETAIL_ROW = {
+                            ACTIVED: aceptar,
+                            DELETED: rechazar
+                        };
+                        oValuesModel.setProperty("/values", currentValues);
+                    }
                 }.bind(this),
-                error: function(error) {
+                error: function (error) {
                     oView.setBusy(false);
-                    MessageToast.show("Error al activar: " + 
+                    MessageToast.show("Error al activar: " +
                         (error.responseJSON?.error?.message || "Error en el servidor"));
                 }
             });
         },
-        onDeleteValue: function() {
+        onDeleteValue: function () {
             var oView = this.getView();
             var oNewValueModel = oView.getModel("newValueModel");
             var oValuesModel = oView.getModel("values");
-    
+
             // Obtener datos del formulario
             var oFormData = oNewValueModel.getData();
             var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
@@ -272,36 +319,42 @@ sap.ui.define([
             // 🔥 Mensaje de confirmación antes de eliminar
             MessageBox.confirm("¿ESTÁS SEGURO DE ELIMINAR PERMANENTEMENTE ESTE DATO?", {
                 title: "Confirmar Eliminación",
-                onClose: function(oAction) {
+                onClose: function (oAction) {
                     if (oAction === MessageBox.Action.OK) {
                         // ✅ Si el usuario presiona "OK", ejecuta la eliminación
                         oView.setBusy(true);
-                
+
                         $.ajax({
                             url: `http://localhost:4004/api/sec/valuesCRUD?procedure=deletePermanent&labelID=${oSelectedCatalog.LABELID}&ValueID=${oFormData.VALUEID}`,
                             method: "GET",
-                            success: function(response) {
+                            success: function (response) {
                                 oView.setBusy(false);
-                                MessageToast.show("Valor eliminado correctamente"); // 🔥 Mensaje actualizado
-                                this._loadValuesByLabel(oSelectedCatalog.LABELID);
+                                MessageToast.show("Valor eliminado correctamente");
+
+                                // Actualizar el modelo directamente
+                                var currentValues = oValuesModel.getProperty("/values") || [];
+                                var filteredValues = currentValues.filter(item => item.VALUEID !== oFormData.VALUEID);
+                                oValuesModel.setProperty("/values", filteredValues);
+
+                                this._cleanModels();
                             }.bind(this),
-                            error: function(error) {
+                            error: function (error) {
                                 oView.setBusy(false);
-                                MessageToast.show("Error al eliminar: " + 
+                                MessageToast.show("Error al eliminar: " +
                                     (error.responseJSON?.error?.message || "Error en el servidor"));
-                            }  
+                            }
                         });
                     }
                 }.bind(this)
             });
         },
-        onChangeValue: function() {
+        onChangeValue: function () {
             var oView = this.getView();
             var oValuesModel = oView.getModel("values");
             var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
-                      // Inicializa el modelo con estructura completa
-          var oModel = new JSONModel({
-                            COMPANYID: 0,
+            // Inicializa el modelo con estructura completa
+            var oModel = new JSONModel({
+                COMPANYID: 0,
                 CEDIID: 0,
                 LABELID: oSelectedCatalog.LABELID,
                 VALUEPAID: "",
@@ -319,36 +372,36 @@ sap.ui.define([
                     "DELETED": false
                 },
                 "DETAIL_ROW_REG": [
-                        
-                    ]
-          });
 
-          this.getView().setModel(oModel, "addValueModel");
+                ]
+            });
 
-          // Cargar el diálogo si no existe
-          if (!this._oEditDialog) {
-            Fragment.load({
-              id: this.getView().getId(),
-              name: "com.invertions.sapfiorimodinv.view.fragments.EditValueDialog",
-              controller: this,
-            }).then(
-              function (oDialog) {
-                this._oEditDialog = oDialog;
-                this.getView().addDependent(oDialog);
-                oDialog.open();
-              }.bind(this)
-            );
-          } else {
-            this._oEditDialog.open();
-          }
+            this.getView().setModel(oModel, "addValueModel");
+
+            // Cargar el diálogo si no existe
+            if (!this._oEditDialog) {
+                Fragment.load({
+                    id: this.getView().getId(),
+                    name: "com.invertions.sapfiorimodinv.view.fragments.EditValueDialog",
+                    controller: this,
+                }).then(
+                    function (oDialog) {
+                        this._oEditDialog = oDialog;
+                        this.getView().addDependent(oDialog);
+                        oDialog.open();
+                    }.bind(this)
+                );
+            } else {
+                this._oEditDialog.open();
+            }
         },
-        onAddValues: function() {
+        onAddValues: function () {
             var oView = this.getView();
             var oValuesModel = oView.getModel("values");
             var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
-                      // Inicializa el modelo con estructura completa
-          var oModel = new JSONModel({
-                            COMPANYID: 0,
+            // Inicializa el modelo con estructura completa
+            var oModel = new JSONModel({
+                COMPANYID: 0,
                 CEDIID: 0,
                 LABELID: oSelectedCatalog.LABELID,
                 VALUEPAID: "",
@@ -366,72 +419,72 @@ sap.ui.define([
                     "DELETED": false
                 },
                 "DETAIL_ROW_REG": [
-                        
-                    ]
-          });
 
-          this.getView().setModel(oModel, "addValueModel");
+                ]
+            });
 
-          // Cargar el diálogo si no existe
-          if (!this._oAddDialog) {
-            Fragment.load({
-              id: this.getView().getId(),
-              name: "com.invertions.sapfiorimodinv.view.fragments.AddValueDialog",
-              controller: this,
-            }).then(
-              function (oDialog) {
-                this._oAddDialog = oDialog;
-                this.getView().addDependent(oDialog);
-                oDialog.open();
-              }.bind(this)
-            );
-          } else {
-            this._oAddDialog.open();
-          }
+            this.getView().setModel(oModel, "addValueModel");
+
+            // Cargar el diálogo si no existe
+            if (!this._oAddDialog) {
+                Fragment.load({
+                    id: this.getView().getId(),
+                    name: "com.invertions.sapfiorimodinv.view.fragments.AddValueDialog",
+                    controller: this,
+                }).then(
+                    function (oDialog) {
+                        this._oAddDialog = oDialog;
+                        this.getView().addDependent(oDialog);
+                        oDialog.open();
+                    }.bind(this)
+                );
+            } else {
+                this._oAddDialog.open();
+            }
         },
         onCancelEdit: function () {
             if (this._oEditDialog) {
-            this._oEditDialog.close();
-          }
-          this._cleanModels();
+                this._oEditDialog.close();
+            }
+            this._cleanModels();
         },
         onCancelValues: function () {
             if (this._oAddDialog) {
-            this._oAddDialog.close();
-          }
-          this._cleanModels();
+                this._oAddDialog.close();
+            }
+            this._cleanModels();
         },
-        _cleanModels: function() {
+        _cleanModels: function () {
             // Limpiar modelo de valores seleccionados
             this.getView().getModel("newValueModel").setData({
-              VALUEID: "",
-              VALUE: "",
-              VALUEPAID: "",
-              ALIAS: "",
-             IMAGE: "",
-             DESCRIPTION: ""
-             });
-  
-             // Limpiar modelo de añadir valores (si existe)
-             if (this.getView().getModel("addValueModel")) {
-               this.getView().getModel("addValueModel").setData({
-                 VALUEID: "",
-                 VALUE: "",
-                 VALUEPAID: "",
+                VALUEID: "",
+                VALUE: "",
+                VALUEPAID: "",
                 ALIAS: "",
-                 IMAGE: "",
-                 DESCRIPTION: ""
-               });
-            }  
-  
-             // Resetear selección
-             this.getView().getModel("values").setProperty("/selectedValueIn", null);
-  
-              // Deseleccionar items en la tabla
-             var oTable = this.byId("valuesTable");
-              if (oTable) {
-                  oTable.removeSelections();
-              }
+                IMAGE: "",
+                DESCRIPTION: ""
+            });
+
+            // Limpiar modelo de añadir valores (si existe)
+            if (this.getView().getModel("addValueModel")) {
+                this.getView().getModel("addValueModel").setData({
+                    VALUEID: "",
+                    VALUE: "",
+                    VALUEPAID: "",
+                    ALIAS: "",
+                    IMAGE: "",
+                    DESCRIPTION: ""
+                });
+            }
+
+            // Resetear selección
+            this.getView().getModel("values").setProperty("/selectedValueIn", null);
+
+            // Deseleccionar items en la tabla
+            var oTable = this.byId("valuesTable");
+            if (oTable) {
+                oTable.removeSelections();
+            }
         }
 
 
