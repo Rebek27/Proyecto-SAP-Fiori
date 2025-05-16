@@ -13,6 +13,8 @@ sap.ui.define(
     return Controller.extend(
       "com.invertions.sapfiorimodinv.controller.Catalogs",
       {
+        // ---------------------------------------------------- INICIO DE LA VISTA
+
         onInit: function () {
           var oModel = new JSONModel();
           var that = this;
@@ -28,11 +30,12 @@ sap.ui.define(
             },
           });
         },
-        // ----- PARA FILTRAR EN LA TABLA
+
+        // ---------------------------------------------------- PARA FILTRAR EN LA TABLA
+
         onFilterChange: function (oEvent) {
           var sQuery = oEvent.getSource().getValue();
           var oTable = this.byId("catalogTable");
-
           var aItems = oTable.getItems();
 
           if (!sQuery) {
@@ -41,22 +44,30 @@ sap.ui.define(
             });
             return;
           }
+
           aItems.forEach(function (oItem) {
             var oContext = oItem.getBindingContext();
             if (!oContext) return;
 
             var oData = oContext.getObject();
             var bVisible = Object.keys(oData).some(function (sKey) {
-              if (typeof oData[sKey] === "string") {
-                return oData[sKey].toLowerCase().includes(sQuery.toLowerCase());
+              var value = oData[sKey];
+
+              if (typeof value === "string") {
+                return value.toLowerCase().includes(sQuery.toLowerCase());
+              } else if (typeof value === "number") {
+                return value.toString().includes(sQuery);
               }
+
               return false;
             });
 
             oItem.setVisible(bVisible);
           });
         },
-        // ----- PARA AGREGAR UN NUEVO LABEL
+
+        // ---------------------------------------------------- PARA AGREGAR UN NUEVO LABEL
+
         onAddCatalog: function () {
           // Inicializa el modelo con estructura completa
           var oModel = new JSONModel({
@@ -114,6 +125,10 @@ sap.ui.define(
           var oModel = this.getView().getModel("addCatalogModel");
           var oData = oModel.getData();
 
+          // Obtener el modelo de la tabla
+          var oTableModel = this.getView().getModel();
+          var aData = oTableModel.getProperty("/value") || [];
+
           // Validación básica
           if (!oData.LABELID || !oData.LABEL) {
             MessageToast.show("LABELID y LABEL son campos requeridos");
@@ -135,7 +150,13 @@ sap.ui.define(
             success: function (response) {
               MessageToast.show("Catálogo agregado correctamente");
               this._oAddDialog.close();
-              this._refreshCatalogTable(); // Método para refrescar la tabla
+
+              // Agregar el nuevo registro
+              aData.push(oData);
+              // Actualizar el modelo
+              oTableModel.setProperty("/value", aData);
+
+              // this._refreshCatalogTable();
             }.bind(this),
             error: function (error) {
               MessageToast.show("Error al guardar: " + error.responseText);
@@ -146,6 +167,83 @@ sap.ui.define(
         onCancelAddCatalog: function () {
           if (this._oAddDialog) {
             this._oAddDialog.close();
+          }
+        },
+
+        // ---------------------------------------------------- FIN PARA AGREGAR UN NUEVO LABEL
+
+        // ---------------------------------------------------- PARA EDITAR UN LABEL
+
+        onEditPressed: function () {
+          if (!this._oSelectedItem) return;
+
+          var oContext = this._oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+
+          // Crear modelo para edición
+          var oEditModel = new JSONModel($.extend(true, {}, oData));
+          this.getView().setModel(oEditModel, "editModel");
+
+          // Cargar diálogo de edición
+          if (!this._oEditDialog) {
+            Fragment.load({
+              id: this.getView().getId(),
+              name: "com.invertions.sapfiorimodinv.view.fragments.EditCatalogDialog",
+              controller: this,
+            }).then(
+              function (oDialog) {
+                this._oEditDialog = oDialog;
+                this.getView().addDependent(oDialog);
+                oDialog.open();
+              }.bind(this)
+            );
+          } else {
+            this._oEditDialog.open();
+          }
+        },
+
+        onSaveEdit: function () {
+          var oEditModel = this.getView().getModel("editModel");
+          var oEditedData = oEditModel.getData();
+
+          // Obtener el modelo de la tabla
+          var oTableModel = this.getView().getModel();
+          var aData = oTableModel.getProperty("/value") || [];
+
+          // Llamada a la API para actualizar
+          $.ajax({
+            url: "http://localhost:4004/api/sec/updateLabel",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              values: oEditedData,
+            }),
+            success: function (response) {
+              MessageToast.show("Registro actualizado correctamente");
+              this._oEditDialog.close();
+
+              // Agregar el nuevo registro
+              aData.push(oEditedData);
+              // Actualizar el modelo
+              oTableModel.setProperty("/value", aData);
+            }.bind(this),
+            error: function (error) {
+              MessageToast.show("Error al actualizar: " + error.responseText);
+            }.bind(this),
+          });
+        },
+
+        onCancelEdit: function () {
+          if (this._oEditDialog) {
+            this._oEditDialog.close();
+          }
+        },
+
+        // ---------------------------------------------------- FIN PARA EDITAR UN LABEL
+
+        onCloseDialog: function () {
+          if (this._oDialog) {
+            this._oDialog.close();
           }
         },
 
@@ -164,48 +262,6 @@ sap.ui.define(
         },
 
         // ----- PARA EDITAR UN LABEL
-        onSaveEdit: function () {
-          var oEditModel = this.getView().getModel("editModel");
-          var oEditedData = oEditModel.getData();
-
-          // Mostrar indicador de carga
-          // this._setBusy(true);
-
-          // Llamada a la API para actualizar
-          $.ajax({
-            url: "http://localhost:4004/api/sec/updateLabel", // Tu endpoint de actualización
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-              values: oEditedData,
-            }),
-            success: function (response) {
-              MessageToast.show("Registro actualizado correctamente");
-              this._oEditDialog.close();
-
-              this._refreshCatalogTable(); // Método para refrescar la tabla
-
-              // this._setBusy(false);
-            }.bind(this),
-            error: function (error) {
-              MessageToast.show("Error al actualizar: " + error.responseText);
-              // this._setBusy(false);
-            }.bind(this),
-          });
-        },
-
-        onCancelEdit: function () {
-          if (this._oEditDialog) {
-            this._oEditDialog.close();
-          }
-        },
-
-        /* _setBusy: function (bBusy) {
-          this.getView().setBusy(bBusy);
-          if (this._oEditDialog) {
-            this._oEditDialog.setBusy(bBusy);
-          }
-        }, */
 
         onItemPress: function (oEvent) {
           var oItem = oEvent.getParameter("listItem");
@@ -257,12 +313,6 @@ sap.ui.define(
           var oLeftLayoutData = oLeftPanel.getLayoutData();
           if (oLeftLayoutData) {
             oLeftLayoutData.setSize("50%");
-          }
-        },
-
-        onCloseDialog: function () {
-          if (this._oDialog) {
-            this._oDialog.close();
           }
         },
 
@@ -373,33 +423,6 @@ sap.ui.define(
         },
 
         // Implementación de acciones
-        onEditPressed: function () {
-          if (!this._oSelectedItem) return;
-
-          var oContext = this._oSelectedItem.getBindingContext();
-          var oData = oContext.getObject();
-
-          // Crear modelo para edición
-          var oEditModel = new JSONModel($.extend(true, {}, oData));
-          this.getView().setModel(oEditModel, "editModel");
-
-          // Cargar diálogo de edición
-          if (!this._oEditDialog) {
-            Fragment.load({
-              id: this.getView().getId(),
-              name: "com.invertions.sapfiorimodinv.view.fragments.EditCatalogDialog",
-              controller: this,
-            }).then(
-              function (oDialog) {
-                this._oEditDialog = oDialog;
-                this.getView().addDependent(oDialog);
-                oDialog.open();
-              }.bind(this)
-            );
-          } else {
-            this._oEditDialog.open();
-          }
-        },
 
         onActivatePressed: function () {
           this._changeStatus(true);

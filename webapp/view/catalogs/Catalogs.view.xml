@@ -17,7 +17,7 @@
                     orientation="Horizontal"
                 >
                     <!-- Panel izquierdo: Tabla de catálogos -->
-                    <Panel>
+                    <Panel width="auto">
                         <layoutData>
                             <layout:SplitterLayoutData size="100%" />
                         </layoutData>
@@ -84,33 +84,35 @@
                             itemPress="onItemPress"
                             mode="SingleSelectMaster"
                             growing="true"
+                            width="auto"
                         >
                             <columns>
-                                <Column>
+                                <Column width="120px">
+                                    <!-- Define un ancho fijo para cada columna -->
                                     <Text text="LABELID" />
                                 </Column>
-                                <Column>
+                                <Column width="140px">
                                     <Text text="LABEL" />
                                 </Column>
-                                <Column>
+                                <Column width="220px">
                                     <Text text="INDEX" />
                                 </Column>
-                                <Column>
+                                <Column width="170px">
                                     <Text text="COLLECTION" />
                                 </Column>
-                                <Column>
+                                <Column width="150px">
                                     <Text text="SECTION" />
                                 </Column>
-                                <Column>
+                                <Column width="100px">
                                     <Text text="SEQUENCE" />
                                 </Column>
-                                <Column>
+                                <Column width="160px">
                                     <Text text="IMAGE" />
                                 </Column>
-                                <Column>
+                                <Column width="230px">
                                     <Text text="DESCRIPTION" />
                                 </Column>
-                                <Column>
+                                <Column width="120px">
                                     <Text text="ESTADO" />
                                 </Column>
                             </columns>
@@ -140,7 +142,7 @@
                             <layout:SplitterLayoutData size="0px" />
                         </layoutData>
                         <Button
-                            icon="sap-icon://nav-back"
+                            icon="sap-icon://navigation-right-arrow"
                             type="Default"
                             tooltip="Volver"
                             press="onCloseDetailPanel"
