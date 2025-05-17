@@ -1,118 +1,80 @@
-<mvc:View
-  controllerName="com.invertions.sapfiorimodinv.controller.security.RolesMaster"
+<mvc:View controllerName="com.invertions.sapfiorimodinv.controller.security.RolesMaster"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns:m="sap.m"
   xmlns:core="sap.ui.core"
-  xmlns:layout="sap.ui.layout.form">
+  xmlns:layout="sap.ui.layout.form"
+  xmlns:tl="sap.ui.table"
+  xmlns:rowmodes="sap.ui.table.rowmodes"
+  >
 
-  <m:Page id="rolesPage" title="Roles Disponibles" class="sapUiContentPadding">
-    <!-- 🔹 Sección: Búsqueda -->
-    <m:Toolbar class="sapUiTinyMarginBottom">
-      <m:Title text="Roles Disponibles" level="H2" />
-        <m:ToolbarSpacer />
-        <m:Button text="Agregar Rol" icon="sap-icon://add" press=".onOpenDialog" />
+  <m:Page id="rolesMaster" title="Roles" class="sapUiContentPadding">
+
+
+    <m:Toolbar design="Transparent" class="customRoleToolbar">
+      <m:Button text="Crear" icon="sap-icon://add" type="Accept" press=".onOpenDialog" />
+
+      <m:SearchField id="searchRoleName" width="25rem" placeholder="Buscar roles..." liveChange=".onMultiSearch" />
+
       <m:ToolbarSpacer />
-      <m:SearchField
-        id="searchRoleName"
-        placeholder="Buscar por nombre de rol..."
-        liveChange=".onMultiSearch"
-        width="40%" />
+      <m:ToolbarSpacer />
+      <m:Select id="roleStatusFilter" width="12rem" change=".onStatusFilterChange" forceSelection="true">
+        <m:items>
+          <core:Item key="all" text="Todos" />
+          <core:Item key="active" text="Activos" />
+          <core:Item key="inactive" text="Inactivos" />
+        </m:items>
+      </m:Select>
+
     </m:Toolbar>
 
-    <!-- 🔹 Sección: Lista de Roles -->
-    <m:List
-      id="rolesList"
-      items="{roles>/value}"
-      mode="SingleSelectMaster"
-      itemPress=".onRolePress">
-      <m:StandardListItem
-        title="{roles>ROLENAME}"
-        description="{roles>DESCRIPTION}"
-        type="Active" />
-    </m:List>
 
+    <tl:Table id="rolesTable" rows="{roles>/value}" selectionMode="Single" selectionBehavior="RowOnly" rowSelectionChange=".onRoleSelected" enableColumnReordering="true" alternateRowColors="true" rowActionCount="2" width="100%">
 
-      <m:Dialog
-  id="dialogAddRole"
-  title="Agregar Nuevo Rol"
-  draggable="true"
-  resizable="true"
-  contentWidth="600px"
-  class="sapUiContentPadding"
-  contentHeight="auto"
-  afterClose=".onDialogClose">
+      <tl:rowMode>
+        <rowmodes:Fixed rowCount="20" />
+      </tl:rowMode>
 
-  <layout:SimpleForm
-    editable="true"
-    layout="ResponsiveGridLayout"
-    labelSpanL="4"
-    labelSpanM="4"
-    emptySpanL="1"
-    columnsL="2"
-    columnsM="2">
+      <tl:columns>
+        <tl:Column sortProperty="ROLEID" width="20%">
+          <m:Label text="Role ID" />
+          <tl:template>
+            <m:Text text="{roles>ROLEID}" />
+          </tl:template>
+        </tl:Column>
+        <tl:Column sortProperty="ROLENAME" width="25%">
+          <m:Label text="Nombre del Rol" />
+          <tl:template>
+            <m:Text text="{roles>ROLENAME}" />
+          </tl:template>
+        </tl:Column>
+        <tl:Column sortProperty="DESCRIPTION" width="55%">
+          <m:Label text="Descripción" />
+          <tl:template>
+            <m:Text text="{roles>DESCRIPTION}" />
+          </tl:template>
+        </tl:Column>
+        <tl:Column sortProperty="DETAIL_ROW/ACTIVED" width="15%">
+          <m:Label text="Estado" />
+          <tl:template>
+            <m:ObjectStatus text="{= ${roles>DETAIL_ROW/ACTIVED} ? 'Activo' : 'Inactivo' }" state="{= ${roles>DETAIL_ROW/ACTIVED} ? 'Success' : 'Warning' }" />
+          </tl:template>
+        </tl:Column>
 
-    <m:Label text="ID del Rol" />
-    <m:Input value="{newRoleModel>/ROLEID}" placeholder="Ej. IdAdmin" />
+      </tl:columns>
 
-    <m:Label text="Nombre del Rol" />
-    <m:Input value="{newRoleModel>/ROLENAME}" placeholder="Ej. Administrador" />
+      <tl:footer>
+        <m:OverflowToolbar id="OverFlowUsersManage">
+          <m:Label id="OberflowLabelUsersManage" text="Modo de filas" />
+          <m:SegmentedButton selectedKey="{ui>/rowMode}" id="rowModeSelector">
+            <m:items>
+              <m:SegmentedButtonItem id="IdUsersFixedButton" key="Fixed" icon="sap-icon://locked" />
+              <m:SegmentedButtonItem id="IdUsersInteracctiveButton" key="Interactive" icon="sap-icon://resize-vertical" />
+            </m:items>
+          </m:SegmentedButton>
+        </m:OverflowToolbar>
+      </tl:footer>
+    </tl:Table>
 
-    <m:Label text="Descripción" />
-    <m:Input value="{newRoleModel>/DESCRIPTION}" placeholder="Ej. Encargado de seguridad..." />
-
-    <!-- Proceso y privilegios -->
-    <core:Title text="Privilegios por Proceso" />
-            <!-- ComboBox: Proceso -->
-<m:Label text="Proceso" />
-<m:ComboBox
-  items="{processCatalogModel>/values}"
-  selectedKey="{newRoleModel>/NEW_PROCESSID}"
-  placeholder="Selecciona un proceso">
-  <core:Item key="{processCatalogModel>VALUEID}" text="{processCatalogModel>VALUE} -{processCatalogModel>VALUEPAID}" />
-</m:ComboBox>
-
-<!-- MultiComboBox: Privilegios -->
-<m:Label text="Privilegios" />
-<m:MultiComboBox
-  items="{privilegeCatalogModel>/values}"
-  selectedKeys="{newRoleModel>/NEW_PRIVILEGES}"
-  placeholder="Selecciona privilegios">
-  <core:Item
-    key="{privilegeCatalogModel>VALUEID}"
-    text="{privilegeCatalogModel>VALUE}" />
-</m:MultiComboBox>
-
-
-
-    <m:Button
-      text="Agregar Privilegio"
-      icon="sap-icon://add"
-      press=".onAddPrivilege" />
-
-    <m:Table
-      items="{newRoleModel>/PRIVILEGES}"
-      growing="true"
-      growingThreshold="5">
-      <m:columns>
-        <m:Column><m:Text text="Proceso" /></m:Column>
-        <m:Column><m:Text text="Privilegios" /></m:Column>
-      </m:columns>
-      <m:items>
-        <m:ColumnListItem>
-          <m:cells>
-            <m:Text text="{newRoleModel>PROCESSID}" />
-            <m:Text text="{= ${newRoleModel>PRIVILEGEID}.join(', ')}" />
-          </m:cells>
-        </m:ColumnListItem>
-      </m:items>
-    </m:Table>
-  </layout:SimpleForm>
-
-    <m:buttons>
-    <m:Button text="Guardar" type="Emphasized" press=".onSaveRole" />
-    <m:Button text="Cancelar" press=".onDialogClose" />
-  </m:buttons>
-</m:Dialog>
 
   </m:Page>
 </mvc:View>

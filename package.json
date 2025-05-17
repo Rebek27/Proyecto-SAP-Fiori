@@ -20,7 +20,7 @@
     "eslint-plugin-fiori-custom": "2.6.7"
   },
   "scripts": {
-    "start": "fiori run \"index.html\" --port 8081",
+    "start": "fiori run --port 8081 --open 'index.html#/'",
     "build": "ui5 build --all --config ./ui5.yaml --clean-dest --dest dist"
   },
   "sapuxLayer": "CUSTOMER_BASE"

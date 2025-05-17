@@ -1,4 +1,4 @@
-<mvc:View
+<!-- <mvc:View
   controllerName="com.invertions.sapfiorimodinv.controller.Invertions.Invertions"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
@@ -139,4 +139,4 @@
 
     </HBox>
   </Page>
-</mvc:View>
+</mvc:View> -->

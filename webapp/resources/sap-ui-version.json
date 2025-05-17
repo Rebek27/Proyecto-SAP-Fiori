@@ -1,32 +1,31 @@
 {
   "name": "SAPUI5 Distribution",
-  "version": "1.132.1",
-  "buildTimestamp": "202501281723",
+  "version": "1.135.0",
+  "buildTimestamp": "202504170759",
   "scmRevision": "",
-  "gav": "com.sap.ui5.dist:sapui5-dist:1.132.1:war",
+  "gav": "com.sap.ui5.dist:sapui5-dist:1.135.0:war",
   "libraries": [
     {
       "name": "sap.ui.core",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:core:1.132.1:jar",
+      "gav": "com.sap.ui5:core:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.core",
       "themes": [
         "base",
         "sap_hcb"
       ],
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.apf",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220940",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151322",
       "scmRevision": "",
-      "gav": "com.sap.apf:apf-lib:1.132.0:jar",
+      "gav": "com.sap.apf:apf-lib:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.apf",
       "themes": [],
       "manifestHints": {
@@ -77,16 +76,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ca.scfld.md",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220939",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151322",
       "scmRevision": "",
-      "gav": "com.sap.ca:scfld.md:1.132.0:jar",
+      "gav": "com.sap.ca:scfld.md:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ca.scfld.md",
       "deprecated": true,
       "themes": [],
@@ -104,16 +102,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ca.ui",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220939",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151322",
       "scmRevision": "",
-      "gav": "com.sap.ca:ui:1.132.0:jar",
+      "gav": "com.sap.ca:ui:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ca.ui",
       "deprecated": true,
       "themes": [
@@ -148,16 +145,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.cards.ap.common",
-      "version": "1.132.0",
-      "buildTimestamp": "202501221126",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151523",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.cards.ap.common:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.cards.ap.common:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.cards.ap.common",
       "themes": [],
       "manifestHints": {
@@ -176,16 +172,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.cards.ap.generator",
-      "version": "1.132.0",
-      "buildTimestamp": "202501221126",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151523",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.cards.ap.generator:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.cards.ap.generator:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.cards.ap.generator",
       "themes": [],
       "manifestHints": {
@@ -206,16 +201,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.cards.ap.transpiler",
-      "version": "1.132.0",
-      "buildTimestamp": "202501221126",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151523",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.cards.ap.transpiler:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.cards.ap.transpiler:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.cards.ap.transpiler",
       "themes": [],
       "manifestHints": {
@@ -226,16 +220,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.chart",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:chart:1.132.1:jar",
+      "gav": "com.sap.ui5:chart:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.chart",
       "themes": [],
       "manifestHints": {
@@ -253,16 +246,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.collaboration",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220834",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151216",
       "scmRevision": "",
-      "gav": "com.sap.collaboration:collaboration-commons:1.132.0:jar",
+      "gav": "com.sap.collaboration:collaboration-commons:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.collaboration",
       "themes": [
         "base",
@@ -313,16 +305,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.cux.home",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220929",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150936",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.cux.home:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.cux.home:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.cux.home",
       "themes": [
         "base",
@@ -349,16 +340,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.esh.search.ui",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220826",
+      "version": "1.135.1",
+      "buildTimestamp": "202504151158",
       "scmRevision": "",
-      "gav": "com.sap.esh:sap.esh.search.ui:1.132.0:jar",
+      "gav": "com.sap.esh:sap.esh.search.ui:1.135.1:jar",
       "npmPackageName": "@sapui5/sap.esh.search.ui",
       "themes": [
         "base",
@@ -403,16 +393,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.1"
       ]
     },
     {
       "name": "sap.f",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:fiori:1.132.1:jar",
+      "gav": "com.sap.ui5:fiori:1.135.0:jar",
       "npmPackageName": "@openui5/sap.f",
       "themes": [
         "base",
@@ -431,16 +420,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.base",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.base:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.base:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.base",
       "themes": [],
       "manifestHints": {
@@ -451,16 +439,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.controls",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.controls:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.controls:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.controls",
       "themes": [
         "base",
@@ -492,16 +479,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.core",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.core:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.core:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.core",
       "themes": [],
       "manifestHints": {
@@ -523,16 +509,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.ina",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.ina:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.ina:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.ina",
       "themes": [],
       "manifestHints": {
@@ -555,16 +540,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.macros",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.macros:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.macros:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.macros",
       "themes": [],
       "manifestHints": {
@@ -594,16 +578,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.navigation",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.navigation:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.navigation:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.navigation",
       "themes": [],
       "manifestHints": {
@@ -614,16 +597,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.placeholder",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.placeholder:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.placeholder:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.placeholder",
       "themes": [
         "base",
@@ -649,16 +631,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.plugins.managecache",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.plugins.managecache:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.plugins.managecache:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.plugins.managecache",
       "themes": [],
       "manifestHints": {
@@ -676,16 +657,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.templates",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.templates:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.templates:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.templates",
       "themes": [],
       "manifestHints": {
@@ -719,16 +699,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.test",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.test:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.test:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.fe.test",
       "themes": [],
       "manifestHints": {
@@ -739,16 +718,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fe.tools",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220847",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151231",
       "scmRevision": "",
-      "gav": "com.sap.uxeng:sap.fe.tools:1.132.0:jar",
+      "gav": "com.sap.uxeng:sap.fe.tools:1.135.0:jar",
       "themes": [],
       "manifestHints": {
         "dependencies": {
@@ -758,16 +736,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.feedback.ui",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220939",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151321",
       "scmRevision": "",
-      "gav": "com.sap.feedback:sap.feedback.ui:1.132.0:jar",
+      "gav": "com.sap.feedback:sap.feedback.ui:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.feedback.ui",
       "themes": [],
       "manifestHints": {
@@ -784,16 +761,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.fiori",
-      "version": "1.132.1",
-      "buildTimestamp": "202501281723",
+      "version": "1.135.0",
+      "buildTimestamp": "202504170759",
       "scmRevision": "",
-      "gav": "com.sap.ui5.dist:fiori-lib:1.132.1:jar",
+      "gav": "com.sap.ui5.dist:fiori-lib:1.135.0:jar",
       "themes": [
         "base",
         "sap_belize",
@@ -821,16 +797,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.gantt",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220810",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150829",
       "scmRevision": "",
-      "gav": "com.sap.gantt:gantt.lib:1.132.0:jar",
+      "gav": "com.sap.gantt:gantt.lib:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.gantt",
       "themes": [
         "base",
@@ -875,16 +850,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.insights",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220826",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150846",
       "scmRevision": "",
-      "gav": "com.sap.suite:insights-lib:1.132.0:jar",
+      "gav": "com.sap.suite:insights-lib:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.insights",
       "themes": [
         "base",
@@ -925,16 +899,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.m",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:mobile:1.132.1:jar",
+      "gav": "com.sap.ui5:mobile:1.135.0:jar",
       "npmPackageName": "@openui5/sap.m",
       "themes": [
         "base",
@@ -954,16 +927,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.makit",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:makit:1.132.1:jar",
+      "gav": "com.sap.ui5:makit:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.makit",
       "deprecated": true,
       "themes": [
@@ -992,16 +964,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.me",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:mobile-ext:1.132.1:jar",
+      "gav": "com.sap.ui5:mobile-ext:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.me",
       "deprecated": true,
       "themes": [
@@ -1031,16 +1002,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ndc",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:ndc:1.132.1:jar",
+      "gav": "com.sap.ui5:ndc:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ndc",
       "themes": [],
       "manifestHints": {
@@ -1058,16 +1028,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ovp",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220940",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151323",
       "scmRevision": "",
-      "gav": "com.sap.ovp:ovp-lib:1.132.0:jar",
+      "gav": "com.sap.ovp:ovp-lib:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ovp",
       "themes": [
         "base",
@@ -1126,16 +1095,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.rules.ui",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220808",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150828",
       "scmRevision": "",
-      "gav": "com.sap.rules:sap.rules.ui:1.132.0:jar",
+      "gav": "com.sap.rules:sap.rules.ui:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.rules.ui",
       "themes": [
         "base",
@@ -1171,16 +1139,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.sac.df",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220954",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151334",
       "scmRevision": "",
-      "gav": "com.sap.sac:com.sap.sac.df:1.132.0:jar",
+      "gav": "com.sap.sac:com.sap.sac.df:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.sac.df",
       "themes": [
         "base",
@@ -1217,16 +1184,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.suite.ui.commons",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220826",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150846",
       "scmRevision": "",
-      "gav": "com.sap.suite:suite-ui-commons:1.132.0:jar",
+      "gav": "com.sap.suite:suite-ui-commons:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.suite.ui.commons",
       "themes": [
         "base",
@@ -1277,16 +1243,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.suite.ui.generic.template",
-      "version": "1.132.0",
-      "buildTimestamp": "202501221204",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151620",
       "scmRevision": "",
-      "gav": "com.sap.suite.ui.generic.template:sap.suite.ui.generic.template:1.132.0:jar",
+      "gav": "com.sap.suite.ui.generic.template:sap.suite.ui.generic.template:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.suite.ui.generic.template",
       "themes": [
         "base",
@@ -1360,16 +1325,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.suite.ui.microchart",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.suite:suite-ui-microchart:1.132.1:jar",
+      "gav": "com.sap.suite:suite-ui-microchart:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.suite.ui.microchart",
       "themes": [
         "base",
@@ -1405,16 +1369,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.tnt",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:tnt:1.132.1:jar",
+      "gav": "com.sap.ui5:tnt:1.135.0:jar",
       "npmPackageName": "@openui5/sap.tnt",
       "themes": [
         "base",
@@ -1435,16 +1398,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.codeeditor",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:codeeditor:1.132.1:jar",
+      "gav": "com.sap.ui5:codeeditor:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.codeeditor",
       "themes": [
         "base",
@@ -1458,16 +1420,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.commons",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:commons:1.132.1:jar",
+      "gav": "com.sap.ui5:commons:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.commons",
       "deprecated": true,
       "themes": [
@@ -1484,16 +1445,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.comp",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:comp:1.132.1:jar",
+      "gav": "com.sap.ui5:comp:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.comp",
       "themes": [
         "base",
@@ -1542,16 +1502,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.dt",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:dt:1.132.1:jar",
+      "gav": "com.sap.ui5:dt:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.dt",
       "themes": [
         "base",
@@ -1565,16 +1524,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.export",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:export:1.132.1:jar",
+      "gav": "com.sap.ui5:export:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.export",
       "themes": [
         "base",
@@ -1603,16 +1561,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.fl",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:fl:1.132.1:jar",
+      "gav": "com.sap.ui5:fl:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.fl",
       "themes": [
         "base",
@@ -1633,16 +1590,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.generic.app",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220907",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151251",
       "scmRevision": "",
-      "gav": "com.sap.ui5:generic-app:1.132.0:jar",
+      "gav": "com.sap.ui5:generic-app:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.generic.app",
       "themes": [],
       "manifestHints": {
@@ -1666,16 +1622,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.generic.template",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220907",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151251",
       "scmRevision": "",
-      "gav": "com.sap.ui5:generic-template:1.132.0:jar",
+      "gav": "com.sap.ui5:generic-template:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.generic.template",
       "themes": [],
       "manifestHints": {
@@ -1707,16 +1662,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.integration",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:integration:1.132.1:jar",
+      "gav": "com.sap.ui5:integration:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.integration",
       "themes": [
         "base",
@@ -1735,16 +1689,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.layout",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:layout:1.132.1:jar",
+      "gav": "com.sap.ui5:layout:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.layout",
       "themes": [
         "base",
@@ -1758,16 +1711,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.mdc",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:mdc:1.132.1:jar",
+      "gav": "com.sap.ui5:mdc:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.mdc",
       "themes": [
         "base"
@@ -1787,16 +1739,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.richtexteditor",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:richtexteditor:1.132.1:jar",
+      "gav": "com.sap.ui5:richtexteditor:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.richtexteditor",
       "themes": [
         "base",
@@ -1824,16 +1775,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.rta",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:rta:1.132.1:jar",
+      "gav": "com.sap.ui5:rta:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.rta",
       "themes": [
         "base",
@@ -1854,40 +1804,37 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.server.abap",
-      "version": "1.132.1",
-      "buildTimestamp": "202501281723",
+      "version": "1.135.0",
+      "buildTimestamp": "202504170759",
       "scmRevision": "",
-      "gav": "com.sap.ui5.dist:sap.ui.server.abap:1.132.1:jar",
+      "gav": "com.sap.ui5.dist:sap.ui.server.abap:1.135.0:jar",
       "themes": [],
       "patchHistory": [
-        "1.132.0",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.server.java",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:resource:1.132.1:jar",
+      "gav": "com.sap.ui5:resource:1.135.0:jar",
       "themes": [],
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.suite",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:suite:1.132.1:jar",
+      "gav": "com.sap.ui5:suite:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.suite",
       "deprecated": true,
       "themes": [
@@ -1902,16 +1849,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.support",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:support:1.132.1:jar",
+      "gav": "com.sap.ui5:support:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.support",
       "themes": [],
       "manifestHints": {
@@ -1922,16 +1868,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.table",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:table:1.132.1:jar",
+      "gav": "com.sap.ui5:table:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.table",
       "themes": [
         "base",
@@ -1946,16 +1891,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.testrecorder",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:testrecorder:1.132.1:jar",
+      "gav": "com.sap.ui5:testrecorder:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.testrecorder",
       "themes": [],
       "manifestHints": {
@@ -1966,16 +1910,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.unified",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:unified:1.132.1:jar",
+      "gav": "com.sap.ui5:unified:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.unified",
       "themes": [
         "base",
@@ -1989,16 +1932,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.ux3",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:ux3:1.132.1:jar",
+      "gav": "com.sap.ui5:ux3:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.ux3",
       "deprecated": true,
       "themes": [
@@ -2016,16 +1958,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.vbm",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220809",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150829",
       "scmRevision": "",
-      "gav": "com.sap.ui5:vbm:1.132.0:jar",
+      "gav": "com.sap.ui5:vbm:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.vbm",
       "themes": [
         "base",
@@ -2060,16 +2001,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.vk",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220818",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150838",
       "scmRevision": "",
-      "gav": "com.sap.ui5.vizkit:sap.ui.vk:1.132.0:jar",
+      "gav": "com.sap.ui5.vizkit:sap.ui.vk:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.vk",
       "themes": [
         "base",
@@ -2113,16 +2053,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.vtm",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220825",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150846",
       "scmRevision": "",
-      "gav": "com.sap.ui5.vtm:sap.ui.vtm:1.132.0:jar",
+      "gav": "com.sap.ui5.vtm:sap.ui.vtm:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ui.vtm",
       "deprecated": true,
       "themes": [
@@ -2161,16 +2100,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.webc.common",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:webc.common:1.132.1:jar",
+      "gav": "com.sap.ui5:webc.common:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.webc.common",
       "deprecated": true,
       "themes": [],
@@ -2182,16 +2120,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.webc.fiori",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:webc.fiori:1.132.1:jar",
+      "gav": "com.sap.ui5:webc.fiori:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.webc.fiori",
       "deprecated": true,
       "themes": [],
@@ -2205,16 +2142,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ui.webc.main",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:webc.main:1.132.1:jar",
+      "gav": "com.sap.ui5:webc.main:1.135.0:jar",
       "npmPackageName": "@openui5/sap.ui.webc.main",
       "deprecated": true,
       "themes": [],
@@ -2227,16 +2163,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.uiext.inbox",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:inbox:1.132.1:jar",
+      "gav": "com.sap.ui5:inbox:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.uiext.inbox",
       "deprecated": true,
       "themes": [
@@ -2273,16 +2208,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ushell",
-      "version": "1.132.1",
-      "buildTimestamp": "202501281432",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151303",
       "scmRevision": "",
-      "gav": "com.sap.ushell:ushell-lib:1.132.1:jar",
+      "gav": "com.sap.ushell:ushell-lib:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ushell",
       "themes": [
         "base",
@@ -2348,16 +2282,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.ushell_abap",
-      "version": "1.132.1",
-      "buildTimestamp": "202501281432",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151303",
       "scmRevision": "",
-      "gav": "com.sap.ushell:ushell_abap:1.132.1:jar",
+      "gav": "com.sap.ushell:ushell_abap:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.ushell_abap",
       "themes": [],
       "manifestHints": {
@@ -2409,16 +2342,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.uxap",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.uxap:uxap-uilib:1.132.1:jar",
+      "gav": "com.sap.uxap:uxap-uilib:1.135.0:jar",
       "npmPackageName": "@openui5/sap.uxap",
       "themes": [
         "base",
@@ -2440,16 +2372,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.viz",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:viz:1.132.1:jar",
+      "gav": "com.sap.ui5:viz:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.viz",
       "themes": [
         "base",
@@ -2485,16 +2416,15 @@
         }
       },
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.webanalytics.core",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220808",
+      "version": "1.135.0",
+      "buildTimestamp": "202504150828",
       "scmRevision": "",
-      "gav": "com.sap.webanalytics:sap.webanalytics.core:1.132.0:jar",
+      "gav": "com.sap.webanalytics:sap.webanalytics.core:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.webanalytics.core",
       "deprecated": true,
       "themes": [],
@@ -2506,16 +2436,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.zen.commons",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220954",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151334",
       "scmRevision": "",
-      "gav": "com.sap.ip.bi.zen.rt.phx:com.sap.ip.bi.zen.rt.zencopy.phx:1.132.0:jar",
+      "gav": "com.sap.ip.bi.zen.rt.phx:com.sap.ip.bi.zen.rt.zencopy.phx:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.zen.commons",
       "deprecated": true,
       "themes": [
@@ -2550,16 +2479,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.zen.crosstab",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220954",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151334",
       "scmRevision": "",
-      "gav": "com.sap.ip.bi.zen.rt.phx:com.sap.ip.bi.zen.rt.components.crosstab.phx:1.132.0:jar",
+      "gav": "com.sap.ip.bi.zen.rt.phx:com.sap.ip.bi.zen.rt.components.crosstab.phx:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.zen.crosstab",
       "deprecated": true,
       "themes": [
@@ -2592,16 +2520,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "sap.zen.dsh",
-      "version": "1.132.0",
-      "buildTimestamp": "202501220954",
+      "version": "1.135.0",
+      "buildTimestamp": "202504151334",
       "scmRevision": "",
-      "gav": "com.sap.ip.bi.zen.rt:com.sap.ip.bi.zen.rt.dsh.phx:1.132.0:jar",
+      "gav": "com.sap.ip.bi.zen.rt:com.sap.ip.bi.zen.rt.dsh.phx:1.135.0:jar",
       "npmPackageName": "@sapui5/sap.zen.dsh",
       "deprecated": true,
       "themes": [
@@ -2666,16 +2593,15 @@
         }
       },
       "patchHistory": [
-        "1.132.0",
-        "1.132.0"
+        "1.135.0"
       ]
     },
     {
       "name": "themelib_sap_belize",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:themelib_sap_belize:1.132.1:jar",
+      "gav": "com.sap.ui5:themelib_sap_belize:1.135.0:jar",
       "npmPackageName": "@openui5/themelib_sap_belize",
       "deprecated": true,
       "themes": [
@@ -2686,16 +2612,15 @@
         "sap_belize_plus"
       ],
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "themelib_sap_bluecrystal",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:themelib_sap_bluecrystal:1.132.1:jar",
+      "gav": "com.sap.ui5:themelib_sap_bluecrystal:1.135.0:jar",
       "npmPackageName": "@openui5/themelib_sap_bluecrystal",
       "deprecated": true,
       "themes": [
@@ -2703,16 +2628,15 @@
         "sap_bluecrystal_base"
       ],
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "themelib_sap_fiori_3",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:themelib_sap_fiori_3:1.132.1:jar",
+      "gav": "com.sap.ui5:themelib_sap_fiori_3:1.135.0:jar",
       "npmPackageName": "@openui5/themelib_sap_fiori_3",
       "themes": [
         "sap_fiori_3",
@@ -2721,16 +2645,15 @@
         "sap_fiori_3_hcw"
       ],
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     },
     {
       "name": "themelib_sap_horizon",
-      "version": "1.132.1",
-      "buildTimestamp": "202501211848",
+      "version": "1.135.0",
+      "buildTimestamp": "202504141715",
       "scmRevision": "",
-      "gav": "com.sap.ui5:themelib_sap_horizon:1.132.1:jar",
+      "gav": "com.sap.ui5:themelib_sap_horizon:1.135.0:jar",
       "npmPackageName": "@openui5/themelib_sap_horizon",
       "themes": [
         "sap_horizon",
@@ -2739,8 +2662,7 @@
         "sap_horizon_hcw"
       ],
       "patchHistory": [
-        "1.132.1",
-        "1.132.1"
+        "1.135.0"
       ]
     }
   ],
@@ -3799,6 +3721,25 @@
             "sap.ui.layout": {},
             "sap.ui.mdc": {},
             "sap.ui.table": {
+              "lazy": true
+            },
+            "sap.ui.unified": {
+              "lazy": true
+            }
+          }
+        }
+      }
+    },
+    "sap.ushell.components.shell.ShellBar": {
+      "hasOwnPreload": true,
+      "library": "sap.ushell",
+      "manifestHints": {
+        "dependencies": {
+          "libs": {
+            "sap.m": {},
+            "sap.tnt": {},
+            "sap.ui.core": {},
+            "sap.ui.layout": {
               "lazy": true
             },
             "sap.ui.unified": {
