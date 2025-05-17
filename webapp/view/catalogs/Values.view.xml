@@ -60,27 +60,28 @@
         items="{path: 'values>/values'}"
         mode="SingleSelectMaster"
         selectionChange="onItemSelect"
+        width="auto"
     >
         <columns>
-            <Column width="12rem">
+            <Column width="190px">
                 <Text text="VALUEID" />
             </Column>
-            <Column width="12rem">
+            <Column width="170px">
                 <Text text="VALUEPAID" />
             </Column>
-            <Column minScreenWidth="Tablet">
+            <Column width="200px">
                 <Text text="VALUE" />
             </Column>
-            <Column>
+            <Column width="150px">
                 <Text text="ALIAS" />
             </Column>
-            <Column>
+            <Column width="190px">
                 <Text text="IMAGE" />
             </Column>
-            <Column>
+            <Column width="240px">
                 <Text text="DESCRIPTION" />
             </Column>
-            <Column>
+            <Column width="120px">
                 <Text text="ESTADO" />
             </Column>
         </columns>

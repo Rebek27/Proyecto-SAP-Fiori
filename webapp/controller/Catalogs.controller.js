@@ -135,6 +135,18 @@ sap.ui.define(
             return;
           }
 
+          // Verificar si el LABELID ya existe
+          var bLabelIdExists = aData.some(function (item) {
+            return item.LABELID === oData.LABELID;
+          });
+
+          if (bLabelIdExists) {
+            MessageToast.show(
+              "El LABELID ya existe, por favor ingrese uno diferente"
+            );
+            return;
+          }
+
           // Preparar datos para enviar
           var payload = {
             values: oData,
@@ -155,8 +167,6 @@ sap.ui.define(
               aData.push(oData);
               // Actualizar el modelo
               oTableModel.setProperty("/value", aData);
-
-              // this._refreshCatalogTable();
             }.bind(this),
             error: function (error) {
               MessageToast.show("Error al guardar: " + error.responseText);
@@ -222,10 +232,25 @@ sap.ui.define(
               MessageToast.show("Registro actualizado correctamente");
               this._oEditDialog.close();
 
-              // Agregar el nuevo registro
-              aData.push(oEditedData);
-              // Actualizar el modelo
-              oTableModel.setProperty("/value", aData);
+              var updatedIndex = aData.findIndex(
+                (item) => item._id === oEditedData._id
+              );
+
+              if (updatedIndex !== -1) {
+                aData[updatedIndex] = {
+                  ...aData[updatedIndex],
+                  LABELID: oEditedData.LABELID,
+                  VALUEPAID: oEditedData.VALUEPAID,
+                  LABEL: oEditedData.LABEL,
+                  INDEX: oEditedData.INDEX,
+                  COLLECTION: oEditedData.COLLECTION,
+                  SECTION: oEditedData.SECTION,
+                  SEQUENCE: oEditedData.SEQUENCE,
+                  IMAGE: oEditedData.IMAGE,
+                  DESCRIPTION: oEditedData.DESCRIPTION,
+                };
+                oTableModel.setProperty("/values", aData);
+              }
             }.bind(this),
             error: function (error) {
               MessageToast.show("Error al actualizar: " + error.responseText);
@@ -241,11 +266,117 @@ sap.ui.define(
 
         // ---------------------------------------------------- FIN PARA EDITAR UN LABEL
 
-        onCloseDialog: function () {
-          if (this._oDialog) {
-            this._oDialog.close();
-          }
+        // ---------------------------------------------------- PARA ELIMINAR UN LABEL
+
+        onDeletePressed: function () {
+          if (!this._oSelectedItem) return;
+
+          var oContext = this._oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+
+          MessageBox.confirm("¿Está seguro de eliminar este registro?", {
+            actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+            onClose: function (sAction) {
+              if (sAction === MessageBox.Action.YES) {
+                $.ajax({
+                  url: "http://localhost:4004/api/sec/deleteLabel",
+                  method: "POST",
+                  contentType: "application/json",
+                  data: JSON.stringify({ _id: oData._id }),
+                  success: function () {
+                    MessageToast.show("Registro eliminado");
+
+                    // Actualización local del modelo
+                    var oTableModel = this.getView().getModel();
+                    var aData = oTableModel.getProperty("/value") || [];
+
+                    // Encontrar y eliminar el registro
+                    var index = aData.findIndex(
+                      (item) => item._id === oData._id
+                    );
+                    if (index !== -1) {
+                      aData.splice(index, 1);
+                      oTableModel.setProperty("/value", aData);
+                    }
+                  }.bind(this),
+                  error: function (error) {
+                    MessageToast.show(
+                      "Error al eliminar: " + error.responseText
+                    );
+                  }.bind(this),
+                });
+              }
+            }.bind(this),
+          });
         },
+
+        // ---------------------------------------------------- FIN PARA ELIMINAR UN LABEL
+
+        // ---------------------------------------------------- ELIMINADO/ACTIVADO LOGICO
+
+        onActivatePressed: function () {
+          this._changeStatus(true);
+        },
+
+        onDeactivatePressed: function () {
+          this._changeStatus(false);
+        },
+
+        _changeStatus: function (bActivate) {
+          console.log("Activar/Desactivar");
+
+          if (!this._oSelectedItem) {
+            console.log("No hay ítem seleccionado");
+            return;
+          }
+
+          var oContext = this._oSelectedItem.getBindingContext();
+          var oData = oContext.getObject();
+          var sAction = bActivate ? "activate" : "delete";
+          var sStatusMessage = bActivate ? "activado" : "desactivado";
+
+          // Obtener el modelo y los datos actuales
+          var oTableModel = this.getView().getModel();
+          var aData = oTableModel.getProperty("/value") || [];
+
+          $.ajax({
+            url:
+              "http://localhost:4004/api/sec/logicalLabel?status=" +
+              sAction +
+              "&&labelID=" +
+              oData.LABELID,
+            method: "POST",
+            contentType: "application/json",
+            success: function () {
+              // Actualizar el estado localmente
+              var index = aData.findIndex(
+                (item) => item.LABELID === oData.LABELID
+              );
+              if (index !== -1) {
+                // Actualizar solo el campo ACTIVED
+                aData[index].DETAIL_ROW.ACTIVED = bActivate;
+
+                // Actualizar el modelo
+                oTableModel.setProperty("/value", aData);
+              }
+
+              // Actualizar visibilidad de botones según estado
+              this.byId("activateButton").setVisible(!bActivate);
+              this.byId("activateButton").setEnabled(!bActivate);
+              this.byId("deactivateButton").setVisible(bActivate);
+              this.byId("deactivateButton").setEnabled(bActivate);
+
+              MessageToast.show(
+                "Registro " + oData.LABELID + ": " + sStatusMessage
+              );
+            }.bind(this),
+            error: function (error) {
+              MessageToast.show("Error: " + error.responseText);
+            }.bind(this),
+          });
+        },
+
+        // ---------------------------------------------------- FIN ELIMINADO/ACTIVADO LOGICO
 
         _refreshCatalogTable: function () {
           // Implementa la lógica para refrescar los datos de la tabla
@@ -261,7 +392,7 @@ sap.ui.define(
           });
         },
 
-        // ----- PARA EDITAR UN LABEL
+        // ---------------------------------------------------- PARA CARGAR VALORES EN EL PANEL DERECHO
 
         onItemPress: function (oEvent) {
           var oItem = oEvent.getParameter("listItem");
@@ -316,21 +447,9 @@ sap.ui.define(
           }
         },
 
-        onCloseDetailPanel: function () {
-          var oSplitter = this.byId("mainSplitter");
-          var oDetailPanel = this.byId("detailPanel");
-          var oLayoutData = oDetailPanel.getLayoutData();
-          if (oLayoutData) {
-            oLayoutData.setSize("0px");
-          }
-          var oLeftPanel = oSplitter.getContentAreas()[0];
-          var oLeftLayoutData = oLeftPanel.getLayoutData();
-          if (oLeftLayoutData) {
-            oLeftLayoutData.setSize("100%");
-          }
-        },
+        // ---------------------------------------------------- FIN PARA CARGAR VALORES EN EL PANEL DERECHO
 
-        // EXPERIMENTAL
+        // ---------------------------------------------------- PARA BOTONES DE ACCIONES LOGICAS
 
         onSelectionChange: function (oEvent) {
           // Obtener el item seleccionado
@@ -350,17 +469,14 @@ sap.ui.define(
           var oContext = oSelectedItem.getBindingContext();
           var oData = oContext.getObject();
 
-          console.log(oData);
-
           // Actualizar visibilidad de botones según estado
           this.byId("activateButton").setVisible(!oData.DETAIL_ROW.ACTIVED);
+          this.byId("activateButton").setEnabled(!oData.DETAIL_ROW.ACTIVED);
           this.byId("deactivateButton").setVisible(oData.DETAIL_ROW.ACTIVED);
+          this.byId("deactivateButton").setEnabled(oData.DETAIL_ROW.ACTIVED);
 
           // Guardar referencia al item seleccionado
           this._oSelectedItem = oSelectedItem;
-
-          // Mostrar información en panel derecho (opcional)
-          this._loadDetailInformation(oSelectedItem);
         },
 
         _disableAllActions: function () {
@@ -370,138 +486,53 @@ sap.ui.define(
           this.byId("deleteButton").setEnabled(false);
         },
 
-        _loadDetailInformation: function (oSelectedItem) {
-          var oContext = oSelectedItem.getBindingContext();
-          var oSelectedData = oContext.getObject();
-          var sLabelID = oSelectedData.LABELID;
-          var that = this;
+        // ---------------------------------------------------- FIN PARA BOTONES DE ACCIONES LOGICAS
 
-          $.ajax({
-            url:
-              "http://localhost:4004/api/sec/valuesCRUD?procedure=get&labelID=" +
-              encodeURIComponent(sLabelID),
-            method: "GET",
-            dataType: "json",
-            success: function (response) {
-              var oValuesView = that.byId("XMLViewValues");
-              if (oValuesView) {
-                oValuesView.loaded().then(function () {
-                  var oController = oValuesView.getController();
-                  if (oController && oController.loadValues) {
-                    oController.loadValues(response.value || []);
-                    oValuesView
-                      .getModel("values")
-                      .setProperty("/selectedValue", oSelectedData);
-                  }
-                });
-              }
-            },
-            error: function () {
-              MessageToast.show("Error al cargar valores");
-            },
-          });
+        // ------------------------------------------------ BOTONES DE ACCIÓN
 
-          // Expandir el panel derecho
-          this._toggleDetailPanel(true);
-        },
-
-        _toggleDetailPanel: function (bShow) {
+        onCloseDetailPanel: function () {
           var oSplitter = this.byId("mainSplitter");
           var oDetailPanel = this.byId("detailPanel");
           var oLayoutData = oDetailPanel.getLayoutData();
-
           if (oLayoutData) {
-            oLayoutData.setSize(bShow ? "100%" : "0px");
+            oLayoutData.setSize("0px");
           }
-
-          // Ajustar panel izquierdo
           var oLeftPanel = oSplitter.getContentAreas()[0];
           var oLeftLayoutData = oLeftPanel.getLayoutData();
           if (oLeftLayoutData) {
-            oLeftLayoutData.setSize(bShow ? "0%" : "100%");
+            oLeftLayoutData.setSize("100%");
           }
         },
 
-        // Implementación de acciones
-
-        onActivatePressed: function () {
-          this._changeStatus(true);
+        onCenterDetailPanel: function () {
+          var oSplitter = this.byId("mainSplitter");
+          var oDetailPanel = this.byId("detailPanel");
+          var oLayoutData = oDetailPanel.getLayoutData();
+          if (oLayoutData) {
+            oLayoutData.setSize("50%");
+          }
+          var oLeftPanel = oSplitter.getContentAreas()[0];
+          var oLeftLayoutData = oLeftPanel.getLayoutData();
+          if (oLeftLayoutData) {
+            oLeftLayoutData.setSize("50%");
+          }
         },
 
-        onDeactivatePressed: function () {
-          this._changeStatus(false);
+        onExpandDetailPanel: function () {
+          var oSplitter = this.byId("mainSplitter");
+          var oDetailPanel = this.byId("detailPanel");
+          var oLayoutData = oDetailPanel.getLayoutData();
+          if (oLayoutData) {
+            oLayoutData.setSize("100%");
+          }
+          var oLeftPanel = oSplitter.getContentAreas()[0];
+          var oLeftLayoutData = oLeftPanel.getLayoutData();
+          if (oLeftLayoutData) {
+            oLeftLayoutData.setSize("0px");
+          }
         },
 
-        _changeStatus: function (bActivate) {
-          if (!this._oSelectedItem) return;
-
-          var oContext = this._oSelectedItem.getBindingContext();
-          var oData = oContext.getObject();
-          var sAction = bActivate ? "activateLabel" : "deactivateLabel";
-
-          $.ajax({
-            url: "http://localhost:4004/api/sec/" + sAction,
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({ labelID: oData.LABELID }),
-            success: function () {
-              MessageToast.show(
-                "Registro " + (bActivate ? "activado" : "desactivado")
-              );
-              this._refreshCatalogTable();
-            }.bind(this),
-            error: function (error) {
-              MessageToast.show("Error: " + error.responseText);
-            },
-          });
-        },
-
-        onDeletePressed: function () {
-          if (!this._oSelectedItem) return;
-
-          var oContext = this._oSelectedItem.getBindingContext();
-          var oData = oContext.getObject();
-
-          MessageBox.confirm("¿Está seguro de eliminar este registro?", {
-            actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-            onClose: function (sAction) {
-              if (sAction === MessageBox.Action.YES) {
-                $.ajax({
-                  url: "http://localhost:4004/api/sec/deleteLabel",
-                  method: "POST",
-                  contentType: "application/json",
-                  data: JSON.stringify({ labelID: oData.LABELID }),
-                  success: function () {
-                    MessageToast.show("Registro eliminado");
-                    this._refreshCatalogTable();
-                    this._toggleDetailPanel(false);
-                  }.bind(this),
-                  error: function (error) {
-                    MessageToast.show(
-                      "Error al eliminar: " + error.responseText
-                    );
-                  },
-                });
-              }
-            }.bind(this),
-          });
-        },
-
-        /* _refreshCatalogTable: function () {
-          var oModel = this.getView().getModel();
-
-          $.ajax({
-            url: "http://localhost:4004/api/sec/getall",
-            method: "GET",
-            success: function (data) {
-              oModel.setData({ value: data.value });
-              this._disableAllActions();
-            }.bind(this),
-            error: function () {
-              MessageToast.show("Error al actualizar datos");
-            },
-          });
-        }, */
+        // ------------------------------------------------ FIN BOTONES DE ACCIÓN
       }
     );
   }

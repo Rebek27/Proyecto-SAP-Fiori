@@ -141,12 +141,31 @@
                         <layoutData>
                             <layout:SplitterLayoutData size="0px" />
                         </layoutData>
-                        <Button
-                            icon="sap-icon://navigation-right-arrow"
-                            type="Default"
-                            tooltip="Volver"
-                            press="onCloseDetailPanel"
-                        />
+                        <HBox
+                            alignItems="Center"
+                            class="sapUiSmallMargin"
+                        >
+                            <Button
+                                icon="sap-icon://navigation-right-arrow"
+                                type="Default"
+                                tooltip="Volver"
+                                press="onCloseDetailPanel"
+                                class="sapUiTinyMarginEnd"
+                            />
+                            <Button
+                                icon="sap-icon://resize-horizontal"
+                                type="Default"
+                                tooltip="Centrar panel"
+                                press="onCenterDetailPanel"
+                                class="sapUiTinyMarginEnd"
+                            />
+                            <Button
+                                icon="sap-icon://full-screen"
+                                type="Default"
+                                tooltip="Expandir panel"
+                                press="onExpandDetailPanel"
+                            />
+                        </HBox>
 
                         <mvc:XMLView
                             id="XMLViewValues"
