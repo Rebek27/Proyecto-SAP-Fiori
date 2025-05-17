@@ -17,7 +17,11 @@
                     orientation="Horizontal"
                 >
                     <!-- Panel izquierdo: Tabla de catálogos -->
+<<<<<<< HEAD
                     <Panel>
+=======
+                    <Panel width="auto">
+>>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                         <layoutData>
                             <layout:SplitterLayoutData size="100%" />
                         </layoutData>
@@ -31,14 +35,22 @@
                             <ToolbarSpacer />
                             <SearchField
                                 width="20rem"
+<<<<<<< HEAD
                                 id="labelFilter"
                                 placeholder="Buscar valores..."
                                 liveChange="onFilterChange"
+=======
+                                id="searchField"
+                                placeholder="Buscar en todos los campos..."
+                                liveChange="onFilterChange"
+                                showSearchButton="false"
+>>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                             />
                             <Button
                                 text="Agregar"
                                 icon="sap-icon://add"
                                 type="Emphasized"
+<<<<<<< HEAD
                                 tooltip="Agregar elemento"
                                 press=".StatusValueAccept"
                                 enabled="{= !!${values>/selectedValueIn}}"
@@ -69,6 +81,40 @@
                                 type="Reject"
                                 press=".onDeleteValue"
                                 enabled="{= !!${values>/selectedValueIn}}"
+=======
+                                press="onAddCatalog"
+                            />
+                            <Button
+                                id="editButton"
+                                text="Editar"
+                                icon="sap-icon://edit"
+                                press="onEditPressed"
+                                enabled="false"
+                            />
+                            <Button
+                                id="activateButton"
+                                text="Activar"
+                                icon="sap-icon://accept"
+                                press="onActivatePressed"
+                                enabled="false"
+                                visible="{= !${DETAIL_ROW/ACTIVED} }"
+                            />
+                            <Button
+                                id="deactivateButton"
+                                text="Desactivar"
+                                icon="sap-icon://decline"
+                                press="onDeactivatePressed"
+                                enabled="false"
+                                visible="{= ${DETAIL_ROW/ACTIVED} }"
+                            />
+                            <Button
+                                id="deleteButton"
+                                text="Eliminar"
+                                icon="sap-icon://delete"
+                                press="onDeletePressed"
+                                enabled="false"
+                                type="Reject"
+>>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                             />
                         </OverflowToolbar>
                         <Table
@@ -77,6 +123,7 @@
                                 path: '/value',
                                 sorter: { path: 'LABELID' }
                             }"
+<<<<<<< HEAD
                             itemPress="onItemPress"
                             mode="SingleSelectMaster"
                             growing="true"
@@ -107,6 +154,41 @@
                                     <Text text="DESCRIPTION" />
                                 </Column>
                                 <Column>
+=======
+                            selectionChange="onSelectionChange"
+                            itemPress="onItemPress"
+                            mode="SingleSelectMaster"
+                            growing="true"
+                            width="auto"
+                        >
+                            <columns>
+                                <Column width="120px">
+                                    <!-- Define un ancho fijo para cada columna -->
+                                    <Text text="LABELID" />
+                                </Column>
+                                <Column width="140px">
+                                    <Text text="LABEL" />
+                                </Column>
+                                <Column width="220px">
+                                    <Text text="INDEX" />
+                                </Column>
+                                <Column width="170px">
+                                    <Text text="COLLECTION" />
+                                </Column>
+                                <Column width="150px">
+                                    <Text text="SECTION" />
+                                </Column>
+                                <Column width="100px">
+                                    <Text text="SEQUENCE" />
+                                </Column>
+                                <Column width="160px">
+                                    <Text text="IMAGE" />
+                                </Column>
+                                <Column width="230px">
+                                    <Text text="DESCRIPTION" />
+                                </Column>
+                                <Column width="120px">
+>>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                                     <Text text="ESTADO" />
                                 </Column>
                             </columns>
@@ -135,12 +217,40 @@
                         <layoutData>
                             <layout:SplitterLayoutData size="0px" />
                         </layoutData>
+<<<<<<< HEAD
                         <Button
                             icon="sap-icon://nav-back"
                             type="Default"
                             tooltip="Volver"
                             press="onCloseDetailPanel"
                         />
+=======
+                        <HBox
+                            alignItems="Center"
+                            class="sapUiSmallMargin"
+                        >
+                            <Button
+                                icon="sap-icon://navigation-right-arrow"
+                                type="Default"
+                                tooltip="Volver"
+                                press="onCloseDetailPanel"
+                                class="sapUiTinyMarginEnd"
+                            />
+                            <Button
+                                icon="sap-icon://resize-horizontal"
+                                type="Default"
+                                tooltip="Centrar panel"
+                                press="onCenterDetailPanel"
+                                class="sapUiTinyMarginEnd"
+                            />
+                            <Button
+                                icon="sap-icon://full-screen"
+                                type="Default"
+                                tooltip="Expandir panel"
+                                press="onExpandDetailPanel"
+                            />
+                        </HBox>
+>>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
 
                         <mvc:XMLView
                             id="XMLViewValues"
@@ -151,4 +261,8 @@
             </VBox>
         </content>
     </Page>
+<<<<<<< HEAD
 </mvc:View>
+=======
+</mvc:View>
+>>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550

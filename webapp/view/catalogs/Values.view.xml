@@ -6,65 +6,10 @@
     xmlns:layout="sap.ui.layout.form"
     class="sapUiSizeCompact"
 >
-    <!-- 🔹 Formulario CRUD -->
-    <layout:SimpleForm
-        id="formValues"
-        editable="true"
-        layout="ResponsiveGridLayout"
-        title="Agregar/Editar Valor"
-    >
-        <Label
-            text="LABELID"
-            required="true"
-        />
-        <Text text="{values>/selectedValue/LABELID}" />
-
-        <Label
-            text="VALUEID"
-            required="true"
-        />
-        <Input
-            value="{newValueModel>/VALUEID}"
-            id="InputValueID"
-        />
-
-        <Label
-            text="VALUE"
-            required="true"
-        />
-        <Input value="{newValueModel>/VALUE}" />
-
-        <Label text="VALUEPAID" />
-        <Input value="{newValueModel>/VALUEPAID}" />
-
-        <Label text="ALIAS" />
-        <Input value="{newValueModel>/ALIAS}" />
-
-        <Label text="IMAGE" />
-        <Input value="{newValueModel>/IMAGE}" />
-
-        <Label text="DESCRIPTION" />
-        <TextArea
-            value="{newValueModel>/DESCRIPTION}"
-            rows="3"
-        />
-
-        <Toolbar>
-            <ToolbarSpacer />
-            <Button
-                text="Guardar"
-                type="Emphasized"
-                icon="sap-icon://save"
-                press=".onSaveValues"
-                enabled="{= !!${values>/selectedValue}}"
-            />
-        </Toolbar>
-    </layout:SimpleForm>
-
     <!-- 🔹 Barra de herramientas -->
     <OverflowToolbar>
         <Title
-            text="Valores"
+            text="Values"
             level="H2"
         />
         <ToolbarSpacer />
@@ -75,9 +20,16 @@
             liveChange="onFilterChange"
         />
         <Button
+                text="Agregar"
+                type="Emphasized"
+                icon="sap-icon://add"
+                press=".onAddValues"
+                enabled="{= !!${values>/selectedValue}}"
+            />
+        <Button
             text="Editar"
             icon="sap-icon://edit"
-            press=".onEditValue"
+            press=".onChangeValue"
             enabled="{= !!${values>/selectedValueIn}}"
         />
         <Button
@@ -108,27 +60,28 @@
         items="{path: 'values>/values'}"
         mode="SingleSelectMaster"
         selectionChange="onItemSelect"
+        width="auto"
     >
         <columns>
-            <Column width="12rem">
+            <Column width="190px">
                 <Text text="VALUEID" />
             </Column>
-            <Column width="12rem">
+            <Column width="170px">
                 <Text text="VALUEPAID" />
             </Column>
-            <Column minScreenWidth="Tablet">
+            <Column width="200px">
                 <Text text="VALUE" />
             </Column>
-            <Column>
+            <Column width="150px">
                 <Text text="ALIAS" />
             </Column>
-            <Column>
+            <Column width="190px">
                 <Text text="IMAGE" />
             </Column>
-            <Column>
+            <Column width="240px">
                 <Text text="DESCRIPTION" />
             </Column>
-            <Column>
+            <Column width="120px">
                 <Text text="ESTADO" />
             </Column>
         </columns>

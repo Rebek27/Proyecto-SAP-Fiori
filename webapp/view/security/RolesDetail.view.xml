@@ -2,11 +2,15 @@
   controllerName="com.invertions.sapfiorimodinv.controller.security.RolesDetail"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns:m="sap.m"
-  xmlns:core="sap.ui.core">
+  xmlns:core="sap.ui.core"
+  xmlns:layout="sap.ui.layout.form"
+  xmlns:tl="sap.ui.table"
+  xmlns:rowmodes="sap.ui.table.rowmodes"
+  xmlns:cc="com.invertions.sapfiorimodinv.controller">
 
   <m:Page
     id="rolesDetailPage"
-    title="Detalles de rol: {selectedRole>ROLENAME}"
+    title="Detalles de rol: {selectedRole>/ROLENAME}"
     showNavButton="true"
     navButtonPress=".onNavBack">
 
@@ -14,20 +18,9 @@
     <m:headerContent>
       <m:Toolbar>
         <m:ToolbarSpacer />
-        <m:Button
-          text="Editar"
-          icon="sap-icon://edit"
-          press=".onEditRole" />
-        <m:Button
-          text="Desactivar"
-          icon="sap-icon://delete"
-          press=".onDesactivateRole"
-          type="Attention"/>
-          <m:Button
-          text="Eliminar"
-          icon="sap-icon://delete"
-          type="Reject"
-          press=".onDeleteRole" />
+        <m:Button text="Editar" type="Emphasized" icon="sap-icon://edit" press=".onUpdateRole" />
+        <m:Button text="Desactivar" icon="sap-icon://delete" press=".onDesactivateRole" type="Attention" />
+        <m:Button text="Eliminar" icon="sap-icon://delete" type="Reject" press=".onDeleteRole" />
       </m:Toolbar>
     </m:headerContent>
 
@@ -35,8 +28,8 @@
 
       <!-- 🔹 Información del rol -->
       <m:VBox id="roleInfoBox" class="sapUiSmallMargin">
-        <m:Text id="roleIdText" text="ID: {selectedRole>ROLEID}" />
-        <m:Text id="roleDescriptionText" text="{selectedRole>DESCRIPTION}" class="sapUiSmallMarginBottom" />
+        <m:Text id="roleIdText" text="ID: {selectedRole>/ROLEID}" />
+        <m:Text id="roleDescriptionText" text="{selectedRole>/DESCRIPTION}" class="sapUiSmallMarginBottom" />
       </m:VBox>
 
       <!-- 🔹 Procesos del rol -->
@@ -46,95 +39,108 @@
         expandable="false"
         class="sapUiMediumMarginTop">
 
-        <m:Toolbar>
-          <m:ToolbarSpacer />
-          <m:Button
-            icon="sap-icon://add"
-            text="Agregar Proceso"
-            press=".onAddProcess"
-            type="Emphasized" />
-        </m:Toolbar>
-
-        <m:Table
+        <tl:Table
           id="processesTable"
-          items="{selectedRole>PROCESSES}"
-          inset="false"
+          rows="{selectedRole>/PROCESSES}"
+          selectionMode="None"
+          alternateRowColors="true"
+          enableColumnReordering="true"
           width="100%"
-          growing="true"
-          noDataText="Este rol no tiene procesos asignados.">
+          noData="Este rol no tiene procesos asignados.">
 
-          <m:columns>
-            <m:Column>
-              <m:Text text="Proceso" />
-            </m:Column>
-            <m:Column>
-              <m:Text text="Aplicación" />
-            </m:Column>
-            <m:Column>
-              <m:Text text="Vista" />
-            </m:Column>
-            <m:Column>
-              <m:Text text="Privilegios" />
-            </m:Column>
-          </m:columns>
+          <tl:rowMode>
+            <rowmodes:Fixed rowCount="5" />
+          </tl:rowMode>
 
-          <m:items>
-            <m:ColumnListItem>
-              <m:cells>
+          <tl:columns>
+            <tl:Column>
+              <m:Label text="Proceso" />
+              <tl:template>
                 <m:Text text="{selectedRole>PROCESSNAME}" />
+              </tl:template>
+            </tl:Column>
+
+            <tl:Column>
+              <m:Label text="Aplicación" />
+              <tl:template>
                 <m:Text text="{selectedRole>APPLICATIONNAME}" />
+              </tl:template>
+            </tl:Column>
+
+            <tl:Column>
+              <m:Label text="Vista" />
+              <tl:template>
                 <m:Text text="{selectedRole>VIEWNAME}" />
+              </tl:template>
+            </tl:Column>
+
+            <tl:Column>
+              <m:Label text="Privilegios" />
+              <tl:template>
                 <m:HBox wrap="Wrap">
                   <m:FlexBox wrap="Wrap" items="{selectedRole>PRIVILEGES}">
                     <m:items>
-                      <m:ObjectStatus
-                        text="{selectedRole>PRIVILEGENAME}"
-                        class="sapUiTinyMarginEnd sapUiTinyMarginTop" />
+                      <m:ObjectStatus text="{selectedRole>PRIVILEGENAME}" class="sapUiTinyMarginEnd sapUiTinyMarginTop" />
                     </m:items>
                   </m:FlexBox>
                 </m:HBox>
-              </m:cells>
-            </m:ColumnListItem>
-          </m:items>
-
-        </m:Table>
-
+              </tl:template>
+            </tl:Column>
+          </tl:columns>
+        </tl:Table>
       </m:Panel>
 
+      <!-- 🔹 Usuarios del rol -->
       <m:Panel
-  headerText="Usuarios con este Rol"
-  class="sapUiMediumMarginTop"
-  expandable="false">
+        headerText="Usuarios con este Rol"
+        class="sapUiMediumMarginTop"
+        expandable="false">
 
- <m:Table
-  id="usersTable"
-  items="{selectedRole>USERS}"
-  inset="false"
-  width="100%"
-  growing="true"
-  noDataText="Este rol no tiene usuarios asignados.">
+        <tl:Table
+          id="usersTable"
+          rows="{selectedRole>/USERS}"
+          selectionMode="None"
+          alternateRowColors="true"
+          enableColumnReordering="true"
+          width="100%"
+          noData="Este rol no tiene usuarios asignados.">
 
-  <m:columns>
-    <m:Column><m:Text text="Usuario" /></m:Column>
-    <m:Column><m:Text text="Nombre completo" /></m:Column>
-    <m:Column><m:Text text="Empresa" /></m:Column>
-    <m:Column><m:Text text="Departamento" /></m:Column>
-  </m:columns>
+          <tl:rowMode>
+            <rowmodes:Fixed rowCount="5" />
+          </tl:rowMode>
 
-  <m:items>
-    <m:ColumnListItem>
-      <m:cells>
-        <m:Text text="{selectedRole>USERID}" />
-        <m:Text text="{selectedRole>USERNAME}" />
-        <m:Text text="{selectedRole>COMPANYNAME}" />
-        <m:Text text="{selectedRole>DEPARTMENT}" />
-      </m:cells>
-    </m:ColumnListItem>
-  </m:items>
+          <tl:columns>
+            <tl:Column>
+              <m:Label text="Usuario" />
+              <tl:template>
+                <m:Text text="{selectedRole>USERID}" />
+              </tl:template>
+            </tl:Column>
 
-</m:Table>
+            <tl:Column>
+              <m:Label text="Nombre completo" />
+              <tl:template>
+                <m:Text text="{selectedRole>USERNAME}" />
+              </tl:template>
+            </tl:Column>
 
-</m:Panel>
+            <tl:Column>
+              <m:Label text="Empresa" />
+              <tl:template>
+                <m:Text text="{selectedRole>COMPANYNAME}" />
+              </tl:template>
+            </tl:Column>
+
+            <tl:Column>
+              <m:Label text="Departamento" />
+              <tl:template>
+                <m:Text text="{selectedRole>DEPARTMENT}" />
+              </tl:template>
+            </tl:Column>
+          </tl:columns>
+        </tl:Table>
+      </m:Panel>
+
     </m:content>
   </m:Page>
 </mvc:View>
