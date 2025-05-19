@@ -7,7 +7,6 @@
   xmlns:rowmodes="sap.ui.table.rowmodes"
   >
 
-  <m:Page id="rolesMaster" title="Roles" class="sapUiContentPadding">
 
 
     <m:Toolbar design="Transparent" class="customRoleToolbar">
@@ -74,7 +73,4 @@
         </m:OverflowToolbar>
       </tl:footer>
     </tl:Table>
-
-
-  </m:Page>
 </mvc:View>

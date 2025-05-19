@@ -17,11 +17,7 @@
                     orientation="Horizontal"
                 >
                     <!-- Panel izquierdo: Tabla de catálogos -->
-<<<<<<< HEAD
-                    <Panel>
-=======
                     <Panel width="auto">
->>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                         <layoutData>
                             <layout:SplitterLayoutData size="100%" />
                         </layoutData>
@@ -35,53 +31,15 @@
                             <ToolbarSpacer />
                             <SearchField
                                 width="20rem"
-<<<<<<< HEAD
-                                id="labelFilter"
-                                placeholder="Buscar valores..."
-                                liveChange="onFilterChange"
-=======
                                 id="searchField"
                                 placeholder="Buscar en todos los campos..."
                                 liveChange="onFilterChange"
                                 showSearchButton="false"
->>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                             />
                             <Button
                                 text="Agregar"
                                 icon="sap-icon://add"
                                 type="Emphasized"
-<<<<<<< HEAD
-                                tooltip="Agregar elemento"
-                                press=".StatusValueAccept"
-                                enabled="{= !!${values>/selectedValueIn}}"
-                            />
-
-                            <Button
-                                text="Editar"
-                                icon="sap-icon://edit"
-                                press=".onEditValue"
-                                enabled="{= !!${values>/selectedValueIn}}"
-                            />
-                            <Button
-                                text="Activar"
-                                icon="sap-icon://accept"
-                                press=".StatusValueAccept"
-                                enabled="{= !!${values>/selectedValueIn}}"
-                            />
-                            <Button
-                                text="Desactivar"
-                                icon="sap-icon://decline"
-                                type="Reject"
-                                press=".StatusValueDecline"
-                                enabled="{= !!${values>/selectedValueIn}}"
-                            />
-                            <Button
-                                text="Eliminar"
-                                icon="sap-icon://delete"
-                                type="Reject"
-                                press=".onDeleteValue"
-                                enabled="{= !!${values>/selectedValueIn}}"
-=======
                                 press="onAddCatalog"
                             />
                             <Button
@@ -114,7 +72,6 @@
                                 press="onDeletePressed"
                                 enabled="false"
                                 type="Reject"
->>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                             />
                         </OverflowToolbar>
                         <Table
@@ -123,38 +80,6 @@
                                 path: '/value',
                                 sorter: { path: 'LABELID' }
                             }"
-<<<<<<< HEAD
-                            itemPress="onItemPress"
-                            mode="SingleSelectMaster"
-                            growing="true"
-                        >
-                            <columns>
-                                <Column>
-                                    <Text text="LABELID" />
-                                </Column>
-                                <Column>
-                                    <Text text="LABEL" />
-                                </Column>
-                                <Column>
-                                    <Text text="INDEX" />
-                                </Column>
-                                <Column>
-                                    <Text text="COLLECTION" />
-                                </Column>
-                                <Column>
-                                    <Text text="SECTION" />
-                                </Column>
-                                <Column>
-                                    <Text text="SEQUENCE" />
-                                </Column>
-                                <Column>
-                                    <Text text="IMAGE" />
-                                </Column>
-                                <Column>
-                                    <Text text="DESCRIPTION" />
-                                </Column>
-                                <Column>
-=======
                             selectionChange="onSelectionChange"
                             itemPress="onItemPress"
                             mode="SingleSelectMaster"
@@ -188,7 +113,6 @@
                                     <Text text="DESCRIPTION" />
                                 </Column>
                                 <Column width="120px">
->>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
                                     <Text text="ESTADO" />
                                 </Column>
                             </columns>
@@ -217,14 +141,6 @@
                         <layoutData>
                             <layout:SplitterLayoutData size="0px" />
                         </layoutData>
-<<<<<<< HEAD
-                        <Button
-                            icon="sap-icon://nav-back"
-                            type="Default"
-                            tooltip="Volver"
-                            press="onCloseDetailPanel"
-                        />
-=======
                         <HBox
                             alignItems="Center"
                             class="sapUiSmallMargin"
@@ -250,7 +166,6 @@
                                 press="onExpandDetailPanel"
                             />
                         </HBox>
->>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550
 
                         <mvc:XMLView
                             id="XMLViewValues"
@@ -261,8 +176,4 @@
             </VBox>
         </content>
     </Page>
-<<<<<<< HEAD
 </mvc:View>
-=======
-</mvc:View>
->>>>>>> c2dbb9b3005f94ddeacb410a83d29b422ede3550

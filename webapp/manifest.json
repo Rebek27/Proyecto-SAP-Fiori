@@ -48,7 +48,6 @@
                 "sap.tnt": {},
                 "sap.f": {},
                 "sap.ui.table": {}
-
             }
         },
         "contentDensities": {
@@ -97,15 +96,10 @@
                 },
                 {
                     "pattern": "roles",
-                    "name": "RouteRolesMaster",
-                    "target": "TargetRolesMaster"
+                    "name": "RouteRoles",
+                    "target": "TargetRoles"
                 },
                 {
-                    "pattern": "roles/{roleId}",
-                    "name": "RouteRolesDetail",
-                    "target": "TargetRolesDetail"
-                },
-                 {
                     "pattern": "users",
                     "name": "RouteUsersList",
                     "target": "TargetUsersList"
@@ -113,13 +107,13 @@
                 {
                     "pattern": "users/{USERID}",
                     "name": "RouteUserDetails",
-                    "target":"TargetUserDetails"
+                    "target": "TargetUserDetails"
                 },
-                 {
+                {
                     "pattern": "catalogs",
                     "name": "RouteCatalogs",
                     "target": "TargetCatalogs"
-                  },
+                },
                 {
                     "pattern": "invertions",
                     "name": "RouteInvertionsCompanies",
@@ -134,8 +128,7 @@
                     "pattern": "catalogs",
                     "name": "RouteCatalogs",
                     "target": "TargetCatalogs"
-                  }
-
+                }
             ],
             "targets": {
                 "TargetMain": {
@@ -149,25 +142,13 @@
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.salesforecast"
                 },
-                "TargetRolesMaster": {
-                    "viewName": "RolesMaster",
-                    "viewId": "rolesMaster",
-                    "viewType": "XML",
-                    "viewPath": "com.invertions.sapfiorimodinv.view.security"
-                },
-                "TargetRolesDetail": {
-                    "viewName": "RolesDetail",
-                    "viewId": "rolesDetail",
-                    "viewType": "XML",
-                    "viewPath": "com.invertions.sapfiorimodinv.view.security"
-                },
                 "TargetUsersList": {
                     "viewId": "UsersList",
                     "viewName": "UsersList",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security"
                 },
-                "TargetUserDetails":{
+                "TargetUserDetails": {
                     "viewId": "UserDetails",
                     "viewName": "UserDetails",
                     "viewType": "XML",
@@ -196,6 +177,12 @@
                     "viewId": "catalogs",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.catalogs"
+                },
+                "TargetRoles": {
+                    "viewName": "Roles",
+                    "viewId": "rolesSplitter",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.security.splitter"
                 }
             }
         },

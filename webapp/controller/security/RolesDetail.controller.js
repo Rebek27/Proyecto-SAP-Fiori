@@ -11,8 +11,6 @@ sap.ui.define([
   return BaseController.extend("com.invertions.sapfiorimodinv.controller.security.RolesDetail", {
 
     onInit: function () {
-      const oRouter = this.getRouter();
-      oRouter.getRoute("RouteRolesDetail").attachPatternMatched(this._onRouteMatched, this);
 
       const oProcessModel = this.getOwnerComponent().getModel("processCatalogModel");
       const oPrivilegeModel = this.getOwnerComponent().getModel("privilegeCatalogModel");

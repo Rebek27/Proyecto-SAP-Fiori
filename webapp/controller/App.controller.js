@@ -23,7 +23,7 @@ sap.ui.define([
 
             switch (sKey) {
                 case "roles":
-                    oRouter.navTo("RouteRolesMaster");
+                    oRouter.navTo("RouteRoles");
                     break;
                 case "users":
                     oRouter.navTo("RouteUsersList");

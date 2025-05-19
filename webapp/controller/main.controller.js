@@ -14,7 +14,7 @@ sap.ui.define([
     },
 
     onGoToRoles: function () {
-      this.getOwnerComponent().getRouter().navTo("RouteRolesMaster");
+      this.getOwnerComponent().getRouter().navTo("RouteRoles");
     },
 
     onGoToUsers: function () {
