@@ -1,38 +1,107 @@
 <mvc:View
-    controllerName="com.invertions.sapfiorimodinv.controller.security.UsersList"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:m="sap.m"
-    xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout.form"
+  controllerName="com.invertions.sapfiorimodinv.controller.security.UsersList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:m="sap.m"
+  xmlns:table="sap.ui.table"
+  xmlns:core="sap.ui.core"
 >
-    <m:Page
-        id="UsersListPage"
-        title="Usuarios Registrados"
-        class="sapUiContentPadding"
-    >
-        <!-- Barra de herramientas con botón para Agregar usuario -->
-        <m:Toolbar>
-            <m:Title text="Gestión de Usuarios" />
-            <m:ToolbarSpacer />
-            <m:Button
-                text="Agregar Usuario"
-                icon="sap-icon://add"
-                press=".onAddUser"
-            />
-        </m:Toolbar>
-        <m:List
-            id="UsersList"
-            headerText="Lista de usuarios"
-            items="{users>/value}"
-            mode="SingleSelectMaster"
-            itemPress=".onListItemPressed"
-        >
-            <m:StandardListItem
-                title="{users>USERNAME}"
-                description="{users>DEPARTMENT}"
-                type="Active"
-            />
-        </m:List>
+  <m:Page
+    id="UsersListPage"
+    title="Usuarios Registrados"
+    class="sapUiContentPadding"
+  >
+    <!-- Barra de herramientas simple en la parte superior -->
+    <m:Toolbar design="Transparent">
+      <m:Title text="Gestión de Usuarios" />
+      <m:ToolbarSpacer />
+      <m:Button
+        id="CreateUser"
+        text="Agregar Usuario"
+        press=".onAddUser"
+        icon="sap-icon://add"
+        type="Success"
+      />
+    </m:Toolbar>
 
-    </m:Page>
+    <!-- Tabla para mostrar los usuarios con columnas más detalladas -->
+    <table:Table
+      id="UsersTable"
+      rows="{users>/value}"
+      selectionMode="Single"
+      rowSelectionChange=".onListItemPressed"
+      enableColumnReordering="true"
+      visibleRowCount="10"
+      busyIndicatorDelay="0"
+    >
+      <table:columns>
+        <table:Column width="8rem">
+          <m:Label text="USERID" />
+          <table:template>
+            <m:Text text="{users>USERID}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="12rem">
+          <m:Label text="USERNAME" />
+          <table:template>
+            <m:Text text="{users>USERNAME}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="12rem">
+          <m:Label text="PHONENUMBER" />
+          <table:template>
+            <m:Text text="{users>PHONENUMBER}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="15rem">
+          <m:Label text="EMAIL" />
+          <table:template>
+            <m:Text text="{users>EMAIL}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="10rem">
+          <m:Label text="BIRTHDAYDATE" />
+          <table:template>
+            <m:Text text="{users>BIRTHDAYDATE}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="12rem">
+          <m:Label text="DEPARTMENT" />
+          <table:template>
+            <m:Text text="{users>DEPARTMENT}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="12rem">
+          <m:Label text="ROLES" />
+          <table:template>
+            <m:Text text="{path: 'users>ROLES', formatter: '.formatRoles'}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="10rem">
+          <m:Label text="FUNCTION" />
+          <table:template>
+            <m:Text text="{users>FUNCTION}" wrapping="false" />
+          </table:template>
+        </table:Column>
+        <table:Column width="10rem">
+          <m:Label text="STATUS" />
+          <table:template>
+            <m:Text text="{users>STATUS}" wrapping="false" />
+          </table:template>
+        </table:Column>
+      </table:columns>
+
+      <!-- Opcional: Pie de tabla o toolbar de funciones adicionales -->
+      <table:footer>
+        <m:OverflowToolbar>
+          <m:Label text="Modo de filas" />
+          <m:SegmentedButton selectedKey="{ui>/rowMode}">
+            <m:items>
+              <m:SegmentedButtonItem key="Fixed" icon="sap-icon://locked" />
+              <m:SegmentedButtonItem key="Interactive" icon="sap-icon://resize-vertical" />
+            </m:items>
+          </m:SegmentedButton>
+        </m:OverflowToolbar>
+      </table:footer>
+    </table:Table>
+  </m:Page>
 </mvc:View>
