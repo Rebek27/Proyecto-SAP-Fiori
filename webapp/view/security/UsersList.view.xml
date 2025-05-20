@@ -10,17 +10,22 @@
     title="Usuarios Registrados"
     class="sapUiContentPadding"
   >
-    <!-- Barra de herramientas simple en la parte superior -->
-    <m:Toolbar design="Transparent">
-      <m:Title text="Gestión de Usuarios" />
-      <m:ToolbarSpacer />
-      <m:Button
-        id="CreateUser"
-        text="Agregar Usuario"
-        press=".onAddUser"
-        icon="sap-icon://add"
-        type="Success"
-      />
+    <!-- Barra de herramientas con botón para Agregar usuario -->
+    <m:Toolbar id="UsersManageToolBar" design="Transparent" class="customUserToolbar">
+        <m:Button id="CreateUser" text="Crear" press="onAddUser" icon="sap-icon://add" type="Success" class="myBlackButton"/>
+        <m:Button id="UpdateUser" text="Editar" press="onEditUser" icon="sap-icon://edit" type="Emphasized" class="myBlackButton" enabled="{viewModel>/buttonsEnabled}"/>
+        <m:Button id="DeleteUser" text="Eliminar" press="onDeleteUser" icon="sap-icon://delete" type="Negative" enabled="{viewModel>/buttonsEnabled}"/>
+        <m:ToolbarSeparator/>
+        <m:Button id="DesactivateUser" text="Desactivar" icon="sap-icon://decline" press="onDesactivateUser" type="Critical" enabled="{viewModel>/buttonsEnabled}"/>
+        <m:Button id="ActivateUser" text="Activar" icon="sap-icon://accept" press="onActivateUser" type="Success" enabled="{viewModel>/buttonsEnabled}" class="myBlackButton"/>
+        <m:ToolbarSpacer/>
+        <m:SearchField 
+            id="SearchUserField" 
+            width="25rem"
+            placeholder="Buscar usuario..."
+            liveChange="onSearchUser" 
+        />
+        <m:Button id="RefreshUserTable" press="onRefresh" icon="sap-icon://restart" type="Transparent" tooltip="Refrescar tabla"/>
     </m:Toolbar>
 
     <!-- Tabla para mostrar los usuarios con columnas más detalladas -->
@@ -85,10 +90,15 @@
         <table:Column width="10rem">
           <m:Label text="STATUS" />
           <table:template>
-            <m:Text text="{users>STATUS}" wrapping="false" />
+            <m:Text
+              text="{= ${users>DETAIL_ROW/ACTIVED} ? 'ACTIVO' : 'INACTIVO'}"
+              class="{= ${users>DETAIL_ROW/ACTIVED} ? 'sapUiGreenText' : 'sapUiRedText'}"
+            />
           </table:template>
         </table:Column>
       </table:columns>
+      
+
 
       <!-- Opcional: Pie de tabla o toolbar de funciones adicionales -->
       <table:footer>

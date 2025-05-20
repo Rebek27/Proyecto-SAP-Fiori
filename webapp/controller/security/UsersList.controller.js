@@ -9,8 +9,9 @@ sap.ui.define([
     "sap/base/Log",
     "sap/ui/core/Fragment",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
-], function(BaseController, JSONModel, Log, Fragment, MessageToast, MessageBox) {
+    "sap/m/MessageBox",
+    "jquery"
+], function(BaseController, JSONModel, Log, Fragment, MessageToast, MessageBox,$) {
     "use strict";
 
     return BaseController.extend("com.invertions.sapfiorimodinv.controller.security.UsersList", {
@@ -32,32 +33,27 @@ sap.ui.define([
         /**
          * Función para cargar la lista de usuarios desde la API.
          */
-        loadUsers: function() {
-            var oTable = this.byId("IdTable1UsersManageTable");
-            var oModel = new JSONModel();
-            var that = this;
+        loadUsers: function () {
+          var oUsersModel = this.getView().getModel("users");
 
-            fetch("env.json")
-                .then(res => res.json())
-                .then(env => fetch(env.API_USERS_URL_BASE + "getallusers"))
-                .then(res => res.json())
-                .then(data => {
-                    // Formatear el campo ROLES para cada usuario antes de asignarlo al modelo
-                    data.value.forEach(user => {
-                        user.ROLES = that.formatRoles(user.ROLES);
-                    });
-                    oModel.setData(data);
-                    // Asigna el modelo a la tabla
-                    oTable.setModel(oModel);
-                })
-                .catch(err => {
-                    // Si ocurre un error con setModel, se ignora; en otro caso se muestra el mensaje
-                    if (err.message === "Cannot read properties of undefined (reading 'setModel')") {
-                        return;
-                    } else {
-                        MessageToast.show("Error al cargar usuarios: " + err.message);
-                    }
-                });
+          $.ajax({
+            url: "http://localhost:4004/api/sec/usersCRUD?procedure=getall",
+            method: "POST",
+            success: function (data) {
+              // Actualizar el modelo con los datos recibidos
+              oUsersModel.setProperty("/value", data.value || data);
+
+
+            },
+            error: function (error) {
+              console.error("Error loading users:", error);
+
+              // Mostrar mensaje de error
+              MessageBox.error(
+                "Error al cargar los usuarios. Por favor, inténtelo de nuevo."
+              );
+            },
+          });
         },
 
         loadCompanies: function() {
@@ -68,20 +64,22 @@ sap.ui.define([
             // Agregar la lógica para cargar departamentos según la compañía
         },
 
-        loadRoles: function() {
-            var oView = this.getView();
-            var oRolesModel = new JSONModel();
+        loadRoles: async function() {
+            try {
+                const res = await fetch("http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=all", { method: "POST" });
+                const data = await res.json();
 
-            fetch("env.json")
-                .then(res => res.json())
-                .then(env => fetch(env.API_ROLES_URL_BASE + "getallroles"))
-                .then(res => res.json())
-                .then(data => {
-                    oRolesModel.setData({ roles: data.value });
-                    // Asigna el modelo de roles a la vista (puedes usarlo en la lista de roles de la modal)
-                    oView.setModel(oRolesModel);
-                })
-                .catch(err => MessageToast.show("Error al cargar roles: " + err.message));
+                const aAll = (data.value || []).filter(r => !r.DETAIL_ROW?.DELETED);
+                const aFiltered = aAll.filter(r => r.DETAIL_ROW?.ACTIVED);
+
+                this.getOwnerComponent().setModel(new JSONModel({
+                    value: aFiltered,
+                    valueAll: aAll,
+                    filterKey: "active"
+                }), "roles");
+            } catch (e) {
+                MessageBox.error("Error al cargar roles.");
+            }
         },
 
         formatRoles: function(rolesArray) {
