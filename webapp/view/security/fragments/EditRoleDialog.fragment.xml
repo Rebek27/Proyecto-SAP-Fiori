@@ -69,9 +69,10 @@
 
   <m:buttons>
     <m:Button
-      text="Guardar"
-      type="Emphasized"
-      press="{= ${roleDialogModel>/IS_EDIT} ? '.onSaveRoleEdit' : '.onSaveRole'}" />
+  text="Actualizar"
+  type="Emphasized"
+  press=".onUpdateRoleServer" />
+
     <m:Button text="Cancelar" press=".onDialogClose" />
   </m:buttons>
 </m:Dialog>

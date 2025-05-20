@@ -84,8 +84,13 @@
                 "transition": "slide"
             },
             "routes": [
-                {
+                 {
                     "pattern": "",
+                    "name": "Login",
+                    "target": "TargetLogin"
+                },
+                {
+                    "pattern": "home",
                     "name": "RouteMain",
                     "target": "TargetMain"
                 },
@@ -123,11 +128,6 @@
                     "pattern": "invertions/{symbol}",
                     "name": "RouteInvertions",
                     "target": "TargetInvertions"
-                },
-                {
-                    "pattern": "catalogs",
-                    "name": "RouteCatalogs",
-                    "target": "TargetCatalogs"
                 }
             ],
             "targets": {
@@ -172,17 +172,17 @@
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.invertions"
                 },
-                "TargetCatalogs": {
-                    "viewName": "Catalogs",
-                    "viewId": "catalogs",
-                    "viewType": "XML",
-                    "viewPath": "com.invertions.sapfiorimodinv.view.catalogs"
-                },
                 "TargetRoles": {
                     "viewName": "Roles",
                     "viewId": "rolesSplitter",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security.splitter"
+                },
+                "TargetLogin": {
+                    "viewName": "Login",
+                    "viewId": "Login",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view"
                 }
             }
         },

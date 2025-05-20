@@ -10,7 +10,8 @@ sap.ui.define([
 
   return BaseController.extend("com.invertions.sapfiorimodinv.controller.security.RolesDetail", {
 
-    onInit: function () {
+    onInit: async function () {
+      await this.loadCatalogsOnce();
 
       const oProcessModel = this.getOwnerComponent().getModel("processCatalogModel");
       const oPrivilegeModel = this.getOwnerComponent().getModel("privilegeCatalogModel");
@@ -20,6 +21,25 @@ sap.ui.define([
       }
       if (oPrivilegeModel) {
         this.getView().setModel(oPrivilegeModel, "privilegeCatalogModel");
+      }
+    },
+
+    loadCatalogsOnce: async function () {
+      if (this._catalogsLoaded) return;
+
+      await this.loadCatalog("IdProcesses", "processCatalogModel");
+      await this.loadCatalog("IdPrivileges", "privilegeCatalogModel");
+      this._catalogsLoaded = true;
+    },
+
+    loadCatalog: async function (labelId, modelName) {
+      try {
+        const res = await fetch(`http://localhost:4004/api/sec/catalogsR?procedure=get&type=bylabelid&labelid=${labelId}`);
+        const data = await res.json();
+        const values = data.value?.[0]?.VALUES || [];
+        this.getView().setModel(new JSONModel({ values }), modelName);
+      } catch (e) {
+        console.error("Error cargando catálogo", labelId, e);
       }
     },
 
@@ -131,28 +151,79 @@ sap.ui.define([
       });
     },
 
-    onUpdateRole: function () {
+    onUpdateRoleServer: async function () {
+      const oData = this.getView().getModel("roleDialogModel").getData();
+
+      if (!oData.ROLENAME) {
+        MessageToast.show("El nombre del rol es obligatorio.");
+        return;
+      }
+
+      const sOldRoleId = oData.OLD_ROLEID || oData.ROLEID;
+
+      try {
+        const response = await fetch(`http://localhost:4004/api/sec/rolesCRUD?procedure=put&roleid=${encodeURIComponent(sOldRoleId)}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            ROLEID: oData.ROLEID,
+            ROLENAME: oData.ROLENAME,
+            DESCRIPTION: oData.DESCRIPTION,
+            PRIVILEGES: oData.PRIVILEGES
+          })
+        });
+
+        if (!response.ok) throw new Error(await response.text());
+
+        MessageToast.show("Rol actualizado exitosamente.");
+
+        const oRolesModel = this.getOwnerComponent().getModel("roles");
+        const aRoles = oRolesModel.getProperty("/value");
+        const index = aRoles.findIndex(role => role.ROLEID === sOldRoleId);
+
+        if (index !== -1) {
+          aRoles[index].ROLEID = oData.ROLEID;
+          aRoles[index].ROLENAME = oData.ROLENAME;
+          aRoles[index].DESCRIPTION = oData.DESCRIPTION;
+          aRoles[index].PRIVILEGES = oData.PRIVILEGES;
+          oRolesModel.setProperty("/value", aRoles);
+        }
+
+        this.onDialogClose();
+
+      } catch (err) {
+        MessageBox.error("Error al actualizar el rol: " + err.message);
+      }
+    },
+
+    onUpdateRole: async function () {
       const oView = this.getView();
-      const oSelectedRole = oView.getModel("selectedRole").getData();
+      const oSelectedRole = oView.getModel("selectedRole")?.getData();
+
+      if (!oSelectedRole) {
+        MessageToast.show("No hay datos del rol seleccionados.");
+        return;
+      }
+
+      await this.loadCatalogsOnce();
 
       const oModel = new JSONModel({
+        OLD_ROLEID: oSelectedRole.ROLEID,
         ROLEID: oSelectedRole.ROLEID,
         ROLENAME: oSelectedRole.ROLENAME,
         DESCRIPTION: oSelectedRole.DESCRIPTION,
-        PRIVILEGES: oSelectedRole.PROCESSES.map(proc => ({
+        PRIVILEGES: (oSelectedRole.PROCESSES || []).map(proc => ({
           PROCESSID: proc.PROCESSID,
-          PRIVILEGEID: proc.PRIVILEGES.map(p => p.PRIVILEGEID)
+          PRIVILEGEID: (proc.PRIVILEGES || []).map(p => p.PRIVILEGEID)
         })),
         NEW_PROCESSID: "",
         NEW_PRIVILEGES: [],
         IS_EDIT: true
       });
-      oView.setModel(oModel, "roleDialogModel");
 
-      const oProcessModel = this.getOwnerComponent().getModel("processCatalogModel");
-      const oPrivilegeModel = this.getOwnerComponent().getModel("privilegeCatalogModel");
-      if (oProcessModel) oView.setModel(oProcessModel, "processCatalogModel");
-      if (oPrivilegeModel) oView.setModel(oPrivilegeModel, "privilegeCatalogModel");
+      oView.setModel(oModel, "roleDialogModel");
 
       const oExistingDialog = this.byId("dialogEditRole");
       if (oExistingDialog) {
@@ -165,8 +236,9 @@ sap.ui.define([
         controller: this
       }).then(function (oDialog) {
         oView.addDependent(oDialog);
-        oDialog.setTitle("Editar Rol");
         oDialog.open();
+      }).catch(function (error) {
+        MessageBox.error("Error al cargar el diálogo: " + error.message);
       });
     },
 
@@ -201,49 +273,9 @@ sap.ui.define([
       oModel.setData(oData);
     },
 
-    onSaveRoleEdit: async function () {
-      const oData = this.getView().getModel("roleDialogModel").getData();
-
-      if (!oData.ROLEID || !oData.ROLENAME) {
-        MessageToast.show("ID y Nombre del Rol son obligatorios.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`http://localhost:4004/api/sec/rolesCRUD?procedure=put&roleid=${oData.ROLEID}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ROLEID: oData.ROLEID,
-            ROLENAME: oData.ROLENAME,
-            DESCRIPTION: oData.DESCRIPTION,
-            PRIVILEGES: oData.PRIVILEGES
-          })
-        });
-
-        if (!response.ok) throw new Error(await response.text());
-
-        MessageToast.show("Rol actualizado correctamente.");
-
-        const oRolesModel = this.getOwnerComponent().getModel("roles");
-        const aRoles = oRolesModel.getProperty("/value");
-        const index = aRoles.findIndex(role => role.ROLEID === oData.ROLEID);
-        if (index !== -1) {
-          aRoles[index].ROLENAME = oData.ROLENAME;
-          aRoles[index].DESCRIPTION = oData.DESCRIPTION;
-          aRoles[index].PRIVILEGES = oData.PRIVILEGES;
-          oRolesModel.setProperty("/value", aRoles);
-        }
-
-        const oDialog = this.byId("dialogEditRole");
-        if (oDialog) {
-          oDialog.close();
-        }
-
-      } catch (err) {
-        MessageBox.error("Error al actualizar el rol: " + err.message);
-      }
+    onDialogClose: function () {
+      const oDialog = this.byId("dialogEditRole");
+      if (oDialog) oDialog.close();
     }
-
   });
 });

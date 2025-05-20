@@ -3,18 +3,33 @@
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:core="sap.ui.core"
-  displayBlock="true">
+  displayBlock="true"
+    models="{ appView: 'appView' }">
 
   <VBox class="sapUiSmallMargin">
 
-
+  <!-- 🧑 Información del Usuario -->
   <ObjectHeader
     title="¡Bienvenido al Módulo Administrativo!"
     intro="Seleccione una opción para comenzar"
     icon="sap-icon://home"
     showTitleSelector="false"
-    fullScreenOptimized="true"
-  />
+    fullScreenOptimized="true" />
+
+  <VBox class="sapUiSmallMarginBottom" xmlns:core="sap.ui.core">
+  <Text text="👤 {appView>/currentUser/USERNAME}" class="sapUiTinyMarginBottom" />
+<Text text="🎂 {appView>/currentUser/BIRTHDAYDATE}" class="sapUiTinyMarginBottom" />
+<Text text="🏢 {appView>/currentUser/DEPARTMENT}" class="sapUiTinyMarginBottom" />
+<Text text="🏭 {appView>/currentUser/COMPANYNAME}" class="sapUiTinyMarginBottom" />
+<Text text="{appView>/currentUser/_privilegesText}" class="sapUiTinyMarginBottom" />
+
+  <Text text="{appView>/isLoggedIn}" />
+
+  
+  <!-- Si quieres los privilegios renderizados como texto plano -->
+  <Text text="{appView>/currentUser/_privilegesText}" class="sapUiTinyMarginBottom" />
+</VBox>
+
 
   <Toolbar class="sapUiSmallMarginTop">
     <Title text="Accesos rápidos" level="H4" />

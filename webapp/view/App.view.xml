@@ -3,7 +3,8 @@
   xmlns:mvc="sap.ui.core.mvc"
   xmlns:tnt="sap.tnt"
   xmlns:f="sap.f"
-  xmlns="sap.m">
+  xmlns="sap.m"
+   models="{ appView: 'appView' }">
 
   <tnt:ToolPage id="mainToolPage" class="sapUiSizeCompact">
 
