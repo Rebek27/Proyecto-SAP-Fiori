@@ -1,4 +1,7 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
     <Dialog
         id="AddUserDialog"
         title="Añadir Usuario"
@@ -8,43 +11,101 @@
         draggable="true"
         resizable="true"
     >
-        <VBox id="AddUserDialogVbox" class="sapUiSmallMargin">
-            <Input id="inputUserId" placeholder="ID de Usuario"/>
+        <VBox
+            id="AddUserDialogVbox"
+            class="sapUiSmallMargin"
+        >
+            <Input
+                id="inputUserId"
+                placeholder="ID de Usuario"
+            />
 
-            <Input id="inputUsername" placeholder="Nombre Completo"/>
-            
-            <Input id="inputUserPhoneNumber" placeholder="Número telefónico"/>
+            <Input
+                id="inputUsername"
+                placeholder="Nombre Completo"
+            />
 
-            <Input id="inputUserEmail" placeholder="Correo Electrónico"/>
+            <Input
+                id="inputUserPhoneNumber"
+                placeholder="Número telefónico"
+            />
 
-            <DatePicker id="inputUserBirthdayDate" placeholder="Fecha de nacimiento"/>
+            <Input
+                id="inputUserEmail"
+                placeholder="Correo Electrónico"
+            />
 
-            <ComboBox id="comboBoxCompanies" items="{/companies}" selectionChange="onCompanySelected" placeholder="Compañía">
-                <core:Item id="CompanyItem" key="{COMPANYID}" text="{COMPANYNAMME}" />
+            <DatePicker
+                id="inputUserBirthdayDate"
+                placeholder="Fecha de nacimiento"
+            />
+
+            <ComboBox
+                id="comboBoxCompanies"
+                items="{/companies}"
+                selectionChange="onCompanySelected"
+                placeholder="Compañía"
+            >
+                <core:Item
+                    id="CompanyItem"
+                    key="{COMPANYID}"
+                    text="{COMPANYNAMME}"
+                />
             </ComboBox>
-            
-            <ComboBox id="comboBoxCedis" items="{/cedis}" selectionChange="onCediSelected" placeholder="Departamento">
-                <core:Item id="CediItem" key="{CEDIID}" text="{CEDINAME}" />
+
+            <ComboBox
+                id="comboBoxCedis"
+                items="{/cedis}"
+                selectionChange="onCediSelected"
+                placeholder="Departamento"
+            >
+                <core:Item
+                    id="CediItem"
+                    key="{CEDIID}"
+                    text="{CEDINAME}"
+                />
             </ComboBox>
 
-            <ComboBox id="comboBoxRoles" items="{/roles}" selectionChange="onRoleSelected" placeholder="Selecciona un Rol">
-                <core:Item id="RoleItem" key="{ROLEID}" text="{ROLENAME}" />
+            <ComboBox
+                id="comboBoxRoles"
+                items="{roles>/roles}"
+                selectionChange="onRoleSelected"
+                placeholder="Selecciona un Rol"
+            >
+                <core:Item
+                    key="{roles>ROLEID}"
+                    text="{roles>ROLENAME}"
+                />
             </ComboBox>
-            
-            <VBox id="selectedRolesVBox" class="sapUiSmallMarginTop">
-                <!--VBOx donde va añadiendo los roles -->
+
+            <!-- Resto de controles -->
+            <VBox
+                id="selectedRolesVBox"
+                class="sapUiSmallMarginTop"
+            >
+                <!-- Aquí se mostrarán los roles seleccionados -->
             </VBox>
-            
-            <Input id="inputUserFunction" placeholder="Función que ejerce"/>
-
+            <Input
+                id="inputUserFunction"
+                placeholder="Función que ejerce"
+            />
         </VBox>
 
         <beginButton>
-            <Button id="SaveNewUser" text="Guardar" type="Emphasized" press="onSaveUser" />
+            <Button
+                id="SaveNewUser"
+                text="Guardar"
+                type="Emphasized"
+                press="onSaveUser"
+            />
         </beginButton>
 
         <endButton>
-            <Button id="CancelSaveUser" text="Cancelar" press="onCancelUser" />
+            <Button
+                id="CancelSaveUser"
+                text="Cancelar"
+                press="onCancelUser"
+            />
         </endButton>
     </Dialog>
 </core:FragmentDefinition>
