@@ -64,16 +64,6 @@ sap.ui.define([
       this.getView().setModel(oSelectedModel, "selectedRole");
     },
 
-    onNavBack: function () {
-      const oHistory = sap.ui.core.routing.History.getInstance();
-      const sPreviousHash = oHistory.getPreviousHash();
-
-      if (sPreviousHash !== undefined) {
-        window.history.go(-1);
-      } else {
-        this.getOwnerComponent().getRouter().navTo("RouteRolesMaster", {}, true);
-      }
-    },
 
     _handleRoleAction: async function (options) {
       const oModel = this.getView().getModel("selectedRole");

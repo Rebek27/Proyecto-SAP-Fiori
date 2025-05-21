@@ -23,16 +23,15 @@
                     id="emailInput"
                     type="Email"
                     placeholder="Correo"
-                    value="{/email}"
+                    value="{loginModel>/email}"    
                     width="300px"
                     class="sapUiSmallMarginBottom"
                 />
-
                 <m:HBox width="300px" class="sapUiSmallMarginBottom">
                     <m:Input
                         id="passwordInput"
                         placeholder="Contraseña"
-                        value="{/password}"
+                        value="{loginModel>/password}"  
                         type="Password"
                         width="100%"
                     />

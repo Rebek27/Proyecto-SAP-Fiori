@@ -111,18 +111,6 @@
               <m:Text text="{selectedRole>USERNAME}" />
             </tl:template>
           </tl:Column>
-          <tl:Column>
-            <m:Label text="Empresa" />
-            <tl:template>
-              <m:Text text="{selectedRole>COMPANYNAME}" />
-            </tl:template>
-          </tl:Column>
-          <tl:Column>
-            <m:Label text="Departamento" />
-            <tl:template>
-              <m:Text text="{selectedRole>DEPARTMENT}" />
-            </tl:template>
-          </tl:Column>
         </tl:columns>
       </tl:Table>
     </m:Panel>

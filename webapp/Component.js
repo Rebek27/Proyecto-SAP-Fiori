@@ -15,7 +15,7 @@ sap.ui.define([
       // Lógica base
       UIComponent.prototype.init.apply(this, arguments);
 
-      // 🔒 Modelo global para sesión y usuario
+      // Modelo global para sesión y usuario
       const oAppModel = new JSONModel({
         isLoggedIn: false,
         currentUser: {}

@@ -7,7 +7,7 @@ sap.ui.define([
 
     onInit: function () {
      const oUser = this.getOwnerComponent().getModel("appView").getProperty("/currentUser");
-  console.log("🧠 Usuario recibido en Main:", oUser);
+    console.log(" Usuario recibido en Main:", oUser);
     },
 
     onGoToInvertions: function () {

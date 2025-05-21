@@ -16,13 +16,6 @@
 
       <m:ToolbarSpacer />
       <m:ToolbarSpacer />
-      <m:Select id="roleStatusFilter" width="12rem" change=".onStatusFilterChange" forceSelection="true">
-        <m:items>
-          <core:Item key="all" text="Todos" />
-          <core:Item key="active" text="Activos" />
-          <core:Item key="inactive" text="Inactivos" />
-        </m:items>
-      </m:Select>
 
     </m:Toolbar>
 

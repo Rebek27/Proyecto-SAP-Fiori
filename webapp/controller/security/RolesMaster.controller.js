@@ -36,6 +36,7 @@ sap.ui.define([
         this.getView().addDependent(dialog);
         this._pDialog = dialog;
       });
+
     },
 
     // 🔄 Obtener lista de roles desde backend
@@ -164,8 +165,8 @@ sap.ui.define([
         const filterKey = model.getProperty("/filterKey");
         const aFiltered = aAll.filter(r =>
           filterKey === "active" ? r.DETAIL_ROW?.ACTIVED :
-          filterKey === "inactive" ? !r.DETAIL_ROW?.ACTIVED :
-          !r.DETAIL_ROW?.DELETED
+            filterKey === "inactive" ? !r.DETAIL_ROW?.ACTIVED :
+              !r.DETAIL_ROW?.DELETED
         );
 
         model.setProperty("/valueAll", aAll);
@@ -185,14 +186,27 @@ sap.ui.define([
         return;
       }
 
+      const oRolesView = this.getView().getParent().getParent(); // sube hasta Roles.view
+      const oUiStateModel = oRolesView.getModel("uiState");
+
+      if (oUiStateModel) {
+        oUiStateModel.setProperty("/isDetailVisible", true);
+      }
+
+
       const oRole = oTable.getContextByIndex(iIndex).getObject();
       const sId = encodeURIComponent(oRole.ROLEID);
+
+
+
 
       try {
         const res = await fetch(`http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=all&roleid=${sId}`, {
           method: "POST"
         });
         const result = await res.json();
+
+
 
         if (!result?.value?.length) {
           MessageBox.warning("No se encontró información del rol.");
@@ -213,21 +227,6 @@ sap.ui.define([
       binding.filter(filters);
     },
 
-    // 🔘 Cambiar filtro activo/inactivo/todos
-    onStatusFilterChange: function (oEvent) {
-      const key = oEvent.getSource().getSelectedKey();
-      const model = this.getOwnerComponent().getModel("roles");
-      const all = model.getProperty("/valueAll") || [];
-
-      const filtered = all.filter(r =>
-        key === "active" ? r.DETAIL_ROW?.ACTIVED && !r.DETAIL_ROW?.DELETED :
-        key === "inactive" ? !r.DETAIL_ROW?.ACTIVED && !r.DETAIL_ROW?.DELETED :
-        !r.DETAIL_ROW?.DELETED
-      );
-
-      model.setProperty("/value", filtered);
-      model.setProperty("/filterKey", key);
-    }
 
   });
 });

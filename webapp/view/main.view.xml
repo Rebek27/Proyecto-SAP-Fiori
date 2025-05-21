@@ -9,26 +9,33 @@
   <VBox class="sapUiSmallMargin">
 
   <!-- 🧑 Información del Usuario -->
-  <ObjectHeader
-    title="¡Bienvenido al Módulo Administrativo!"
-    intro="Seleccione una opción para comenzar"
-    icon="sap-icon://home"
-    showTitleSelector="false"
-    fullScreenOptimized="true" />
+ <ObjectHeader
+  title="¡Bienvenido al Módulo Administrativo!"
+  intro="Seleccione una opción para comenzar"
+  icon="sap-icon://home"
+  showTitleSelector="false"
+  fullScreenOptimized="true" />
 
-  <VBox class="sapUiSmallMarginBottom" xmlns:core="sap.ui.core">
-  <Text text="👤 {appView>/currentUser/USERNAME}" class="sapUiTinyMarginBottom" />
-<Text text="🎂 {appView>/currentUser/BIRTHDAYDATE}" class="sapUiTinyMarginBottom" />
-<Text text="🏢 {appView>/currentUser/DEPARTMENT}" class="sapUiTinyMarginBottom" />
-<Text text="🏭 {appView>/currentUser/COMPANYNAME}" class="sapUiTinyMarginBottom" />
-<Text text="{appView>/currentUser/_privilegesText}" class="sapUiTinyMarginBottom" />
-
-  <Text text="{appView>/isLoggedIn}" />
-
-  
-  <!-- Si quieres los privilegios renderizados como texto plano -->
-  <Text text="{appView>/currentUser/_privilegesText}" class="sapUiTinyMarginBottom" />
+<!-- Información del usuario -->
+<VBox class="sapUiSmallMarginBottom sapUiMediumFontSize" xmlns:core="sap.ui.core">
+  <HBox>
+    <Text text="Usuario:" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+    <Text text="{appView>/currentUser/USERNAME}" class="sapUiTinyMarginBottom" />
+  </HBox>
+  <HBox>
+    <Text text="Fecha de nacimiento:" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+    <Text text="{appView>/currentUser/BIRTHDAYDATE}" class="sapUiTinyMarginBottom" />
+  </HBox>
+  <HBox>
+    <Text text="Empresa:" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+    <Text text="{appView>/currentUser/COMPANYNAME}" class="sapUiTinyMarginBottom" />
+  </HBox>
+  <HBox>
+    <Text text="Departamento:" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" />
+    <Text text="{appView>/currentUser/DEPARTMENT}" class="sapUiTinyMarginBottom" />
+  </HBox>
 </VBox>
+
 
 
   <Toolbar class="sapUiSmallMarginTop">
