@@ -21,14 +21,25 @@ sap.ui.define(
 
           this._oDialog = null;
 
-          $.ajax({
-            url: "http://localhost:4004/api/sec/getall",
-            method: "GET",
-            success: function (data) {
+          fetch("http://localhost:4004/api/sec/labelCRUD?procedure=getall", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+              }
+              return response.json();
+            })
+            .then((data) => {
               oModel.setData({ value: data.value });
               that.getView().setModel(oModel);
-            },
-          });
+            })
+            .catch((error) => {
+              console.error("Error en la petición fetch:", error);
+            });
         },
 
         // ---------------------------------------------------- PARA FILTRAR EN LA TABLA
@@ -77,8 +88,8 @@ sap.ui.define(
             LABEL: "",
             INDEX: "",
             COLLECTION: "",
-            SECTION: "seguridad", // Valor por defecto
-            SEQUENCE: 10, // Valor por defecto
+            SECTION: "seguridad",
+            SEQUENCE: 10,
             IMAGE: "",
             DESCRIPTION: "",
             DETAIL_ROW: {
@@ -152,14 +163,24 @@ sap.ui.define(
             values: oData,
           };
 
-          console.log("Data:", JSON.stringify(oData));
+          // console.log("Data:", JSON.stringify(oData));
 
-          $.ajax({
-            url: "http://localhost:4004/api/sec/newLabel", // Ajusta tu endpoint
+          fetch("http://localhost:4004/api/sec/labelCRUD?procedure=post", {
             method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(payload),
-            success: function (response) {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.text().then((text) => {
+                  throw new Error(text);
+                });
+              }
+              return response.json();
+            })
+            .then((response) => {
               MessageToast.show("Catálogo agregado correctamente");
               this._oAddDialog.close();
 
@@ -167,11 +188,10 @@ sap.ui.define(
               aData.push(oData);
               // Actualizar el modelo
               oTableModel.setProperty("/value", aData);
-            }.bind(this),
-            error: function (error) {
-              MessageToast.show("Error al guardar: " + error.responseText);
-            },
-          });
+            })
+            .catch((error) => {
+              MessageToast.show("Error al guardar: " + error.message);
+            });
         },
 
         onCancelAddCatalog: function () {
@@ -221,18 +241,28 @@ sap.ui.define(
           var aData = oTableModel.getProperty("/value") || [];
 
           // Llamada a la API para actualizar
-          $.ajax({
-            url: "http://localhost:4004/api/sec/updateLabel",
+          fetch("http://localhost:4004/api/sec/labelCRUD?procedure=patch", {
             method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
               values: oEditedData,
             }),
-            success: function (response) {
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.text().then((text) => {
+                  throw new Error(text);
+                });
+              }
+              return response.json();
+            })
+            .then((response) => {
               MessageToast.show("Registro actualizado correctamente");
               this._oEditDialog.close();
 
-              var updatedIndex = aData.findIndex(
+              const updatedIndex = aData.findIndex(
                 (item) => item._id === oEditedData._id
               );
 
@@ -251,11 +281,10 @@ sap.ui.define(
                 };
                 oTableModel.setProperty("/values", aData);
               }
-            }.bind(this),
-            error: function (error) {
-              MessageToast.show("Error al actualizar: " + error.responseText);
-            }.bind(this),
-          });
+            })
+            .catch((error) => {
+              MessageToast.show("Error al actualizar: " + error.message);
+            });
         },
 
         onCancelEdit: function () {
@@ -278,33 +307,42 @@ sap.ui.define(
             actions: [MessageBox.Action.YES, MessageBox.Action.NO],
             onClose: function (sAction) {
               if (sAction === MessageBox.Action.YES) {
-                $.ajax({
-                  url: "http://localhost:4004/api/sec/deleteLabel",
-                  method: "POST",
-                  contentType: "application/json",
-                  data: JSON.stringify({ _id: oData._id }),
-                  success: function () {
+                fetch(
+                  "http://localhost:4004/api/sec/labelCRUD?procedure=delete&&type=hard",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ _id: oData._id }),
+                  }
+                )
+                  .then((response) => {
+                    if (!response.ok) {
+                      return response.text().then((text) => {
+                        throw new Error(text);
+                      });
+                    }
+                    return response.json();
+                  })
+                  .then(() => {
                     MessageToast.show("Registro eliminado");
 
                     // Actualización local del modelo
-                    var oTableModel = this.getView().getModel();
-                    var aData = oTableModel.getProperty("/value") || [];
+                    const oTableModel = this.getView().getModel();
+                    const aData = oTableModel.getProperty("/value") || [];
 
-                    // Encontrar y eliminar el registro
-                    var index = aData.findIndex(
+                    const index = aData.findIndex(
                       (item) => item._id === oData._id
                     );
                     if (index !== -1) {
                       aData.splice(index, 1);
                       oTableModel.setProperty("/value", aData);
                     }
-                  }.bind(this),
-                  error: function (error) {
-                    MessageToast.show(
-                      "Error al eliminar: " + error.responseText
-                    );
-                  }.bind(this),
-                });
+                  })
+                  .catch((error) => {
+                    MessageToast.show("Error al eliminar: " + error.message);
+                  });
               }
             }.bind(this),
           });
@@ -339,24 +377,33 @@ sap.ui.define(
           var oTableModel = this.getView().getModel();
           var aData = oTableModel.getProperty("/value") || [];
 
-          $.ajax({
-            url:
-              "http://localhost:4004/api/sec/logicalLabel?status=" +
+          fetch(
+            "http://localhost:4004/api/sec/labelCRUD?procedure=delete&&type=logic&&status=" +
               sAction +
               "&&labelID=" +
               oData.LABELID,
-            method: "POST",
-            contentType: "application/json",
-            success: function () {
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                return response.text().then((text) => {
+                  throw new Error(text);
+                });
+              }
+              return response.json();
+            })
+            .then(() => {
               // Actualizar el estado localmente
-              var index = aData.findIndex(
+              const index = aData.findIndex(
                 (item) => item.LABELID === oData.LABELID
               );
               if (index !== -1) {
-                // Actualizar solo el campo ACTIVED
                 aData[index].DETAIL_ROW.ACTIVED = bActivate;
-
-                // Actualizar el modelo
                 oTableModel.setProperty("/value", aData);
               }
 
@@ -369,28 +416,13 @@ sap.ui.define(
               MessageToast.show(
                 "Registro " + oData.LABELID + ": " + sStatusMessage
               );
-            }.bind(this),
-            error: function (error) {
-              MessageToast.show("Error: " + error.responseText);
-            }.bind(this),
-          });
+            })
+            .catch((error) => {
+              MessageToast.show("Error: " + error.message);
+            });
         },
 
         // ---------------------------------------------------- FIN ELIMINADO/ACTIVADO LOGICO
-
-        _refreshCatalogTable: function () {
-          // Implementa la lógica para refrescar los datos de la tabla
-          var oTable = this.byId("catalogTable");
-          var oModel = this.getView().getModel();
-
-          $.ajax({
-            url: "http://localhost:4004/api/sec/getall",
-            method: "GET",
-            success: function (data) {
-              oModel.setData({ value: data.value });
-            },
-          });
-        },
 
         // ---------------------------------------------------- PARA CARGAR VALORES EN EL PANEL DERECHO
 
@@ -405,31 +437,38 @@ sap.ui.define(
             encodeURIComponent(sLabelID);
           var that = this;
 
-          $.ajax({
-            url: sUrl,
+          fetch(sUrl, {
             method: "GET",
-            dataType: "json",
-            success: function (response) {
-              var oValuesView = that.byId("XMLViewValues");
+            headers: {
+              Accept: "application/json",
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al obtener datos");
+              }
+              return response.json();
+            })
+            .then((response) => {
+              const oValuesView = that.byId("XMLViewValues");
               if (oValuesView) {
-                oValuesView.loaded().then(function () {
-                  var oController = oValuesView.getController();
+                oValuesView.loaded().then(() => {
+                  const oController = oValuesView.getController();
                   if (oController && oController.loadValues) {
-                    // Pasa los valores y también el ítem seleccionado
+                    // Pasa los valores y el ítem seleccionado
                     oController.loadValues(response.value || []);
 
-                    // Actualiza el selectedValue en el modelo values
+                    // Actualiza el selectedValue en el modelo "values"
                     oValuesView
                       .getModel("values")
                       .setProperty("/selectedValue", oSelectedData);
                   }
                 });
               }
-            },
-            error: function () {
+            })
+            .catch(() => {
               MessageToast.show("Error al cargar valores");
-            },
-          });
+            });
 
           // Expandir el panel derecho
           var oSplitter = this.byId("mainSplitter");
