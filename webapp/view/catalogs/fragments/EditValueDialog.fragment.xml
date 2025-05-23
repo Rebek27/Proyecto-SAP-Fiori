@@ -10,7 +10,7 @@
         
         <content>
             <form:SimpleForm editable="true">
-            <Label text="LABELID" required="true"/>
+        <Label text="LABELID" required="true"/>
         <Text text="{values>/selectedValue/LABELID}" />
         
          <Label text="VALUEID" required="true"/>
@@ -19,8 +19,35 @@
         <Label text="VALUE" required="true"/>
         <Input value="{newValueModel>/VALUE}" />
 
-        <Label text="VALUEPAID" />
-        <Input value="{newValueModel>/VALUEPAID}" />
+                        <Label text="Label ID" />
+                <ComboBox
+                    items="{
+                          path: 'values>/AllLabels',
+                          sorter: { path: 'LABELID' }
+                        }"
+                    selectedKey="{newValueModel>/ValuePaid1}"
+                    selectionChange=".onLabelIdChange"
+                >
+                    <core:Item
+                        key="{values>LABELID}"
+                        text="{values>LABELID}"
+                    />
+                </ComboBox>
+
+                <Label text="Values ID que están en LABELID" />
+                <ComboBox
+                    id="valueIdComboBox2"
+                    items="{
+                              path: 'values>/FilteredValues',
+                              sorter: { path: 'VALUEID' }
+                            }"
+                    selectedKey="{newValueModel>/ValuePaid2}"
+                >
+                    <core:Item
+                        key="{values>VALUEID}"
+                        text="{values>VALUEID}"
+                    />
+                </ComboBox>
 
         <Label text="ALIAS" />
         <Input value="{newValueModel>/ALIAS}" />
@@ -30,6 +57,8 @@
 
         <Label text="DESCRIPTION" />
         <TextArea value="{newValueModel>/DESCRIPTION}" rows="3"/>
+        <Label text="Estado Inicial"/>
+        <Switch state="{newValueModel>/DETAIL_ROW/ACTIVED}" customTextOn="ACTIVO" customTextOff="INACTIVO" change=".onSwitchChange"/>
                 
                 <!-- Agrega más campos según necesites -->
             </form:SimpleForm>

@@ -20,7 +20,9 @@ sap.ui.define(
           var that = this;
 
           this._oDialog = null;
+          this._aAllValues = []; // Array para almacenar todos los valores
 
+          // Cargar labels
           fetch("http://localhost:4004/api/sec/labelCRUD?procedure=getall", {
             method: "POST",
             headers: {
@@ -36,9 +38,28 @@ sap.ui.define(
             .then((data) => {
               oModel.setData({ value: data.value });
               that.getView().setModel(oModel);
+
+              // Se hace un get all de todos los valores
+              return fetch("http://localhost:4004/api/sec/valuesCRUD?procedure=getall", {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+            })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al cargar valores iniciales");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              // Almacenar todos los valores en el array
+              this._aAllValues = data.value || [];
             })
             .catch((error) => {
               console.error("Error en la petición fetch:", error);
+              MessageToast.show("Error al cargar datos iniciales");
             });
         },
 
@@ -429,53 +450,39 @@ sap.ui.define(
         onItemPress: function (oEvent) {
           var oItem = oEvent.getParameter("listItem");
           var oContext = oItem.getBindingContext();
-          var oSelectedData = oContext.getObject(); // Obtiene los datos del ítem seleccionado
+          var oSelectedData = oContext.getObject();
 
-          var sLabelID = oSelectedData.LABELID;
-          var sUrl =
-            "http://localhost:4004/api/sec/valuesCRUD?procedure=get&labelID=" +
-            encodeURIComponent(sLabelID);
-          var that = this;
+          // Filtrar valores localmente por LABELID seleccionado, para evitar múltiples llamadas a la API
+          var aFilteredValues = this._aAllValues.filter(function(oValue) {
+            return oValue.LABELID === oSelectedData.LABELID;
+          });
+          var oAllLabels = this.getView().getModel().getProperty("/value");
+          var aAllValues = this._aAllValues;
+          var oValuesView = this.byId("XMLViewValues");
+          if (oValuesView) {
+            oValuesView.loaded().then(function() {
+              var oController = oValuesView.getController();
+              if (oController && oController.loadValues) {
+                // Pasar los valores filtrados
+                oController.loadValues(aFilteredValues,aAllValues,oAllLabels);
 
-          fetch(sUrl, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Error al obtener datos");
+                // Actualizar el selectedValue en el modelo "values"
+                oValuesView.getModel("values")
+                  .setProperty("/selectedValue", oSelectedData);
+                  oValuesView.getModel("values")
+                  .setProperty("/AllValues", aAllValues);
+                  oValuesView.getModel("values")
+                  .setProperty("/AllLabels", oAllLabels);
               }
-              return response.json();
-            })
-            .then((response) => {
-              const oValuesView = that.byId("XMLViewValues");
-              if (oValuesView) {
-                oValuesView.loaded().then(() => {
-                  const oController = oValuesView.getController();
-                  if (oController && oController.loadValues) {
-                    // Pasa los valores y el ítem seleccionado
-                    oController.loadValues(response.value || []);
-
-                    // Actualiza el selectedValue en el modelo "values"
-                    oValuesView
-                      .getModel("values")
-                      .setProperty("/selectedValue", oSelectedData);
-                  }
-                });
-              }
-            })
-            .catch(() => {
-              MessageToast.show("Error al cargar valores");
-            });
+            }.bind(this));
+          }
 
           // Expandir el panel derecho
           var oSplitter = this.byId("mainSplitter");
           var oDetailPanel = this.byId("detailPanel");
           var oLayoutData = oDetailPanel.getLayoutData();
           if (oLayoutData) {
-            oLayoutData.setSize("50%"); // O el porcentaje/píxeles que prefieras
+            oLayoutData.setSize("50%");
           }
 
           // Opcional: reducir el panel izquierdo
