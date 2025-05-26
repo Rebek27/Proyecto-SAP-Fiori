@@ -47,7 +47,9 @@
                 "sap.ui.core": {},
                 "sap.tnt": {},
                 "sap.f": {},
-                "sap.ui.table": {}
+                "sap.ui.table": {},
+                "sap.viz": {}
+                
             }
         },
         "contentDensities": {
@@ -121,7 +123,7 @@
                 },
                 {
                     "pattern": "investments",
-                    "name": "RouteInvestments",
+                    "name": "RouteInvertions",
                     "target": "TargetInvestments"
                 }
             ],
