@@ -281,6 +281,18 @@ sap.ui.define(
             return;
           }
 
+          // Verificar si el LABELID ya existe
+          var bLabelIdExists = aData.some(function (item) {
+            return item.LABELID === oEditedData.LABELID;
+          });
+
+          if (bLabelIdExists) {
+            MessageToast.show(
+              "El LABELID ya existe, por favor ingrese uno diferente"
+            );
+            return;
+          }
+
           // Llamada a la API para actualizar
           fetch("http://localhost:4004/api/sec/labelCRUD?procedure=patch", {
             method: "POST",
