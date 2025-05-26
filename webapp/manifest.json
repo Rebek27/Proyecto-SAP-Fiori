@@ -120,14 +120,9 @@
                     "target": "TargetCatalogs"
                 },
                 {
-                    "pattern": "invertions",
-                    "name": "RouteInvertionsCompanies",
-                    "target": "TargetInvertionsCompanies"
-                },
-                {
-                    "pattern": "invertions/{symbol}",
-                    "name": "RouteInvertions",
-                    "target": "TargetInvertions"
+                    "pattern": "investments",
+                    "name": "RouteInvestments",
+                    "target": "TargetInvestments"
                 }
             ],
             "targets": {
@@ -177,6 +172,12 @@
                     "viewId": "rolesSplitter",
                     "viewType": "XML",
                     "viewPath": "com.invertions.sapfiorimodinv.view.security.splitter"
+                },
+                "TargetInvestments": {
+                    "viewName": "Investments",
+                    "viewId": "investmentsPage",
+                    "viewType": "XML",
+                    "viewPath": "com.invertions.sapfiorimodinv.view.investments"
                 },
                 "TargetLogin": {
                     "viewName": "Login",
