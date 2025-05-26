@@ -73,6 +73,15 @@
                                 enabled="false"
                                 type="Reject"
                             />
+                            <HBox>
+                                <Button
+                                    icon="sap-icon://navigation-right-arrow"
+                                    type="Default"
+                                    tooltip="Ver detalle"
+                                    press="onCenterDetailPanel"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                            </HBox>
                         </OverflowToolbar>
                         <Table
                             id="catalogTable"
