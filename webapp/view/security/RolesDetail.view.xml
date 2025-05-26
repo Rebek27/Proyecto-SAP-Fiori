@@ -13,9 +13,6 @@
     <m:Toolbar>
       <m:Title text="Detalles de rol: {selectedRole>/ROLENAME}" level="H2" />
       <m:ToolbarSpacer />
-      <m:Button text="Editar" type="Emphasized" icon="sap-icon://edit" press=".onUpdateRole" />
-      <m:Button text="Desactivar" icon="sap-icon://delete" press=".onDesactivateRole" type="Attention" />
-      <m:Button text="Eliminar" icon="sap-icon://delete" type="Reject" press=".onDeleteRole" />
     </m:Toolbar>
 
     <!-- 🔹 Información del rol -->
@@ -39,6 +36,13 @@
         enableColumnReordering="true"
         width="100%"
         noData="Este rol no tiene procesos asignados.">
+
+          <tl:extension>
+          <m:OverflowToolbar>
+            <m:ToolbarSpacer />
+            <m:Button text="Catálogos" type="Emphasized" icon="sap-icon://folder" press=".onGotoCatalogs" />
+          </m:OverflowToolbar>
+        </tl:extension>
 
         <tl:rowMode>
           <rowmodes:Fixed rowCount="5" />
@@ -93,6 +97,13 @@
         enableColumnReordering="true"
         width="100%"
         noData="Este rol no tiene usuarios asignados.">
+
+          <tl:extension>
+          <m:OverflowToolbar>
+            <m:ToolbarSpacer />
+            <m:Button text="Usuarios" type="Emphasized" icon="sap-icon://folder" press=".onGoToUsers" />
+          </m:OverflowToolbar>
+        </tl:extension>
 
         <tl:rowMode>
           <rowmodes:Fixed rowCount="5" />

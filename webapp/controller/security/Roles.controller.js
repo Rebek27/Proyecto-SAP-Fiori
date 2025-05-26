@@ -12,24 +12,34 @@ sap.ui.define([
 
       // Hook del enrutador
       const oRouter = this.getOwnerComponent().getRouter();
-      oRouter.getRoute("RouteRoles").attachPatternMatched(this._onRouteMatched, this);
+      oRouter.getRoute("RouteRoles").attachPatternMatched(this.onRouteMatched, this);
     },
 
-    _onRouteMatched: function () {
+    onRouteMatched: async function () {
       const oRolesMaster = this.byId("rolesMasterView");
       const oController = oRolesMaster.getController();
 
-      if (oController && typeof oController.loadRolesData === "function") {
-        oController.loadRolesData(); // Ejecuta get all al acceder
+      if (!oController) return;
+
+      // Cargar roles desde backend
+      if (typeof oController.loadRolesData === "function") {
+        oController.loadRolesData();
       }
 
+      // Cargar catálogos directamente
+      if (typeof oController.loadCatalog === "function") {
+        await oController.loadCatalog("IdProcesses", "processCatalogModel");
+        await oController.loadCatalog("IdPrivileges", "privilegeCatalogModel");
+      }
+
+      // Ocultar el panel derecho
       const oUiStateModel = this.getView().getModel("uiState");
       if (oUiStateModel) {
         oUiStateModel.setProperty("/isDetailVisible", false);
       }
 
+      // Limpiar rol seleccionado
       this.getOwnerComponent().setModel(new JSONModel({}), "selectedRole");
-
     }
   });
 });
