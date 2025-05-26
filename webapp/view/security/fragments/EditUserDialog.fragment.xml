@@ -1,50 +1,183 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-    <Dialog
-        id="EditUserDialog"
-        title="Editar Usuario"
-        icon="sap-icon://edit"
-        type="Message"
-        class="customDialogSize"
-        draggable="true"
-        resizable="true"
-    >
-        <VBox id="EditUserDialogVbox" class="sapUiSmallMargin">
-            <Input id="inputEditUserId" placeholder="ID de Usuario"/>
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+  <Dialog
+      id="EditUserDialog"
+      title="Editar Usuario"
+      icon="sap-icon://edit"
+      type="Message"
+      class="customDialogSize"
+      draggable="true"
+      resizable="true">
+    <VBox
+        id="EditUserDialogVbox"
+        class="sapUiSmallMargin">
+      <!-- Campo existente: ID de Usuario -->
+      <Input
+          id="inputEditUserId"
+          placeholder="ID de Usuario"
+          value="{editUserModel>/USERID}" 
+          editable="false"/>
 
-            <Input id="inputEditUsername" placeholder="Nombre Completo"/>
-            
-            <Input id="inputEditUserPhoneNumber" type="Number" placeholder="Número telefónico"/>
+      <!-- Nuevo: Campo PASSWORD -->
+      <Input
+          id="inputEditUserPassword"
+          placeholder="Contraseña"
+          type="Password"
+          value="{editUserModel>/PASSWORD}" />
 
-            <Input id="inputEditUserEmail" type="Email" placeholder="Correo Electrónico"/>
+      <!-- Nuevo: Campo ALIAS -->
+      <Input
+          id="inputEditUserAlias"
+          placeholder="Alias"
+          value="{editUserModel>/ALIAS}" />
 
-            <DatePicker id="inputEditUserBirthdayDate" placeholder="Fecha de nacimiento"/>
+      <!-- Nuevos: Campos FIRSTNAME y LASTNAME -->
+      <Input
+          id="inputEditUserFirstName"
+          placeholder="Primer Nombre"
+          value="{editUserModel>/FIRSTNAME}" />
+      <Input
+          id="inputEditUserLastName"
+          placeholder="Apellido"
+          value="{editUserModel>/LASTNAME}" />
 
-            <ComboBox id="comboBoxEditCompanies" items="{/companies}" selectionChange="onCompanySelected" placeholder="Compañía">
-                <core:Item id="EditCompanyItem" key="{COMPANYID}" text="{COMPANYNAMME}" />
-            </ComboBox>
-            
-            <ComboBox id="comboBoxEditCedis" items="{/cedis}" selectionChange="onCediSelected" placeholder="Departamento">
-                <core:Item id="EditCediItem" key="{CEDIID}" text="{CEDINAME}" />
-            </ComboBox>
+      <!-- Nuevo: Campo EMPLOYEEID -->
+      <Input
+          id="inputEditEmployeeId"
+          placeholder="ID de Empleado"
+          value="{editUserModel>/EMPLOYEEID}" />
 
-            <ComboBox id="comboBoxEditRoles" items="{/roles}" selectionChange="onRoleSelected" placeholder="Selecciona un Rol">
-                <core:Item id="EditRoleItem" key="{ROLEID}" text="{ROLENAME}" />
-            </ComboBox>
-            
-            <VBox id="selectedEditRolesVBox" class="sapUiSmallMarginTop">
-                <!--VBOx donde va añadiendo los roles -->
-            </VBox>
+      <!-- Nuevo: Campo EXTENSION -->
+      <Input
+          id="inputEditExtension"
+          placeholder="Extensión"
+          value="{editUserModel>/EXTENSION}" />
 
-            <Input id="inputEditUserFunction" placeholder="Función que ejerce"/>
+      <!-- Campo existente: Número telefónico -->
+      <Input
+          id="inputEditUserPhoneNumber"
+          placeholder="Número telefónico"
+          value="{editUserModel>/PHONENUMBER}" />
 
-        </VBox>
+      <!-- Campo existente: Correo Electrónico -->
+      <Input
+          id="inputEditUserEmail"
+          placeholder="Correo Electrónico"
+          type="Email"
+          value="{editUserModel>/EMAIL}" />
 
-        <beginButton>
-            <Button id="EditUser" text="Guardar" type="Emphasized" press="onEditSaveUser" />
-        </beginButton>
+      <!-- Campo existente: Fecha de nacimiento -->
+      <DatePicker
+          id="inputEditUserBirthdayDate"
+          placeholder="Fecha de nacimiento"
+          change=".handleDateChange"
+          value="{editUserModel>/BIRTHDAYDATE}" />
 
-        <endButton>
-            <Button id="CancelEditUser" text="Cancelar" press="onEditCancelUser" />
-        </endButton>
-    </Dialog>
+      <!-- Nuevo: Campo AVATAR (URL del avatar) -->
+      <Input
+          id="inputEditUserAvatar"
+          placeholder="URL del Avatar"
+          value="{editUserModel>/AVATAR}" />
+
+      <!-- Combobox: Compañía -->
+      <ComboBox
+          id="comboBoxEditCompanies"
+          items="{companies>/companies}"
+          selectedKey="{editUserModel>/COMPANY}"
+          selectionChange="onCompanySelected"
+          placeholder="Compañía">
+        <core:Item
+            id="EditCompanyItem"
+            key="{companies>VALUEID}"
+            text="{companies>VALUE}" />
+      </ComboBox>
+
+      <!-- Combobox: Departamento (CEDIS) -->
+      <ComboBox
+          id="comboBoxEditCedis"
+          items="{departments>/departments}"
+          selectedKey="{editUserModel>/DEPARTMENT}"
+          selectionChange="onCediSelected"
+          placeholder="Departamento">
+        <core:Item
+            id="EditCediItem"
+            key="{departments>VALUEID}"
+            text="{departments>VALUE}" />
+      </ComboBox>
+
+      <!-- Combobox: Roles -->
+      <ComboBox
+          id="comboBoxEditRoles"
+          items="{roles>/roles}"
+          selectionChange="onRoleSelected"
+          placeholder="Selecciona un Rol">
+        <core:Item
+            id="EditRoleItem"
+            key="{roles>ROLEID}"
+            text="{roles>ROLENAME}" />
+      </ComboBox>
+
+      <!-- Caja para mostrar roles seleccionados -->
+      <VBox
+          id="selectedEditRolesVBox"
+          class="sapUiSmallMarginTop">
+        <!-- Aquí se mostrarán los roles seleccionados -->
+      </VBox>
+
+      <!-- Grupo: Datos de dirección -->
+      <Title text="Dirección" level="H4" class="sapUiSmallMarginTop" />
+      <!-- Nuevo: Campo CALLE -->
+      <Input
+          id="inputEditStreetUser"
+          placeholder="Calle"
+          value="{editUserModel>/STREET}" />
+      <!-- Nuevo: Campo CÓDIGO POSTAL -->
+      <Input
+          id="inputEditPostalCodeUser"
+          placeholder="Código Postal"
+          value="{editUserModel>/POSTALCODE}" />
+      <!-- Nuevo: Campo CIUDAD -->
+      <Input
+          id="inputEditCityUser"
+          placeholder="Ciudad"
+          value="{editUserModel>/CITY}" />
+      <!-- Nuevo: Campo REGIÓN -->
+      <Input
+          id="inputEditRegionUser"
+          placeholder="Región"
+          value="{editUserModel>/REGION}" />
+      <!-- Nuevo: Campo ESTADO -->
+      <Input
+          id="inputEditStateUser"
+          placeholder="Estado"
+          value="{editUserModel>/STATE}" />
+      <!-- Nuevo: Campo PAÍS -->
+      <Input
+          id="inputEditCountryUser"
+          placeholder="País"
+          value="{editUserModel>/COUNTRY}" />
+
+      <!-- Campo existente: Función que ejerce -->
+      <Input
+          id="inputEditUserFunction"
+          placeholder="Función que ejerce"
+          value="{editUserModel>/FUNCTION}" />
+    </VBox>
+
+    <beginButton>
+      <Button
+          id="EditUser"
+          text="Guardar"
+          type="Emphasized"
+          press="onEditSaveUser" />
+    </beginButton>
+
+    <endButton>
+      <Button
+          id="CancelEditUser"
+          text="Cancelar"
+          press="onEditCancelUser" />
+    </endButton>
+  </Dialog>
 </core:FragmentDefinition>

@@ -19,6 +19,7 @@ sap.ui.define(
           var oModel = new JSONModel();
           var that = this;
 
+
           this._oDialog = null;
           this._aAllValues = []; // Array para almacenar todos los valores
 
@@ -40,12 +41,16 @@ sap.ui.define(
               that.getView().setModel(oModel);
 
               // Se hace un get all de todos los valores
-              return fetch("http://localhost:4004/api/sec/valuesCRUD?procedure=getall", {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
+              return fetch(
+                "http://localhost:4004/api/sec/valuesCRUD?procedure=getall",
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
             })
             .then((response) => {
               if (!response.ok) {
@@ -162,8 +167,10 @@ sap.ui.define(
           var aData = oTableModel.getProperty("/value") || [];
 
           // Validación básica
-          if (!oData.LABELID || !oData.LABEL) {
-            MessageToast.show("LABELID y LABEL son campos requeridos");
+          if (!oData.LABELID || !oData.LABEL || !oData.DESCRIPTION) {
+            MessageToast.show(
+              "LABELID, LABEL Y DESCRIPTION son campos requeridos"
+            );
             return;
           }
 
@@ -261,6 +268,31 @@ sap.ui.define(
           var oTableModel = this.getView().getModel();
           var aData = oTableModel.getProperty("/value") || [];
 
+          oEditedData.DETAIL_ROW = {
+            ACTIVED: oEditedData.DETAIL_ROW.ACTIVED,
+            DELETED: !oEditedData.DETAIL_ROW.ACTIVED,
+          };
+
+          // Validación básica
+          if (!oEditedData.LABELID || !oEditedData.LABEL || !oEditedData.DESCRIPTION) {
+            MessageToast.show(
+              "LABELID, LABEL Y DESCRIPTION son campos requeridos"
+            );
+            return;
+          }
+
+          // Verificar si el LABELID ya existe
+          var bLabelIdExists = aData.some(function (item) {
+            return item.LABELID === oEditedData.LABELID;
+          });
+
+          if (bLabelIdExists) {
+            MessageToast.show(
+              "El LABELID ya existe, por favor ingrese uno diferente"
+            );
+            return;
+          }
+
           // Llamada a la API para actualizar
           fetch("http://localhost:4004/api/sec/labelCRUD?procedure=patch", {
             method: "POST",
@@ -299,9 +331,22 @@ sap.ui.define(
                   SEQUENCE: oEditedData.SEQUENCE,
                   IMAGE: oEditedData.IMAGE,
                   DESCRIPTION: oEditedData.DESCRIPTION,
+                  DETAIL_ROW: {
+                    ACTIVED: oEditedData.DETAIL_ROW.ACTIVED,
+                    DELETED: oEditedData.DETAIL_ROW.DELETED,
+                  },
                 };
                 oTableModel.setProperty("/values", aData);
               }
+
+
+
+              // Actualizar visibilidad de botones según estado
+              this.byId("activateButton").setVisible(!oEditedData.DETAIL_ROW.ACTIVED);
+              this.byId("activateButton").setEnabled(!oEditedData.DETAIL_ROW.ACTIVED);
+              this.byId("deactivateButton").setVisible(oEditedData.DETAIL_ROW.ACTIVED);
+              this.byId("deactivateButton").setEnabled(oEditedData.DETAIL_ROW.ACTIVED);
+
             })
             .catch((error) => {
               MessageToast.show("Error al actualizar: " + error.message);
@@ -453,44 +498,53 @@ sap.ui.define(
           var oSelectedData = oContext.getObject();
 
           // Filtrar valores localmente por LABELID seleccionado, para evitar múltiples llamadas a la API
-          var aFilteredValues = this._aAllValues.filter(function(oValue) {
+          var aFilteredValues = this._aAllValues.filter(function (oValue) {
             return oValue.LABELID === oSelectedData.LABELID;
           });
           var oAllLabels = this.getView().getModel().getProperty("/value");
           var aAllValues = this._aAllValues;
           var oValuesView = this.byId("XMLViewValues");
           if (oValuesView) {
-            oValuesView.loaded().then(function() {
-              var oController = oValuesView.getController();
-              if (oController && oController.loadValues) {
-                // Pasar los valores filtrados
-                oController.loadValues(aFilteredValues,aAllValues,oAllLabels);
+            oValuesView.loaded().then(
+              function () {
+                var oController = oValuesView.getController();
+                if (oController && oController.loadValues) {
+                  // Pasar los valores filtrados
+                  oController.loadValues(
+                    aFilteredValues,
+                    aAllValues,
+                    oAllLabels
+                  );
 
-                // Actualizar el selectedValue en el modelo "values"
-                oValuesView.getModel("values")
-                  .setProperty("/selectedValue", oSelectedData);
-                  oValuesView.getModel("values")
-                  .setProperty("/AllValues", aAllValues);
-                  oValuesView.getModel("values")
-                  .setProperty("/AllLabels", oAllLabels);
-              }
-            }.bind(this));
+                  // Actualizar el selectedValue en el modelo "values"
+                  oValuesView
+                    .getModel("values")
+                    .setProperty("/selectedValue", oSelectedData);
+                  oValuesView
+                    .getModel("values")
+                    .setProperty("/AllValues", aAllValues);
+                  oValuesView
+                    .getModel("values")
+                    .setProperty("/AllLabels", oAllLabels);
+                }
+              }.bind(this)
+            );
           }
 
           // Expandir el panel derecho
-          var oSplitter = this.byId("mainSplitter");
+          /*  var oSplitter = this.byId("mainSplitter");
           var oDetailPanel = this.byId("detailPanel");
           var oLayoutData = oDetailPanel.getLayoutData();
           if (oLayoutData) {
             oLayoutData.setSize("50%");
-          }
+          } */
 
           // Opcional: reducir el panel izquierdo
-          var oLeftPanel = oSplitter.getContentAreas()[0];
+          /* var oLeftPanel = oSplitter.getContentAreas()[0];
           var oLeftLayoutData = oLeftPanel.getLayoutData();
           if (oLeftLayoutData) {
             oLeftLayoutData.setSize("50%");
-          }
+          } */
         },
 
         // ---------------------------------------------------- FIN PARA CARGAR VALORES EN EL PANEL DERECHO

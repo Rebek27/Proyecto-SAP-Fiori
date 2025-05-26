@@ -33,7 +33,7 @@
       id="UsersTable"
       rows="{users>/value}"
       selectionMode="Single"
-      rowSelectionChange=".onListItemPressed"
+      rowSelectionChange=".onUserRowSelected"
       enableColumnReordering="true"
       visibleRowCount="10"
       busyIndicatorDelay="0"
