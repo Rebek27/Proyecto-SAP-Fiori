@@ -40,6 +40,7 @@
                         }"
                     selectedKey="{newValueModel>/ValuePaid1}"
                     selectionChange=".onLabelIdChange"
+                    value="{newValueModel>/Padre}"
                 >
                     <core:Item
                         key="{values>LABELID}"
@@ -55,6 +56,7 @@
                               sorter: { path: 'VALUEID' }
                             }"
                     selectedKey="{newValueModel>/ValuePaid2}"
+                    value="{newValueModel>/Hijo}"
                 >
                     <core:Item
                         key="{values>VALUEID}"
@@ -72,6 +74,7 @@
                 <TextArea
                     value="{newValueModel>/DESCRIPTION}"
                     rows="3"
+                    required="true"
                 />
                 <Label text="Estado Inicial" />
                 <Switch

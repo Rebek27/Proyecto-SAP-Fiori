@@ -75,6 +75,7 @@
                 <TextArea
                     value="{newValueModel>/DESCRIPTION}"
                     rows="3"
+                    required="true"
                 />
                 <Label text="Estado Inicial" />
                 <Switch

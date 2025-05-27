@@ -273,12 +273,15 @@ sap.ui.define(
             MessageToast.show("Selecciona un valor primero.");
             return;
           }
-
+          let partes = oSelectedValue.VALUEPAID.split("-");
+          let padre = partes[0];
+          let hijo = partes[1];
           // Copiar los datos del seleccionado al modelo newValueModel
           var oModel = new JSONModel({
             VALUEID: oSelectedValue.VALUEID || "",
             VALUE: oSelectedValue.VALUE || "",
-            VALUEPAID: oSelectedValue.VALUEPAID || "",
+            Padre: padre || "",
+            Hijo: hijo || "",
             ALIAS: oSelectedValue.ALIAS || "",
             IMAGE: oSelectedValue.IMAGE || "",
             DESCRIPTION: oSelectedValue.DESCRIPTION || "",
