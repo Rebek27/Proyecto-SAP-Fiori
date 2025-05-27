@@ -8,3 +8,12 @@
   background-color: red !important;
   font-weight: bold;
 }
+
+.balance{
+    color: #00ff00 ;                    /* Texto verde */
+    border: 2px solid #00ff00 ;         /* Contorno verde */
+    background-color: transparent;   /* Fondo transparente */
+    border-radius: 8px;              /* Bordes redondeados */
+    padding: 4px 8px;                /* Espaciado interno para que se vea bien */
+    display: inline-block;           /* Para que respete el borde con el texto */
+}

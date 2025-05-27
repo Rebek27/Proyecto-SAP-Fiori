@@ -289,12 +289,12 @@ sap.ui.define([
             }));
 
             // Agregar indicadores si existen
-            /*if ("SHORT_MA" in aData[0]) {
+            if ("SHORT_MA" in aData[0]) {
                 aMeasures.push(new sap.viz.ui5.data.MeasureDefinition({
                     name: "ShortMA",
                     value: "{strategyResultModel>SHORT_MA}"
                 }));
-            }*/
+            }
 
             if ("LONG_MA" in aData[0]) {
                 aMeasures.push(new sap.viz.ui5.data.MeasureDefinition({
@@ -898,11 +898,11 @@ sap.ui.define([
 
             // Pasar datos al método que carga la tabla y gráfico
             this._loadTableDataBySymbol(chartDataProcessed);
-
+            console.log("Señales",chartDataProcessed);
             // Para el modelo de resultados también mandamos todas las señales planas invertidas
             const simplifiedSignals = Object.values(signalsByDate).flat().reverse();
             const oResultModel = this.getView().getModel("strategyResultModel");
-            //oResultModel.setProperty("/signals", simplifiedSignals);
+            oResultModel.setProperty("/signals", simplifiedSignals);
             //Aqui ponemos todo lo de resumen
             oResultModel.setProperty("/simulationName", fullRecord.SIMULATIONNAME);
             oResultModel.setProperty("/symbol", fullRecord.SYMBOL);

@@ -16,7 +16,7 @@
                 fragmentName="com.invertions.sapfiorimodinv.view.investments.fragments.SymbolSelector"
                 type="XML" />
             <ToolbarSpacer />
-            <Text text="{= 'Balance: $' + ${strategyAnalysisModel>/balance}}"
+            <Text  text="{= 'Balance: $' + ${strategyAnalysisModel>/balance}}"
                 class="balance sapUiSmallMarginBegin" />
         </headerContent>
 
@@ -95,7 +95,7 @@
                                     </columns>
                                     <items>
                                         <ColumnListItem type="Active"
-                                            highlight="{= ${strategyResultModel>SIGNALS} === 'BUY' ? 'Success' : (${strategyResultModel>SIGNALS} === 'SELL' ? 'Error' : 'None') }">
+                                            highlight="{= ${strategyResultModel>SIGNALS/0} === 'buy' ? 'Success' : (${strategyResultModel>SIGNALS/0} === 'sell' ? 'Error' : 'None') }">
                                             <cells>
                                                 <Text text="{strategyResultModel>DATE}" />
                                                 <Text text="{strategyResultModel>OPEN}" />
