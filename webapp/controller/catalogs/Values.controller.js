@@ -510,13 +510,6 @@ sap.ui.define(
                 },
               });
               oValuesModel.setProperty("/values", currentValues);
-              /* var oModel = this.getView().getModel("catalogModel");
-
-              var oData = oModel.getData();
-
-              oData.value = oData.value || [];
-
-              oModel.setData(oData); */
 
               // Cerrar diálogo y limpiar
               this.onCancelValues();
