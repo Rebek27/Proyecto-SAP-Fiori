@@ -29,58 +29,59 @@ sap.ui.define([
       // Modelo para controlar el estado de los diálogos
       this.getView().setModel(new JSONModel({ currentDialog: null }), "uiDialogState");
 
+
+
       // Cargar datos y fragmentos
       this.loadRolesData();
       this._loadFragments();
+
+      this.byId("btnEditar")?.setEnabled(false);
+      this.byId("btnDesactivar")?.setEnabled(false);
+      this.byId("btnEliminar")?.setEnabled(false);
     },
+
+
+    /////////// -----------------------    MODALES Y CONFIGURACIONES  ----------------------------
+
+    actualizarEstadoBotones: function () {
+      const role = this.getOwnerComponent().getModel("selectedRole")?.getData();
+      const activo = !!(role && role.ROLEID); // true si hay rol seleccionado
+
+      this.byId("btnEditar")?.setEnabled(activo);
+      this.byId("btnDesactivar")?.setEnabled(activo);
+      this.byId("btnEliminar")?.setEnabled(activo);
+    },
+
 
     _loadFragments: function () {
       var viewId = this.getView().getId();
 
-      Fragment.load({ id: viewId, name: "com.invertions.sapfiorimodinv.view.security.fragments.AddRoleDialog", controller: this })
-        .then(function (dialog) {
-          this.getView().addDependent(dialog);
-          this._pDialog = dialog;
-        }.bind(this));
+      // Cargar los fragmentosssssssssss
+      Fragment.load({
+        id: viewId,
+        name: "com.invertions.sapfiorimodinv.view.security.fragments.AddRoleDialog",
+        controller: this
+      }).then(function (dialog) {
+        this.getView().addDependent(dialog);
+        this._pDialog = dialog;
+      }.bind(this));
 
-      Fragment.load({ id: viewId, name: "com.invertions.sapfiorimodinv.view.security.fragments.EditRoleDialog", controller: this })
-        .then(function (dialog) {
-          this.getView().addDependent(dialog);
-          this._pEditDialog = dialog;
-        }.bind(this));
+
+      Fragment.load({
+        id: viewId,
+        name: "com.invertions.sapfiorimodinv.view.security.fragments.EditRoleDialog",
+        controller: this
+      }).then(function (dialog) {
+        this.getView().addDependent(dialog);
+        this._pEditDialog = dialog;
+      }.bind(this));
     },
 
-    loadRolesData: async function () {
-      try {
-        var res = await fetch("http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=all", { method: "POST" });
-        var data = await res.json();
+    //Inicializar modal
+    guardarModal: function () {
 
-        var aAll = (data.value || []).filter(function (r) { return !r.DETAIL_ROW || !r.DETAIL_ROW.DELETED; });
-        var aFiltered = aAll.filter(function (r) { return r.DETAIL_ROW && r.DETAIL_ROW.ACTIVED; });
-
-        this.getOwnerComponent().setModel(new JSONModel({
-          value: aFiltered,
-          valueAll: aAll,
-          filterKey: "active"
-        }), "roles");
-      } catch (e) {
-        MessageBox.error("Error al cargar roles.");
-      }
-    },
-
-    loadCatalog: async function (labelId, modelName) {
-      try {
-        var res = await fetch("http://localhost:4004/api/sec/catalogsR?procedure=get&type=bylabelid&labelid=" + labelId);
-        var data = await res.json();
-        var values = (data.value && data.value[0] && data.value[0].VALUES) || [];
-        this.getView().setModel(new JSONModel({ values: values }), modelName);
-      } catch (e) {
-        console.error("Error cargando catálogo", labelId);
-      }
-    },
-
-    onOpenDialog: function () {
       var model = this.getView().getModel("newRoleModel");
+
       model.setData({
         ROLEID: "",
         ROLENAME: "",
@@ -90,18 +91,26 @@ sap.ui.define([
         PRIVILEGES: []
       });
 
+      //// cual es modal
       this.getView().getModel("uiDialogState").setProperty("/currentDialog", "add");
+
       this._pDialog.setTitle("Crear Rol");
       this._pDialog.open();
     },
 
+
+    //CERRAR MODALES
     onDialogClose: function () {
+
       if (this._pDialog && this._pDialog.isOpen()) {
         this._pDialog.close();
       }
+
       if (this._pEditDialog && this._pEditDialog.isOpen()) {
         this._pEditDialog.close();
       }
+
+
       this.getView().getModel("uiDialogState").setProperty("/currentDialog", null);
 
       var oRolesView = this.getView().getParent().getParent();
@@ -110,6 +119,77 @@ sap.ui.define([
         oUiStateModel.setProperty("/isDetailVisible", false);
       }
     },
+
+    //Inicializar UPDATE modal
+    onUpdateRole: function () {
+
+      const role = this.getOwnerComponent().getModel("selectedRole")?.getData();
+
+      if (!role) return;
+
+
+      const model = new JSONModel({
+        OLD_ROLEID: role.ROLEID,
+        ROLEID: role.ROLEID,
+        ROLENAME: role.ROLENAME,
+        DESCRIPTION: role.DESCRIPTION,
+
+
+        PRIVILEGES: (role.PROCESSES || []).map(proc => ({
+          PROCESSID: proc.PROCESSID,
+          PRIVILEGEID: (proc.PRIVILEGES || []).map(p => p.PRIVILEGEID)
+        })),
+
+
+        NEW_PROCESSID: "",
+        NEW_PRIVILEGES: []
+      });
+
+      // Se define que el modelo tendrá TwoWay Binding (los cambios en los inputs se reflejan en el modelo automáticamente)
+      model.setDefaultBindingMode("TwoWay");
+
+      this.getView().setModel(model, "roleDialogModel");
+      this.getView().getModel("uiDialogState").setProperty("/currentDialog", "edit");
+      this._pEditDialog.setTitle("Editar Rol");
+      this._pEditDialog.open();
+    },
+
+
+
+    onAddPrivilege: function () {
+      const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
+      const modelName = dialog === "edit" ? "roleDialogModel" : "newRoleModel";
+      const model = this.getView().getModel(modelName);
+      const data = { ...model.getData() };
+
+      if (!data.NEW_PROCESSID || !Array.isArray(data.NEW_PRIVILEGES) || data.NEW_PRIVILEGES.length === 0) {
+        MessageToast.show("Selecciona proceso y al menos un privilegio.");
+        return;
+      }
+
+      data.PRIVILEGES.push({ PROCESSID: data.NEW_PROCESSID, PRIVILEGEID: data.NEW_PRIVILEGES });
+      data.NEW_PROCESSID = "";
+      data.NEW_PRIVILEGES = [];
+      model.setData(data);
+    },
+
+    onRemovePrivilege: function (oEvent) {
+      const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
+      const modelName = dialog === "edit" ? "roleDialogModel" : "newRoleModel";
+      const context = oEvent.getSource().getBindingContext(modelName);
+      if (!context) return;
+
+      const model = this.getView().getModel(modelName);
+      const data = { ...model.getData() };
+      const index = parseInt(context.getPath().split("/").pop());
+      if (!isNaN(index)) {
+        data.PRIVILEGES.splice(index, 1);
+        model.setData(data);
+      }
+    },
+
+
+    /////////// -----------------------    VALIDACIONES  ----------------------------
 
     onSaveRole: async function () {
       var data = this.getView().getModel("newRoleModel").getData();
@@ -122,15 +202,63 @@ sap.ui.define([
 
     onUpdateRoleServer: async function () {
       var data = this.getView().getModel("roleDialogModel").getData();
-      if (!data.ROLENAME) {
-        MessageToast.show("El nombre del rol es obligatorio.");
+      if (!data.ROLEID || !data.ROLENAME) {
+        MessageToast.show("ID y Nombre del Rol son obligatorios.");
         return;
       }
       await this._actualizarRolExistente(data);
     },
 
+
+    /////////// -----------------------   SERVICIOSSSSS  ----------------------------
+
+    loadRolesData: async function () {
+      try {
+        var res = await fetch("http://localhost:4004/api/sec/rolesCRUD?procedure=get&type=all", {
+          method: "POST"
+        });
+
+
+        var data = await res.json();
+
+
+        var aAll = (data.value || []).filter(function (r) {
+          return !r.DETAIL_ROW || !r.DETAIL_ROW.DELETED;
+        });
+
+
+        var aFiltered = aAll.filter(function (r) {
+          return r.DETAIL_ROW && r.DETAIL_ROW.ACTIVED;
+        });
+
+        this.getOwnerComponent().setModel(new JSONModel({
+          value: aFiltered,
+          valueAll: aAll,
+          filterKey: "active"
+        }), "roles");
+
+      } catch (e) {
+
+        MessageBox.error("Error al cargar roles.");
+      }
+    },
+
+
+    loadCatalog: async function (labelId, modelName) {
+      try {
+        var res = await fetch("http://localhost:4004/api/sec/catalogsR?procedure=get&type=bylabelid&labelid=" + labelId);
+        var data = await res.json();
+        var values = (data.value && data.value[0] && data.value[0].VALUES) || [];
+        this.getView().setModel(new JSONModel({ values: values }), modelName);
+      } catch (e) {
+        console.error("Error cargando catálogo", labelId);
+      }
+    },
+
+
     _guardarNuevoRol: async function (data) {
       try {
+
         const res = await fetch("http://localhost:4004/api/sec/rolesCRUD?procedure=post", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -145,23 +273,20 @@ sap.ui.define([
         }
 
         MessageToast.show("Rol guardado correctamente.");
+
         this.onDialogClose();
 
         const nuevoRol = await this._cargarRol(encodeURIComponent(data.ROLEID));
+
 
         const model = this.getOwnerComponent().getModel("roles");
         const all = model.getProperty("/valueAll");
         all.push(nuevoRol);
 
-        const filterKey = model.getProperty("/filterKey");
-        const filtered = all.filter(function (r) {
-          if (filterKey === "active") return r.DETAIL_ROW && r.DETAIL_ROW.ACTIVED;
-          if (filterKey === "inactive") return !r.DETAIL_ROW || !r.DETAIL_ROW.ACTIVED;
-          return !r.DETAIL_ROW || !r.DETAIL_ROW.DELETED;
-        });
-
         model.setProperty("/valueAll", all);
-        model.setProperty("/value", filtered);
+        model.setProperty("/value", all);
+
+
         this.getOwnerComponent().setModel(new JSONModel(nuevoRol), "selectedRole");
 
       } catch (e) {
@@ -173,7 +298,9 @@ sap.ui.define([
       const roleid = data.OLD_ROLEID || data.ROLEID;
 
       try {
+
         const url = "http://localhost:4004/api/sec/rolesCRUD?procedure=put&roleid=" + encodeURIComponent(roleid);
+
         const res = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -187,30 +314,27 @@ sap.ui.define([
           return;
         }
 
-        MessageToast.show("Rol actualizado exitosamente.");
-        this.onDialogClose();
 
+        MessageToast.show("Rol actualizado exitosamente.");
+
+
+        this.onDialogClose();
         const rolActualizado = await this._cargarRol(encodeURIComponent(data.ROLEID));
 
         const model = this.getOwnerComponent().getModel("roles");
         const all = model.getProperty("/valueAll");
+
         const index = all.findIndex(r => r.ROLEID === data.OLD_ROLEID || r.ROLEID === data.ROLEID);
 
         if (index !== -1) {
           all[index] = rolActualizado;
         } else {
+
           all.push(rolActualizado);
         }
 
-        const filterKey = model.getProperty("/filterKey");
-        const filtered = all.filter(function (r) {
-          if (filterKey === "active") return r.DETAIL_ROW && r.DETAIL_ROW.ACTIVED;
-          if (filterKey === "inactive") return !r.DETAIL_ROW || !r.DETAIL_ROW.ACTIVED;
-          return !r.DETAIL_ROW || !r.DETAIL_ROW.DELETED;
-        });
-
         model.setProperty("/valueAll", all);
-        model.setProperty("/value", filtered);
+        model.setProperty("/value", all);
         this.getOwnerComponent().setModel(new JSONModel(rolActualizado), "selectedRole");
 
       } catch (e) {
@@ -271,15 +395,31 @@ sap.ui.define([
       });
     },
 
+
+
+
+    /////////// -----------------------    MANEJAR LOS DATOS LOCALMENTE  ----------------------------
+
     _actualizarListaRolesEstado: function (roleId, actived, deleted) {
+
       const model = this.getOwnerComponent().getModel("roles");
+
       const all = model.getProperty("/valueAll").map(role =>
         role.ROLEID === roleId
-          ? { ...role, DETAIL_ROW: { ...role.DETAIL_ROW, ACTIVED: actived, DELETED: deleted } }
+          ? {
+            ...role,
+            DETAIL_ROW: {
+              ...role.DETAIL_ROW,
+              ACTIVED: actived,
+              DELETED: deleted
+            }
+          }
           : role
       );
 
       const filterKey = model.getProperty("/filterKey");
+
+
       const filtered = all.filter(r =>
         filterKey === "active" ? r.DETAIL_ROW?.ACTIVED :
           filterKey === "inactive" ? !r.DETAIL_ROW?.ACTIVED :
@@ -288,13 +428,29 @@ sap.ui.define([
 
       model.setProperty("/valueAll", all);
       model.setProperty("/value", filtered);
+
       this.getOwnerComponent().setModel(new JSONModel({}), "selectedRole");
     },
 
+
+    //BUSCADOR
     onMultiSearch: function () {
       const query = this.byId("searchRoleName").getValue().toLowerCase();
       const binding = this.byId("rolesTable").getBinding("rows");
-      const filters = query ? [new Filter("ROLENAME", FilterOperator.Contains, query)] : [];
+
+      let filters = [];
+      if (query) {
+        filters = [
+          new Filter({
+            filters: [
+              new Filter("ROLENAME", FilterOperator.Contains, query),
+              new Filter("DESCRIPTION", FilterOperator.Contains, query)
+            ],
+            and: false
+          })
+        ];
+      }
+
       binding.filter(filters);
     },
 
@@ -310,61 +466,8 @@ sap.ui.define([
       if (oUiStateModel) {
         oUiStateModel.setProperty("/isDetailVisible", true);
       }
-    },
-
-    onUpdateRole: async function () {
-      const role = this.getOwnerComponent().getModel("selectedRole")?.getData();
-      if (!role) return;
-
-      const model = new JSONModel({
-        OLD_ROLEID: role.ROLEID,
-        ROLEID: role.ROLEID,
-        ROLENAME: role.ROLENAME,
-        DESCRIPTION: role.DESCRIPTION,
-        PRIVILEGES: (role.PROCESSES || []).map(proc => ({
-          PROCESSID: proc.PROCESSID,
-          PRIVILEGEID: (proc.PRIVILEGES || []).map(p => p.PRIVILEGEID)
-        })),
-        NEW_PROCESSID: "",
-        NEW_PRIVILEGES: []
-      });
-      model.setDefaultBindingMode("TwoWay");
-      this.getView().setModel(model, "roleDialogModel");
-      this.getView().getModel("uiDialogState").setProperty("/currentDialog", "edit");
-      this._pEditDialog.setTitle("Editar Rol");
-      this._pEditDialog.open();
-    },
-
-    onAddPrivilege: function () {
-      const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
-      const modelName = dialog === "edit" ? "roleDialogModel" : "newRoleModel";
-      const model = this.getView().getModel(modelName);
-      const data = { ...model.getData() };
-
-      if (!data.NEW_PROCESSID || !Array.isArray(data.NEW_PRIVILEGES) || data.NEW_PRIVILEGES.length === 0) {
-        MessageToast.show("Selecciona proceso y al menos un privilegio.");
-        return;
-      }
-
-      data.PRIVILEGES.push({ PROCESSID: data.NEW_PROCESSID, PRIVILEGEID: data.NEW_PRIVILEGES });
-      data.NEW_PROCESSID = "";
-      data.NEW_PRIVILEGES = [];
-      model.setData(data);
-    },
-
-    onRemovePrivilege: function (oEvent) {
-      const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
-      const modelName = dialog === "edit" ? "roleDialogModel" : "newRoleModel";
-      const context = oEvent.getSource().getBindingContext(modelName);
-      if (!context) return;
-
-      const model = this.getView().getModel(modelName);
-      const data = { ...model.getData() };
-      const index = parseInt(context.getPath().split("/").pop());
-      if (!isNaN(index)) {
-        data.PRIVILEGES.splice(index, 1);
-        model.setData(data);
-      }
+      // Aquí actualizas los botones
+      this.actualizarEstadoBotones();
     },
 
     _cargarRol: async function (roleId) {
