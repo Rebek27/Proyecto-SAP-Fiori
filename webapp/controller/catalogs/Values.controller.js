@@ -325,7 +325,11 @@ sap.ui.define(
             MessageToast.show("VALUEID y VALUE son campos obligatorios");
             return;
           }
-          var ValuePaid = `${oFormData.ValuePaid1}-${oFormData.ValuePaid2}`;
+          if (oFormData.ValuePaid1 !== undefined || oFormData.ValuePaid2 !== undefined) {
+            var ValuePaid = `${oFormData.ValuePaid1}-${oFormData.ValuePaid2}`;
+          }else{
+            var ValuePaid =  "";
+          }
           // Construir objeto con todos los parámetros
           var oParams = {
             COMPANYID: 0,
@@ -453,7 +457,11 @@ sap.ui.define(
             MessageToast.show("VALUEID y VALUE son campos obligatorios");
             return;
           }
-          var ValuePaid = `${oFormData.ValuePaid1}-${oFormData.ValuePaid2}`;
+          if (oFormData.ValuePaid1 !== undefined || oFormData.ValuePaid2 !== undefined) {
+            var ValuePaid = `${oFormData.ValuePaid1}-${oFormData.ValuePaid2}`;
+          }else{
+            var ValuePaid =  "";
+          }
           // Construir objeto con todos los parámetros
           var oParams = {
             COMPANYID: 0,
@@ -502,7 +510,6 @@ sap.ui.define(
                 },
               });
               oValuesModel.setProperty("/values", currentValues);
-
               /* var oModel = this.getView().getModel("catalogModel");
 
               var oData = oModel.getData();
