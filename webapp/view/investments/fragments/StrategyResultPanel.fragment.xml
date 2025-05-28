@@ -90,7 +90,7 @@
             </VBox>
 Última Señal -->
 
-            <!--Resuen
+            <!--Resumen
             financiero-->
             <VBox class="sapUiSmallMargin">
                 <Title text="Resumen Financiero" titleStyle="H4" />
