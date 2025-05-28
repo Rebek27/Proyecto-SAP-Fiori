@@ -268,14 +268,18 @@ sap.ui.define(
           var oView = this.getView();
           var oValuesModel = oView.getModel("values");
           var oSelectedValue = oValuesModel.getProperty("/selectedValueIn");
+          var oSelectedCatalog = oValuesModel.getProperty("/selectedValue");
 
           if (!oSelectedValue) {
             MessageToast.show("Selecciona un valor primero.");
             return;
           }
           let partes = oSelectedValue.VALUEPAID.split("-");
-          let padre = partes[0];
-          let hijo = partes[1];
+          var AllLabels = oView.getModel("values").getProperty("/AllLabels") || [];
+          let padre = AllLabels.find(
+            (item) => item.LABELID === partes[0]
+          ).LABEL+'-'+ partes[0];
+          let hijo = oSelectedValue.VALUE +'-'+ partes[1];
           // Copiar los datos del seleccionado al modelo newValueModel
           var oModel = new JSONModel({
             VALUEID: oSelectedValue.VALUEID || "",
