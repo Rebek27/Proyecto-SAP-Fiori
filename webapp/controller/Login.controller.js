@@ -50,6 +50,8 @@ sap.ui.define([
         const oAppModel = this.getOwnerComponent().getModel("appView");
         oAppModel.setProperty("/isLoggedIn", true);
         oAppModel.setProperty("/currentUser", user);
+        oAppModel.setProperty("/userId", user.USERID); 
+
 
         console.log(" Usuario autenticado y guardado:", user);
 
@@ -60,9 +62,9 @@ sap.ui.define([
         console.error(" Error al autenticar:", error);
         MessageToast.show("Error al conectar con la API");
       }
-    } ,
+    },
 
-      //Funcion para el ojito
+    //Funcion para el ojito
     onVerContraseña: function () {
       const oInput = this.byId("passwordInput");
       const bCurrentType = oInput.getType() === "Text";

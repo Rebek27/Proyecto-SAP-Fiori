@@ -16,7 +16,6 @@ sap.ui.define([
         _bSidebarExpanded: true,
         _sSidebarOriginalSize: "380px",
 
-
         //Funcion Principal
         onInit: function () {
 
@@ -62,9 +61,10 @@ sap.ui.define([
             var oStrategyAnalysisModel = new JSONModel(oStrategyAnalysisModelData);
             this.getView().setModel(oStrategyAnalysisModel, "strategyAnalysisModel");
 
+
             // Modelo historial de inversiones
 
-            this._loadHistoryModel();
+
 
             // FIN Modelo historial de inversiones
             //Inicialización modelo de resultados
@@ -128,18 +128,26 @@ sap.ui.define([
                     this._sSidebarOriginalSize = oSidebarVBox.getLayoutData().getSize();
                 }
             }
+            const oAppModel = this.getOwnerComponent().getModel("appView");
+            const userId = oAppModel.getProperty("/userId");
+            this._loadHistoryModel(userId);
+            console.log(userId + 'afuera');
 
         },
         //Fin funcion principal
 
         //Cargar historial
-        _loadHistoryModel: async function () {
+        _loadHistoryModel: async function (userId) {
             const oHistoryModel = new JSONModel();
             this.getView().setModel(oHistoryModel, "historyModel");
 
+            //recuperar el usuario logeado
+
+            console.log(userId + 'historial');
+
             const params = new URLSearchParams({
                 procedure: "getall",
-                RegUser: "1234"
+                RegUser: `${userId}`
             });
 
             try {
@@ -201,7 +209,23 @@ sap.ui.define([
 
         //Carga los simbolos en el comboBox
         _initSymbolModel: function () {
-            const oSymbolModel = new JSONModel({
+            const oSymbolModel = new JSONModel();
+
+            fetch("http://localhost:4004/api/inv/company")
+               .then(response => response.json())
+               .then(data => {
+                   const processedData = data.value.map(item => ({
+                       symbol: item.symbol,
+                       name: item.name
+                   }));
+                  
+                   oSymbolModel.setData({ 
+                   selectedSymbol: "TSLA", // valor por defecto
+                   symbols: processedData 
+                   });
+               })
+
+           /*  oSymbolModel.setData({
                 selectedSymbol: "TSLA", // valor por defecto
                 symbols: [
                     { symbol: "TSLA", name: "Tesla" },
@@ -209,7 +233,7 @@ sap.ui.define([
                     { symbol: "MSFT", name: "Microsoft" },
                     { symbol: "XXXX", name: "Microsoft" }
                 ]
-            });
+            }); */
             this.getView().setModel(oSymbolModel, "symbolModel");
 
         },
@@ -218,9 +242,10 @@ sap.ui.define([
         onSymbolSelectionChange: async function (oEvent) {
             const sSelectedSymbol = oEvent.getParameter("selectedItem").getKey();
             this.getView().getModel("symbolModel").setProperty("/selectedSymbol", sSelectedSymbol);
-
+            console.log(sSelectedSymbol);
+            
             try {
-                const response = await fetch(`http://localhost:4004/api/inv/priceshistorycrud?procedure=GET&symbol=${sSelectedSymbol}`, {
+                const response = await fetch(`http://localhost:4004/api/inv/priceshistorycrud?procedure=GET&type=ALPHA&symbol=${sSelectedSymbol}`, {
                     method: 'POST'
                 });
                 const res = await response.json();
@@ -246,7 +271,10 @@ sap.ui.define([
                 const dataWithFormattedDates = aApiData.map(item => ({
                     ...item,
                     DATE: item.DATE ? item.DATE.substring(0, 10) : "",
-                    DATE_GRAPH: item.DATE ? item.DATE.substring(0, 10) : ""
+                    DATE_GRAPH: item.DATE ? item.DATE.substring(0, 10) : "",
+                    BUY_SIGNAL: item.BUY_SIGNAL ? item.BUY_SIGNAL : "",
+                    SELL_SIGNAL: item.SELL_SIGNAL ? item.SELL_SIGNAL : "",
+
                 }));
 
                 const aPreparedData = this._prepareTableData(dataWithFormattedDates);
@@ -264,7 +292,7 @@ sap.ui.define([
         _addVizMeasures: function (aData) {
             console.log(aData);
 
-            // 🔄 Preprocesar: convertir INDICATORS[] en propiedades directas
+            //  Preprocesar: convertir INDICATORS[] en propiedades directas
             aData.forEach(dayItem => {
                 (dayItem.INDICATORS || []).forEach(ind => {
                     const key = ind.INDICATOR.toUpperCase();
@@ -275,7 +303,7 @@ sap.ui.define([
             const oVizFrame = this.byId("idVizFrame");
             const oDataset = oVizFrame.getDataset();
 
-            // 🧹 Limpia medidas y feeds existentes
+            //  Limpia medidas y feeds existentes
             oDataset.removeAllMeasures();
             oVizFrame.removeAllFeeds();
 
@@ -375,20 +403,6 @@ sap.ui.define([
 
 
 
-
-
-
-        /* onSymbolChange: function(oEvent) {
-          const sSymbol = oEvent.getSource().getSelectedKey();
-          this._loadPriceData(sSymbol).then(aData => {
-              const oPriceModel = this.getView().getModel("priceData");
-              oPriceModel.setProperty("/originalValue", aData); // Guarda los datos originales
-              oPriceModel.setProperty("/value", aData); // Muestra los datos en la gráfica
-          }).catch(error => {
-              console.error("Error al cargar los datos del símbolo:", error.message);
-          });
-      }, */
-
         //Acomoda los datos de la API
         _transformDataForVizFrame: function (aApiData) {
             if (!aApiData || !Array.isArray(aApiData)) {
@@ -420,7 +434,7 @@ sap.ui.define([
 
             oVizFrame.setVizProperties({
                 plotArea: {
-                    dataLabel: { visible: false },
+                    dataLabel: { visible: true },
                     window: {
                         start: null,
                         end: null
@@ -491,6 +505,10 @@ sap.ui.define([
             var oResultPanel = this.byId("strategyResultPanel") || sap.ui.core.Fragment.byId("strategyResultPanel");
             var sSymbol = oView.byId("symbolSelector").getSelectedKey();
 
+            //buscar al usuario
+            const oAppModel = this.getOwnerComponent().getModel("appView");
+            const userId = oAppModel.getProperty("/userId");
+
             // Validaciones básicas
             if (!oStrategyModel.getProperty("/strategyKey")) {
                 MessageBox.warning("Seleccione una estrategia");
@@ -513,6 +531,7 @@ sap.ui.define([
             let aSpecs = [];
             let sStrategy;
 
+
             if (oStrategyModel.getProperty("/strategyKey") === "Momentum") {
                 sStrategy = "momentum";
                 aSpecs = [
@@ -521,6 +540,7 @@ sap.ui.define([
                     { INDICATOR: "ADX", VALUE: oStrategyModel.getProperty("/adx") },
                     { INDICATOR: "RSI", VALUE: oStrategyModel.getProperty("/rsi") }
                 ];
+
             }
 
             if (oStrategyModel.getProperty("/strategyKey") === "reversionSimple") {
@@ -556,8 +576,8 @@ sap.ui.define([
                     SYMBOL: sSymbol,
                     STARTDATE: this._formatDate(oStrategyModel.getProperty("/startDate")),
                     ENDDATE: this._formatDate(oStrategyModel.getProperty("/endDate")),
-                    AMOUNT: 1000,
-                    USERID: "1234",
+                    AMOUNT: parseInt(oStrategyModel.getProperty("/stock")),
+                    USERID: `${userId}`,
                     SPECS: aSpecs
                 }
             };
@@ -638,6 +658,8 @@ sap.ui.define([
                         oResultModel.setProperty("/startDate", aData.STARTDATE);
                         oResultModel.setProperty("/endDate", aData.ENDDATE);
 
+                        //pa que jale otra vez
+                        this._loadHistoryModel(userId);
 
                         const oSummary = aData.SUMMARY;
                         oResultModel.setProperty("/FINAL_BALANCE", oSummary.FINAL_BALANCE);
@@ -661,47 +683,7 @@ sap.ui.define([
                     console.error("Error en la solicitud:", error);
                     this._loadTableDataBySymbol([]);  // Si falla la llamada, cargas datos vacíos
                 });
-            // Configurar petición
-            //var oRequestBody = {
-            //  symbol: sSymbol,
-            // startDate: this._formatDate(oStrategyModel.getProperty("/startDate")),
-            // endDate: this._formatDate(oStrategyModel.getProperty("/endDate")),
-            // amount: 1000,
-            // userId: "ARAMIS",
-            // specs: `SHORT:${oStrategyModel.getProperty("/shortSMA")}&LONG:${oStrategyModel.getProperty("/longSMA")}`
-            //  };
 
-            /* Llamada a la API
-            fetch("http://localhost:3033/api/inv/simulation?strategy=macrossover", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(oRequestBody)
-            })
-                .then(response => response.ok ? response.json() : Promise.reject(response))
-                .then(data => {
-                    console.log("Datos recibidos:", data);
-
-                    // Guardar datos en el modelo
-                    oResultModel.setData({
-                        hasResults: true,
-                        chart_data: this._prepareTableData(data.value.chart_data || []),
-                        signals: data.value.signals || [],
-                        result: data.value.result || 0
-                    });
-
-                    // Sumar la ganancia al balance
-                    var oStrategyModel = this.getView().getModel("strategyAnalysisModel");
-                    var currentBalance = oStrategyModel.getProperty("/balance") || 0;
-                    var gainPerShare = data.value.result || 0;
-                    var stock = oStrategyModel.getProperty("/stock") || 1;
-                    var totalGain = +(gainPerShare * stock).toFixed(2);
-                    oStrategyModel.setProperty("/balance", currentBalance + totalGain);
-                    MessageToast.show("Se añadieron $" + totalGain + " a tu balance.");
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    MessageBox.error("Error al obtener datos de simulación");
-                });*/
         },
         //Fin de todo lo de la API de simulacion
 
@@ -776,8 +758,8 @@ sap.ui.define([
                     SIGNALS: oItem.SIGNALS,
                     RULES: oItem.RULES,
                     SHARES: oItem.SHARES,
-                    BUY_SIGNAL: oItem.BUY_SIGNAL,
-                    SELL_SIGNAL: oItem.SELL_SIGNAL
+                    BUY_SIGNAL: oItem.SIGNALS?.[0] ==="buy" ? oItem.CLOSE : null,
+                    SELL_SIGNAL: oItem.SIGNALS?.[0] ==="sell" ? oItem.CLOSE : null,
                 };
             });
         },
@@ -898,7 +880,7 @@ sap.ui.define([
 
             // Pasar datos al método que carga la tabla y gráfico
             this._loadTableDataBySymbol(chartDataProcessed);
-            console.log("Señales",chartDataProcessed);
+            console.log("Señales", chartDataProcessed);
             // Para el modelo de resultados también mandamos todas las señales planas invertidas
             const simplifiedSignals = Object.values(signalsByDate).flat().reverse();
             const oResultModel = this.getView().getModel("strategyResultModel");

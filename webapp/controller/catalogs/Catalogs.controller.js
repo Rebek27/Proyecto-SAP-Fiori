@@ -19,7 +19,6 @@ sap.ui.define(
           var oModel = new JSONModel();
           var that = this;
 
-
           this._oDialog = null;
           this._aAllValues = []; // Array para almacenar todos los valores
 
@@ -50,7 +49,6 @@ sap.ui.define(
                   },
                 }
               );
-
             })
             .then((response) => {
               if (!response.ok) {
@@ -149,6 +147,7 @@ sap.ui.define(
             }).then(
               function (oDialog) {
                 this._oAddDialog = oDialog;
+                // @ts-ignore
                 this.getView().addDependent(oDialog);
                 oDialog.open();
               }.bind(this)
@@ -251,6 +250,7 @@ sap.ui.define(
             }).then(
               function (oDialog) {
                 this._oEditDialog = oDialog;
+                // @ts-ignore
                 this.getView().addDependent(oDialog);
                 oDialog.open();
               }.bind(this)
@@ -274,7 +274,11 @@ sap.ui.define(
           };
 
           // Validación básica
-          if (!oEditedData.LABELID || !oEditedData.LABEL || !oEditedData.DESCRIPTION) {
+          if (
+            !oEditedData.LABELID ||
+            !oEditedData.LABEL ||
+            !oEditedData.DESCRIPTION
+          ) {
             MessageToast.show(
               "LABELID, LABEL Y DESCRIPTION son campos requeridos"
             );
@@ -339,14 +343,19 @@ sap.ui.define(
                 oTableModel.setProperty("/values", aData);
               }
 
-
-
               // Actualizar visibilidad de botones según estado
-              this.byId("activateButton").setVisible(!oEditedData.DETAIL_ROW.ACTIVED);
-              this.byId("activateButton").setEnabled(!oEditedData.DETAIL_ROW.ACTIVED);
-              this.byId("deactivateButton").setVisible(oEditedData.DETAIL_ROW.ACTIVED);
-              this.byId("deactivateButton").setEnabled(oEditedData.DETAIL_ROW.ACTIVED);
-
+              this.byId("activateButton").setVisible(
+                !oEditedData.DETAIL_ROW.ACTIVED
+              );
+              this.byId("activateButton").setEnabled(
+                !oEditedData.DETAIL_ROW.ACTIVED
+              );
+              this.byId("deactivateButton").setVisible(
+                oEditedData.DETAIL_ROW.ACTIVED
+              );
+              this.byId("deactivateButton").setEnabled(
+                oEditedData.DETAIL_ROW.ACTIVED
+              );
             })
             .catch((error) => {
               MessageToast.show("Error al actualizar: " + error.message);
@@ -368,50 +377,77 @@ sap.ui.define(
 
           var oContext = this._oSelectedItem.getBindingContext();
           var oData = oContext.getObject();
+          var responseX = null;
 
-          MessageBox.confirm("¿Está seguro de eliminar este registro?", {
-            actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-            onClose: function (sAction) {
-              if (sAction === MessageBox.Action.YES) {
-                fetch(
-                  "http://localhost:4004/api/sec/labelCRUD?procedure=delete&&type=hard",
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
+          MessageBox.confirm(
+            "¿Está seguro de eliminar el registro: " +
+              oData.LABELID +
+              ", y todos sus VALUES?",
+            {
+              actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+              onClose: function (sAction) {
+                if (sAction === MessageBox.Action.YES) {
+                  $.ajax({
+                    url: `http://localhost:4004/api/sec/valuesCRUD?procedure=deleteAll&labelID=${oData.LABELID}`,
+                    method: "GET",
+                    success: function (response) {
+                      responseX = response;
+
+                      // Actualizar el modelo directamente
+                      // var currentValues = oValuesModel.getProperty("/values") || [];
+
+                      this._cleanModels();
+                    }.bind(this),
+                    error: function (error) {
+                      MessageToast.show(
+                        "Error al eliminar: " +
+                          (error.responseJSON?.error?.message ||
+                            "Error en el servidor")
+                      );
                     },
-                    body: JSON.stringify({ _id: oData._id }),
-                  }
-                )
-                  .then((response) => {
-                    if (!response.ok) {
-                      return response.text().then((text) => {
-                        throw new Error(text);
-                      });
-                    }
-                    return response.json();
-                  })
-                  .then(() => {
-                    MessageToast.show("Registro eliminado");
-
-                    // Actualización local del modelo
-                    const oTableModel = this.getView().getModel();
-                    const aData = oTableModel.getProperty("/value") || [];
-
-                    const index = aData.findIndex(
-                      (item) => item._id === oData._id
-                    );
-                    if (index !== -1) {
-                      aData.splice(index, 1);
-                      oTableModel.setProperty("/value", aData);
-                    }
-                  })
-                  .catch((error) => {
-                    MessageToast.show("Error al eliminar: " + error.message);
                   });
-              }
-            }.bind(this),
-          });
+                  fetch(
+                    "http://localhost:4004/api/sec/labelCRUD?procedure=delete&&type=hard",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ _id: oData._id }),
+                    }
+                  )
+                    .then((response) => {
+                      if (!response.ok) {
+                        return response.text().then((text) => {
+                          throw new Error(text);
+                        });
+                      }
+                      return response.json();
+                    })
+                    .then(() => {
+                      console.log(responseX);
+                      MessageToast.show("Registro eliminado con " + responseX.value[0].count + " valores eliminados");
+
+                      // Actualización local del modelo
+                      const oTableModel = this.getView().getModel();
+                      const aData = oTableModel.getProperty("/value") || [];
+
+                      const index = aData.findIndex(
+                        (item) => item._id === oData._id
+                      );
+                      if (index !== -1) {
+                        aData.splice(index, 1);
+                        oTableModel.setProperty("/value", aData);
+                      }
+                      this.onCloseDetailPanel();
+                    })
+                    .catch((error) => {
+                      MessageToast.show("Error al eliminar: " + error.message);
+                    });
+                }
+              }.bind(this),
+            }
+          );
         },
 
         // ---------------------------------------------------- FIN PARA ELIMINAR UN LABEL
