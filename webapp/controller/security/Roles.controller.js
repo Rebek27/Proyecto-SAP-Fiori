@@ -28,8 +28,13 @@ sap.ui.define([
 
       // Cargar catálogos directamente
       if (typeof oController.loadCatalog === "function") {
-        await oController.loadCatalog("IdProcesses", "processCatalogModel");
         await oController.loadCatalog("IdPrivileges", "privilegeCatalogModel");
+        await oController.loadCatalog("IdApplications", "allApplications");
+        await oController.loadCatalog("IdViews", "allViews");
+        await oController.loadCatalog("IdProcesses", "allProcesses");
+
+        // Modelos filtrados vacíos para vistas y procesos
+        oController.initFilteredCatalogModels();
       }
 
       // Ocultar el panel derecho

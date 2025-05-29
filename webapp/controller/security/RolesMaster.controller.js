@@ -21,6 +21,8 @@ sap.ui.define([
         ROLEID: "",
         ROLENAME: "",
         DESCRIPTION: "",
+        NEW_APPID: "",
+        NEW_VIEWID: "",
         NEW_PROCESSID: "",
         NEW_PRIVILEGES: [],
         PRIVILEGES: []
@@ -134,13 +136,15 @@ sap.ui.define([
         ROLENAME: role.ROLENAME,
         DESCRIPTION: role.DESCRIPTION,
 
-
         PRIVILEGES: (role.PROCESSES || []).map(proc => ({
           PROCESSID: proc.PROCESSID,
-          PRIVILEGEID: (proc.PRIVILEGES || []).map(p => p.PRIVILEGEID)
+          PRIVILEGEID: (proc.PRIVILEGES || []).map(p => p.PRIVILEGEID),
+          VIEWID: proc.VIEWID || "",
+          APPLICATIONID: proc.APPLICATIONID || ""
         })),
 
-
+        NEW_APPID: role.APPLICATIONID || "",
+        NEW_VIEWID: role.VIEWID || "",
         NEW_PROCESSID: "",
         NEW_PRIVILEGES: []
       });
@@ -155,6 +159,43 @@ sap.ui.define([
     },
 
 
+    // Filtrar view y procesos
+    initFilteredCatalogModels: function () {
+      this.getView().setModel(new JSONModel({ values: [] }), "filteredViews");
+      this.getView().setModel(new JSONModel({ values: [] }), "filteredProcesses");
+    },
+
+    onAppChange: function (oEvent) {
+      const appId = oEvent.getSource().getSelectedKey();
+      const views = this.getView().getModel("allViews")?.getProperty("/values") || [];
+
+      const filtered = views.filter(v => v.VALUEPAID === `IdApplications-${appId}`);
+      this.getView().getModel("filteredViews").setProperty("/values", filtered);
+
+      const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
+      const modelName = dialog === "edit" ? "roleDialogModel" : "newRoleModel";
+      const model = this.getView().getModel(modelName);
+
+      model.setProperty("/NEW_APPID", appId);
+      model.setProperty("/NEW_VIEWID", "");
+      model.setProperty("/NEW_PROCESSID", "");
+      this.getView().getModel("filteredProcesses").setProperty("/values", []);
+    },
+
+    onViewChange: function (oEvent) {
+      const viewId = oEvent.getSource().getSelectedKey();
+      const processes = this.getView().getModel("allProcesses")?.getProperty("/values") || [];
+
+      const filtered = processes.filter(p => p.VALUEPAID === `IdViews-${viewId}`);
+      this.getView().getModel("filteredProcesses").setProperty("/values", filtered);
+
+      const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
+      const modelName = dialog === "edit" ? "roleDialogModel" : "newRoleModel";
+      const model = this.getView().getModel(modelName);
+
+      model.setProperty("/NEW_VIEWID", viewId);
+      model.setProperty("/NEW_PROCESSID", "");
+    },
 
     onAddPrivilege: function () {
       const dialog = this.getView().getModel("uiDialogState").getProperty("/currentDialog");
@@ -162,14 +203,29 @@ sap.ui.define([
       const model = this.getView().getModel(modelName);
       const data = { ...model.getData() };
 
-      if (!data.NEW_PROCESSID || !Array.isArray(data.NEW_PRIVILEGES) || data.NEW_PRIVILEGES.length === 0) {
-        MessageToast.show("Selecciona proceso y al menos un privilegio.");
+      const appId = data.NEW_APPID;
+      const viewId = data.NEW_VIEWID;
+      const procId = data.NEW_PROCESSID;
+      const privs = data.NEW_PRIVILEGES;
+
+      if (!procId || !Array.isArray(privs) || privs.length === 0 || !appId || !viewId) {
+        MessageToast.show("Selecciona aplicación, página, proceso y al menos un privilegio.");
         return;
       }
 
-      data.PRIVILEGES.push({ PROCESSID: data.NEW_PROCESSID, PRIVILEGEID: data.NEW_PRIVILEGES });
+      data.PRIVILEGES.push({
+        PROCESSID: procId,
+        PRIVILEGEID: privs,
+        APPID: appId,     // Solo para mostrar en tabla
+        VIEWID: viewId    // Solo para mostrar en tabla
+      });
+
+      // Limpiar campos
       data.NEW_PROCESSID = "";
       data.NEW_PRIVILEGES = [];
+      data.NEW_VIEWID = "";
+      data.NEW_APPID = "";
+
       model.setData(data);
     },
 
@@ -301,10 +357,20 @@ sap.ui.define([
 
         const url = "http://localhost:4004/api/sec/rolesCRUD?procedure=put&roleid=" + encodeURIComponent(roleid);
 
+        const payload = {
+          ROLEID: data.ROLEID,
+          ROLENAME: data.ROLENAME,
+          DESCRIPTION: data.DESCRIPTION,
+          PRIVILEGES: (data.PRIVILEGES || []).map(p => ({
+            PROCESSID: p.PROCESSID,
+            PRIVILEGEID: p.PRIVILEGEID
+          }))
+        };
+
         const res = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
+          body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
