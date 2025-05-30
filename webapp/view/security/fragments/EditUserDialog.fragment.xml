@@ -17,7 +17,7 @@
           id="inputEditUserId"
           placeholder="ID de Usuario"
           value="{editUserModel>/USERID}" 
-          editable="false"/>
+          editable="true"/>
 
       <!-- Nuevo: Campo PASSWORD -->
       <Input
@@ -84,7 +84,7 @@
       <ComboBox
           id="comboBoxEditCompanies"
           items="{companies>/companies}"
-          selectedKey="{editUserModel>/COMPANY}"
+          selectedKey="{editUserModel>/COMPANYID}"
           selectionChange="onCompanySelected"
           placeholder="Compañía">
         <core:Item
@@ -93,9 +93,22 @@
             text="{companies>VALUE}" />
       </ComboBox>
 
+      <!-- Combobox: CEDI -->
+      <ComboBox
+          id="comboBoxEditCEDI"
+          items="{cedis>/cedis}"
+          selectedKey="{editUserModel>/CEDIID}"
+          selectionChange="onCEDISelected"
+          placeholder="Centro de distribucion">
+        <core:Item
+            id="EditCEDIItem"
+            key="{cedis>VALUEID}"
+            text="{cedis>VALUE}" />
+      </ComboBox>
+
       <!-- Combobox: Departamento (CEDIS) -->
       <ComboBox
-          id="comboBoxEditCedis"
+          id="comboBoxEditDepts"
           items="{departments>/departments}"
           selectedKey="{editUserModel>/DEPARTMENT}"
           selectionChange="onCediSelected"

@@ -94,9 +94,22 @@
             text="{companies>VALUE}" />
       </ComboBox>
 
+      <!-- Combobox: CEDI -->
+      <ComboBox
+          id="comboBoxCEDI"
+          items="{cedis>/cedis}"
+          selectedKey="{newUserModel>/CEDIID}"
+          selectionChange="onCEDISelected"
+          placeholder="Centro de distribución">
+        <core:Item
+            id="addCEDIItem"
+            key="{cedis>VALUEID}"
+            text="{cedis>VALUE}" />
+      </ComboBox>
+
       <!-- Combobox: Departamento (CEDIS) -->
       <ComboBox
-          id="comboBoxCedis"
+          id="comboBoxDepts"
           items="{departments>/departments}"
           selectionChange="onDeptSelected"
           selectedKey="{newUserModel>/DEPARTMENT}"
