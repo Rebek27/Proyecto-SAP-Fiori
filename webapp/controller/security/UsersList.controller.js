@@ -600,6 +600,8 @@ sap.ui.define(
               this._oEditUserDialog = oDialog;
               oView.addDependent(oDialog);
               this.loadCompanies();
+              this.loadCedis();
+              this.loadDeptos();
               this.loadRoles();
               this.populateEditRoles();
               oDialog.open();
@@ -607,6 +609,8 @@ sap.ui.define(
           } else {
             this.populateEditRoles();
             this.loadCompanies();
+            this.loadCedis();
+            this.loadDeptos();
             this.loadRoles();
             this._oEditUserDialog.open();
           }
