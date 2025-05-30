@@ -675,13 +675,13 @@ sap.ui.define(
             return;
           }
 
-          const oldUserId = this.selectedUser.USERID;
-          console.log("USERID",oldUserId);
+          //const oldUserId = this.selectedUser.USERID;
+          console.log("USERID",this.userId);
 
           oData.USERNAME = oData.FIRSTNAME + " " + oData.LASTNAME;
           try {
             // Aquí la lógica para actualizar el usuario en la base de datos.
-          const res = await fetch(`http://localhost:4004/api/sec/usersCRUD?procedure=patch&userid=${oldUserId}`, {
+          const res = await fetch(`http://localhost:4004/api/sec/usersCRUD?procedure=patch&userid=${this.userId}`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -905,6 +905,7 @@ sap.ui.define(
           var oContext = oTable.getContextByIndex(iSelectedIndex);
           var UserData = oContext.getObject();
           this.selectedUser = UserData;
+          this.userId = this.selectedUser.USERID;
           this.getView().getModel("editUserModel").setData(this.selectedUser);
 
           // Activa los botones

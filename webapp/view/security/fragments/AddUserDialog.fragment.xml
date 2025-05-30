@@ -73,6 +73,8 @@
           id="inputUserBirthdayDate"
           placeholder="Fecha de nacimiento"
           change=".handleDateChange"
+          displayFormat="dd.MM.yyyy"
+          valueFormat="yyyy-MM-dd"
           value="{newUserModel>/BIRTHDAYDATE}" />
 
       <!-- Nuevo: Campo AVATAR (URL del avatar o similar) -->

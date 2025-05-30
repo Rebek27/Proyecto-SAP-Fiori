@@ -72,6 +72,8 @@
           id="inputEditUserBirthdayDate"
           placeholder="Fecha de nacimiento"
           change=".handleDateChange"
+          displayFormat="dd.MM.yyyy"
+          valueFormat="yyyy-MM-dd"
           value="{editUserModel>/BIRTHDAYDATE}" />
 
       <!-- Nuevo: Campo AVATAR (URL del avatar) -->
@@ -118,6 +120,12 @@
             key="{departments>VALUEID}"
             text="{departments>VALUE}" />
       </ComboBox>
+
+        <!-- Campo existente: Función que ejerce -->
+      <Input
+          id="inputEditUserFunction"
+          placeholder="Función que ejerce"
+          value="{editUserModel>/FUNCTION}" />
 
       <!-- Combobox: Roles -->
       <ComboBox
@@ -171,11 +179,7 @@
           placeholder="País"
           value="{editUserModel>/COUNTRY}" />
 
-      <!-- Campo existente: Función que ejerce -->
-      <Input
-          id="inputEditUserFunction"
-          placeholder="Función que ejerce"
-          value="{editUserModel>/FUNCTION}" />
+      
     </VBox>
 
     <beginButton>
