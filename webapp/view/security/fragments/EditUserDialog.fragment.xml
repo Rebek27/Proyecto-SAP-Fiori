@@ -17,7 +17,7 @@
           id="inputEditUserId"
           placeholder="ID de Usuario"
           value="{editUserModel>/USERID}" 
-          editable="false"/>
+          editable="true"/>
 
       <!-- Nuevo: Campo PASSWORD -->
       <Input
@@ -72,6 +72,8 @@
           id="inputEditUserBirthdayDate"
           placeholder="Fecha de nacimiento"
           change=".handleDateChange"
+          displayFormat="dd.MM.yyyy"
+          valueFormat="yyyy-MM-dd"
           value="{editUserModel>/BIRTHDAYDATE}" />
 
       <!-- Nuevo: Campo AVATAR (URL del avatar) -->
@@ -84,7 +86,7 @@
       <ComboBox
           id="comboBoxEditCompanies"
           items="{companies>/companies}"
-          selectedKey="{editUserModel>/COMPANY}"
+          selectedKey="{editUserModel>/COMPANYID}"
           selectionChange="onCompanySelected"
           placeholder="Compañía">
         <core:Item
@@ -93,9 +95,22 @@
             text="{companies>VALUE}" />
       </ComboBox>
 
+      <!-- Combobox: CEDI -->
+      <ComboBox
+          id="comboBoxEditCEDI"
+          items="{cedis>/cedis}"
+          selectedKey="{editUserModel>/CEDIID}"
+          selectionChange="onCEDISelected"
+          placeholder="Centro de distribucion">
+        <core:Item
+            id="EditCEDIItem"
+            key="{cedis>VALUEID}"
+            text="{cedis>VALUE}" />
+      </ComboBox>
+
       <!-- Combobox: Departamento (CEDIS) -->
       <ComboBox
-          id="comboBoxEditCedis"
+          id="comboBoxEditDepts"
           items="{departments>/departments}"
           selectedKey="{editUserModel>/DEPARTMENT}"
           selectionChange="onCediSelected"
@@ -105,6 +120,12 @@
             key="{departments>VALUEID}"
             text="{departments>VALUE}" />
       </ComboBox>
+
+        <!-- Campo existente: Función que ejerce -->
+      <Input
+          id="inputEditUserFunction"
+          placeholder="Función que ejerce"
+          value="{editUserModel>/FUNCTION}" />
 
       <!-- Combobox: Roles -->
       <ComboBox
@@ -158,11 +179,7 @@
           placeholder="País"
           value="{editUserModel>/COUNTRY}" />
 
-      <!-- Campo existente: Función que ejerce -->
-      <Input
-          id="inputEditUserFunction"
-          placeholder="Función que ejerce"
-          value="{editUserModel>/FUNCTION}" />
+      
     </VBox>
 
     <beginButton>
