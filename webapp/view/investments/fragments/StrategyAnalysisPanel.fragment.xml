@@ -130,8 +130,8 @@
                                 width="100%" />
                         </VBox>
 
-                        <Label class="sapUiTinyMarginTop" text="Cantidad de acciones" />
-                        <StepInput value="{strategyAnalysisModel>/stock}" min="1" step="1"
+                        <Label class="sapUiTinyMarginTop" text="Cantidad a invertir" />
+                        <StepInput value="{strategyAnalysisModel>/stock}" min="1"
                             displayValuePrecision="0" placeholder="Ej: 10" width="100%" />
 
                         <Label />

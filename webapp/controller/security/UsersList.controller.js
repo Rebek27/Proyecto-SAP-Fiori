@@ -51,8 +51,9 @@ sap.ui.define(
             EMAIL: "",
             BIRTHDAYDATE: "",
             COMPANYID: "",
+            CEDIID:"",
             COMPANYNAME:"",
-            DEPARTMENT: "",     // Departamento o CEDI
+            DEPARTMENT: "",     // Departamento 
             FUNCTION: "",
             ROLES: [],          // Roles coincide con arreglo, ya que se agregarán dinámicamente
             STREET: "",         // Calle
@@ -85,17 +86,23 @@ sap.ui.define(
             url: "http://localhost:4004/api/sec/usersCRUD?procedure=getall",
             method: "POST",
             success: function (data) {
-              // Actualizar el modelo con los datos recibidos
-              oUsersModel.setProperty("/value", data.value || data);
+              // Obtén el array de usuarios desde data.value o data
+              var users = data.value || data;
+
+              // Verifica que sea un array y ordena basándote en USERID (string)
+              if (Array.isArray(users)) {
+                users.sort(function (a, b) {
+                  return a.USERID.localeCompare(b.USERID);
+                });
+              }
+
+              // Actualiza el modelo con los datos ordenados
+              oUsersModel.setProperty("/value", users);
             },
             error: function (error) {
               console.error("Error loading users:", error);
-
-              // Mostrar mensaje de error
-              MessageBox.error(
-                "Error al cargar los usuarios. Por favor, inténtelo de nuevo."
-              );
-            },
+              MessageBox.error("Error al cargar los usuarios. Por favor, inténtelo de nuevo.");
+            }
           });
         },
 
@@ -150,6 +157,72 @@ sap.ui.define(
           }
         },
 
+        loadCedis: async function () {
+          // Agregar la lógica para cargar departamentos según la compañía
+          try{
+          const res = await fetch("http://localhost:4004/api/sec/valuesCRUD?procedure=get&labelID=IdCEDI", {
+              method: "GET",
+              headers: { "Content-Type": "application/json" }
+            });
+
+            // Verificar si la solicitud fue exitosa
+            if (!res.ok) {
+              throw new Error("Error en la respuesta del servidor.");
+            }
+
+            // Convertir la respuesta a JSON
+            const data = await res.json();
+
+            // Validar si hay datos disponibles
+            const aAllCedis = data.value || [];
+            let aFilteredCedis = aAllCedis.filter(
+              (cedi) => cedi.DETAIL_ROW?.ACTIVED && !cedi.DETAIL_ROW?.DELETED
+            );
+            // Obtén la compañía seleccionada. Se asume que se guarda en "newUserModel>/COMPANY"
+            const sSelectedCompany = this.getView().getModel("newUserModel").getProperty("/COMPANYALIAS") || this.getView().getModel("editUserModel").getProperty("/COMPANYALIAS");
+
+            // Si hay una compañía seleccionada, filtra los departamentos que correspondan.
+            if (sSelectedCompany) {
+              aFilteredCedis = aFilteredCedis.filter((cedi) => {
+                // Se asume que department.VALUEPAID tiene un formato "prefijo-companyID"
+                if (cedi.VALUEPAID) {
+                  const parts = cedi.VALUEPAID.split("-");
+                  // Se compara la segunda parte (companyID) con la compañía seleccionada.
+                  return parts[1] === sSelectedCompany;
+                }
+                return false;
+              });
+            }
+
+            console.log("CEDIS filtrados:", aFilteredCedis); // Para depuración
+
+            // Formatear los datos en el formato esperado por el ComboBox
+            const cedisFormatted = aFilteredCedis.map((cedi) => ({
+              COMPANY: cedi.COMPANYALIAS,
+              VALUEID: cedi.VALUEID,
+              VALUE: cedi.VALUE || ""
+            }));
+
+            // Obtener o crear el modelo
+            const oModel = this.getView().getModel("cedis") || new JSONModel();
+
+            // Actualizar los datos en el modelo
+            oModel.setData({
+              cedis: cedisFormatted,
+              originalData: aFilteredCedis // Se guarda la data original por si se necesita más adelante
+            });
+
+            // Si el modelo no estaba asignado previamente, lo asignamos a la vista
+            if (!this.getView().getModel("cedis")) {
+              this.getView().setModel(oModel, "cedis");
+            }
+
+          } catch (error) {
+            console.error("Error al cargar CEDIS:", error);
+            MessageBox.error("Error al cargar CEDIS. Por favor, intente nuevamente.");
+          }
+        },
+
         loadDeptos: async function () {
           // Agregar la lógica para cargar departamentos según la compañía
           try{
@@ -172,16 +245,16 @@ sap.ui.define(
               (department) => department.DETAIL_ROW?.ACTIVED && !department.DETAIL_ROW?.DELETED
             );
             // Obtén la compañía seleccionada. Se asume que se guarda en "newUserModel>/COMPANY"
-            const sSelectedCompany = this.getView().getModel("newUserModel").getProperty("/COMPANYALIAS") || this.getView().getModel("editUserModel").getProperty("/COMPANYALIAS");
-
+            //const sSelectedCompany = this.getView().getModel("newUserModel").getProperty("/COMPANYALIAS") || this.getView().getModel("editUserModel").getProperty("/COMPANYALIAS");
+            const sSelectedCedi = this.getView().getModel("newUserModel").getProperty("/CEDIID") || this.getView().getModel("editUserModel").getProperty("/CEDIID");
             // Si hay una compañía seleccionada, filtra los departamentos que correspondan.
-            if (sSelectedCompany) {
+            if (sSelectedCedi) {
               aFilteredDepartment = aFilteredDepartment.filter((department) => {
-                // Se asume que department.VALUEPAID tiene un formato "prefijo-companyID"
+                // Se asume que department.VALUEPAID tiene un formato "prefijo-cediId"
                 if (department.VALUEPAID) {
                   const parts = department.VALUEPAID.split("-");
                   // Se compara la segunda parte (companyID) con la compañía seleccionada.
-                  return parts[1] === sSelectedCompany;
+                  return parts[1] === sSelectedCedi;
                 }
                 return false;
               });
@@ -290,6 +363,27 @@ sap.ui.define(
           data.COMPANYNAME = sSelectedText;
 
           model.setData(data);
+          this.loadCedis();
+        },
+
+        onCEDISelected: function(oEvent){
+          var oComboBox = oEvent.getSource();
+          var sSelectedKey = oComboBox.getSelectedKey();
+          //var sSelectedText = oComboBox.getSelectedItem().getText();
+          var model,data;
+
+          //ar oVBox;
+          if(oComboBox.getId().includes("comboBoxCEDI")){
+            model = this.getView().getModel("newUserModel");
+            data = model.getData();
+          }else{
+            model = this.getView().getModel("editUserModel");
+            data = model.getData();
+          }
+
+          data.CEDIID = sSelectedKey; //data.COMPANYNAME = sSelectedText;
+          
+          model.setData(data);
           this.loadDeptos();
         },
 
@@ -299,7 +393,7 @@ sap.ui.define(
           //var sSelectedText = oComboBox.getSelectedItem().getText();
           var model,data;
 
-          if (oComboBox.getId().includes("comboBoxCedis")) {
+          if (oComboBox.getId().includes("comboBoxDepts")) {
             model = this.getView().getModel("newUserModel");
             data = model.getData();
           } else {
@@ -392,6 +486,8 @@ sap.ui.define(
             EMAIL: "",
             BIRTHDAYDATE: "",
             COMPANY: "",
+            COMPANYNAME:"",
+            CEDIID:"",
             DEPARTMENT: "",     // Departamento o CEDI
             FUNCTION: "",
             ROLES: [],          // Roles coincide con arreglo, ya que se agregarán dinámicamente
@@ -505,12 +601,18 @@ sap.ui.define(
               this._oEditUserDialog = oDialog;
               oView.addDependent(oDialog);
               this.loadCompanies();
+              this.loadCedis();
+              this.loadDeptos();
               this.loadRoles();
               this.populateEditRoles();
               oDialog.open();
             });
           } else {
             this.populateEditRoles();
+            this.loadCompanies();
+            this.loadCedis();
+            this.loadDeptos();
+            this.loadRoles();
             this._oEditUserDialog.open();
           }
         },
@@ -579,9 +681,13 @@ sap.ui.define(
             return;
           }
 
+          //const oldUserId = this.selectedUser.USERID;
+          console.log("USERID",this.userId);
+
+          oData.USERNAME = oData.FIRSTNAME + " " + oData.LASTNAME;
           try {
             // Aquí la lógica para actualizar el usuario en la base de datos.
-          const res = await fetch(`http://localhost:4004/api/sec/usersCRUD?procedure=patch&userid=${oData.USERID}`, {
+          const res = await fetch(`http://localhost:4004/api/sec/usersCRUD?procedure=patch&userid=${this.userId}`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -598,6 +704,7 @@ sap.ui.define(
                 BIRTHDAYDATE: oData.BIRTHDAYDATE,
                 COMPANYID: oData.COMPANYID || "",     // Compañía
                 COMPANYNAME: oData.COMPANYNAME,
+                CEDIID:oData.CEDIID,
                 DEPARTMENT: oData.DEPARTMENT || "", // Departamento
                 FUNCTION: oData.FUNCTION || "",
                 ROLES: oData.ROLES || [],
@@ -804,6 +911,7 @@ sap.ui.define(
           var oContext = oTable.getContextByIndex(iSelectedIndex);
           var UserData = oContext.getObject();
           this.selectedUser = UserData;
+          this.userId = this.selectedUser.USERID;
           this.getView().getModel("editUserModel").setData(this.selectedUser);
 
           // Activa los botones
