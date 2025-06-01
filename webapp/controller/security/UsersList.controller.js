@@ -349,6 +349,7 @@ sap.ui.define(
               new sap.m.Label({ text: sSelectedText }).addStyleClass(
                 "sapUiSmallMarginEnd"
               ),
+              // @ts-ignore
               new sap.m.Button({
                 icon: "sap-icon://decline",
                 type: "Transparent",
@@ -533,6 +534,7 @@ sap.ui.define(
               var oHBox = new sap.m.HBox({
                 items: [
                   new sap.m.Label({ text: sRoleText }).addStyleClass("sapUiSmallMarginEnd"),
+                  // @ts-ignore
                   new sap.m.Button({
                     icon: "sap-icon://decline",
                     type: "Transparent",

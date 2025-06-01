@@ -302,6 +302,7 @@ sap.ui.define(
             }).then(
               function (oDialog) {
                 this._oEditDialog = oDialog;
+                // @ts-ignore
                 this.getView().addDependent(oDialog);
                 oDialog.open();
               }.bind(this)
@@ -434,6 +435,7 @@ sap.ui.define(
             }).then(
               function (oDialog) {
                 this._oAddDialog = oDialog;
+                // @ts-ignore
                 this.getView().addDependent(oDialog);
                 oDialog.open();
               }.bind(this)

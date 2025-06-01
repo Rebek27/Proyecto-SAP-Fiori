@@ -62,6 +62,7 @@ sap.ui.define([
         name: "com.invertions.sapfiorimodinv.view.security.fragments.AddRoleDialog",
         controller: this
       }).then(function (dialog) {
+        // @ts-ignore
         this.getView().addDependent(dialog);
         this._pDialog = dialog;
       }.bind(this));
@@ -72,6 +73,7 @@ sap.ui.define([
         name: "com.invertions.sapfiorimodinv.view.security.fragments.EditRoleDialog",
         controller: this
       }).then(function (dialog) {
+        // @ts-ignore
         this.getView().addDependent(dialog);
         this._pEditDialog = dialog;
       }.bind(this));

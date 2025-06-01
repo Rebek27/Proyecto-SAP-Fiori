@@ -237,8 +237,12 @@ sap.ui.define(
           var oContext = this._oSelectedItem.getBindingContext();
           var oData = oContext.getObject();
 
-          // Crear modelo para edición
-          var oEditModel = new JSONModel($.extend(true, {}, oData));
+          // Guardar el LABELID original para comparación posterior
+          var oEditModel = new JSONModel(
+            $.extend(true, {}, oData, {
+              originalLabelId: oData.LABELID,
+            })
+          );
           this.getView().setModel(oEditModel, "editModel");
 
           // Cargar diálogo de edición
@@ -287,7 +291,10 @@ sap.ui.define(
 
           // Verificar si el LABELID ya existe
           var bLabelIdExists = aData.some(function (item) {
-            return item.LABELID === oEditedData.LABELID;
+            return (
+              item.LABELID === oEditedData.LABELID &&
+              item.LABELID !== oEditedData.originalLabelId
+            );
           });
 
           if (bLabelIdExists) {
@@ -426,7 +433,11 @@ sap.ui.define(
                     })
                     .then(() => {
                       console.log(responseX);
-                      MessageToast.show("Registro eliminado con " + responseX.value[0].count + " valores eliminados");
+                      MessageToast.show(
+                        "Registro eliminado con " +
+                          responseX.value[0].count +
+                          " valores eliminados"
+                      );
 
                       // Actualización local del modelo
                       const oTableModel = this.getView().getModel();
@@ -566,21 +577,6 @@ sap.ui.define(
               }.bind(this)
             );
           }
-
-          // Expandir el panel derecho
-          /*  var oSplitter = this.byId("mainSplitter");
-          var oDetailPanel = this.byId("detailPanel");
-          var oLayoutData = oDetailPanel.getLayoutData();
-          if (oLayoutData) {
-            oLayoutData.setSize("50%");
-          } */
-
-          // Opcional: reducir el panel izquierdo
-          /* var oLeftPanel = oSplitter.getContentAreas()[0];
-          var oLeftLayoutData = oLeftPanel.getLayoutData();
-          if (oLeftLayoutData) {
-            oLeftLayoutData.setSize("50%");
-          } */
         },
 
         // ---------------------------------------------------- FIN PARA CARGAR VALORES EN EL PANEL DERECHO
