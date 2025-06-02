@@ -6,8 +6,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/viz/ui5/controls/VizFrame",
     "sap/viz/ui5/data/FlattenedDataset",
-    "sap/viz/ui5/controls/common/feeds/FeedItem"
-], function (Controller, JSONModel, MessageToast, DateFormat, MessageBox, VizFrame, FlattenedDataset, FeedItem) {
+    "sap/viz/ui5/controls/common/feeds/FeedItem",
+    "sap/ui/core/Fragment",
+], function (Controller, JSONModel, MessageToast, DateFormat, MessageBox, VizFrame, FlattenedDataset, FeedItem, Fragment) {
     "use strict";
 
     return Controller.extend("com.invertions.sapfiorimodinv.controller.investments.Investments", {
@@ -30,6 +31,19 @@ sap.ui.define([
             this.getView().addEventDelegate({
                 onAfterRendering: this._onViewAfterRendering.bind(this)
             });
+
+            //FINANCIERO 
+            this.getView().setModel(new JSONModel({
+                expandedItems: {}
+            }), "viewModel");
+
+            // 2. Modelo para el historial (ajusta la ruta según tu estructura real)
+            var oHistoryModel = new sap.ui.model.json.JSONModel();
+            this.getView().setModel(oHistoryModel, "historialModelo");
+
+            this._loadFinacialHistory();
+
+
 
             //Selecciona la tabla
             var oViewModel = new sap.ui.model.json.JSONModel({
@@ -212,28 +226,28 @@ sap.ui.define([
             const oSymbolModel = new JSONModel();
 
             fetch("http://localhost:4004/api/inv/company")
-               .then(response => response.json())
-               .then(data => {
-                   const processedData = data.value.map(item => ({
-                       symbol: item.symbol,
-                       name: item.name
-                   }));
-                  
-                   oSymbolModel.setData({ 
-                   selectedSymbol: "TSLA", // valor por defecto
-                   symbols: processedData 
-                   });
-               })
+                .then(response => response.json())
+                .then(data => {
+                    const processedData = data.value.map(item => ({
+                        symbol: item.symbol,
+                        name: item.name
+                    }));
 
-           /*  oSymbolModel.setData({
-                selectedSymbol: "TSLA", // valor por defecto
-                symbols: [
-                    { symbol: "TSLA", name: "Tesla" },
-                    { symbol: "AAPL", name: "Apple" },
-                    { symbol: "MSFT", name: "Microsoft" },
-                    { symbol: "XXXX", name: "Microsoft" }
-                ]
-            }); */
+                    oSymbolModel.setData({
+                        selectedSymbol: "TSLA", // valor por defecto
+                        symbols: processedData
+                    });
+                })
+
+            /*  oSymbolModel.setData({
+                 selectedSymbol: "TSLA", // valor por defecto
+                 symbols: [
+                     { symbol: "TSLA", name: "Tesla" },
+                     { symbol: "AAPL", name: "Apple" },
+                     { symbol: "MSFT", name: "Microsoft" },
+                     { symbol: "XXXX", name: "Microsoft" }
+                 ]
+             }); */
             this.getView().setModel(oSymbolModel, "symbolModel");
 
         },
@@ -243,7 +257,7 @@ sap.ui.define([
             const sSelectedSymbol = oEvent.getParameter("selectedItem").getKey();
             this.getView().getModel("symbolModel").setProperty("/selectedSymbol", sSelectedSymbol);
             console.log(sSelectedSymbol);
-            
+
             try {
                 const response = await fetch(`http://localhost:4004/api/inv/priceshistorycrud?procedure=GET&type=ALPHA&symbol=${sSelectedSymbol}`, {
                     method: 'POST'
@@ -260,6 +274,28 @@ sap.ui.define([
         },
 
 
+        formatProfitState: function (profit) {
+            return profit > 0 ? "Success" : (profit < 0 ? "Error" : "None");
+        },
+
+        onToggleDetails: function (oEvent) {
+            const oSource = oEvent.getSource();
+            const oBindingContext = oSource.getBindingContext();
+            const sSimulationId = oBindingContext.getObject().SIMULATIONID;
+            const oViewModel = this.getView().getModel("viewModel");
+            const oExpandedItems = oViewModel.getProperty("/expandedItems") || {};
+
+            // Toggle estado
+            oExpandedItems[sSimulationId] = !oExpandedItems[sSimulationId];
+
+            // Actualizar modelo
+            oViewModel.setProperty("/expandedItems", oExpandedItems);
+        },
+
+        getArrowIcon: function (expandedItems) {
+            const sSimulationId = this.getBindingContext().getObject().SIMULATIONID;
+            return expandedItems[sSimulationId] ? "sap-icon://navigation-down-arrow" : "sap-icon://navigation-right-arrow";
+        },
 
         //Cargar los datos en la tabla
 
@@ -670,10 +706,9 @@ sap.ui.define([
                         oResultModel.setProperty("/TOTAL_BOUGHT_UNITS", oSummary.TOTAL_BOUGHT_UNITS);
                         oResultModel.setProperty("/TOTAL_SOLD_UNITS", oSummary.TOTAL_SOLDUNITS); // ojo con nombre diferente
                         oResultModel.setProperty("/PERCENTAGE_RETURN", oSummary.PERCENTAGE_RETURN);
-
-
-                        console.log("aaa", chartDataProcessed);
+                        //pueba 
                         this._loadTableDataBySymbol(chartDataProcessed);
+
                     } catch (e) {
                         console.error("Error al obtener datos del símbolo:", e);
                         this._loadTableDataBySymbol([]);
@@ -687,7 +722,73 @@ sap.ui.define([
         },
         //Fin de todo lo de la API de simulacion
 
+        /*HISTORIAL FINANCIERO---------------------------------------------------------------------------------------------------- */
+        _loadFinacialHistory: function () {
 
+            const oAppModel = this.getOwnerComponent().getModel("appView");
+            const userId = oAppModel.getProperty("/userId");
+
+            fetch(`http://localhost:4004/api/inv/history?userId=${userId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Error en la solicitud: " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Datos recibidos:", data.value[0]?.HISTORY);
+                    this.getView().getModel("historialModelo").setData({"HISTORY":data.value[0]?.HISTORY});
+                    this._filterKeySimulations();
+                    console.log("Datos en historialModelo:", this.getView().getModel("historialModelo").getData());
+                })
+                .catch(error => {
+                    console.error("Error al buscar historial:", error);
+                });
+
+        },
+
+        _filterKeySimulations: function () {
+            var aHistory = this.getView().getModel("historialModelo").getProperty("/HISTORY") || [];
+            var aFiltered = [];
+
+            if (aHistory.length >= 3) {
+                aFiltered = [aHistory[0], aHistory[aHistory.length - 2], aHistory[aHistory.length - 1]];
+            } else if (aHistory.length === 2) {
+                aFiltered = [aHistory[0], aHistory[1]];
+            } else if (aHistory.length === 1) {
+                aFiltered = [aHistory[0]];
+            }
+
+            this.getView().getModel("historialModelo").setData({"HISTORY":aFiltered});
+        },
+
+
+        formatSimulationDate: function (dateString) {
+            if (!dateString) return "";
+            try {
+                var oDateFormat = DateFormat.getDateInstance({
+                    pattern: "MMM d, yyyy"
+                });
+                return oDateFormat.format(new Date(dateString));
+            } catch (error) {
+                console.error("Error formateando fecha:", error);
+                return dateString;
+            }
+        },
+
+        // Función para estado de ganancia (renombrable)
+        getProfitState: function (profit) {
+            if (profit === undefined || profit === null) return "None";
+            return profit > 0 ? "Success" : (profit < 0 ? "Error" : "None");
+        },
+
+
+
+
+        /*FIN HISRTOTIAL ----------------------------------------------------------------------------------------------------------*/
         // Función auxiliar para formatear fechas
         _formatDate: function (oDate) {
             return oDate ? DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" }).format(oDate) : null;
@@ -758,8 +859,8 @@ sap.ui.define([
                     SIGNALS: oItem.SIGNALS,
                     RULES: oItem.RULES,
                     SHARES: oItem.SHARES,
-                    BUY_SIGNAL: oItem.SIGNALS?.[0] ==="buy" ? oItem.CLOSE : null,
-                    SELL_SIGNAL: oItem.SIGNALS?.[0] ==="sell" ? oItem.CLOSE : null,
+                    BUY_SIGNAL: oItem.SIGNALS?.[0] === "buy" ? oItem.CLOSE : null,
+                    SELL_SIGNAL: oItem.SIGNALS?.[0] === "sell" ? oItem.CLOSE : null,
                 };
             });
         },
